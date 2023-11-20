@@ -99,6 +99,10 @@ const routes: Route[] = [
         loadChildren: () => import('./menu/menu.module').then((m) => m.MenuModule),
       },
       {
+        path: 'menu-compact',
+        loadChildren: () => import('./menu-compact/menu-compact.module').then((m) => m.MenuCompactModule),
+      },
+      {
         path: 'overlay',
         loadChildren: () => import('./overlay/overlay.module').then((m) => m.OverlayModule),
       },
