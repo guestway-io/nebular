@@ -72,6 +72,13 @@ export * from './components/layout/restore-scroll-top.service';
 export * from './components/menu/menu.module';
 export { NbMenuService, NbMenuItem, NbMenuBag } from './components/menu/menu.service';
 export * from './components/menu/menu.component';
+export * from './components/menu-compact/menu-compact.module';
+export {
+  NbMenuCompactService,
+  NbMenuItemCompact,
+  NbMenuBagCompact,
+} from './components/menu-compact/menu-compact.service';
+export * from './components/menu-compact/menu-compact.component';
 export * from './components/route-tabset/route-tabset.module';
 export * from './components/route-tabset/route-tabset.component';
 export * from './components/sidebar/sidebar.module';

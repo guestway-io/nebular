@@ -1,0 +1,29 @@
+:host ::ng-deep {
+  display: block;
+
+  .menu-items-compact,
+  .menu-item-compact > .menu-items-compact {
+    list-style-type: none;
+    overflow: hidden;
+  }
+
+  .menu-item-compact a {
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+
+    .menu-title-compact {
+      flex: 1 0 auto;
+      pointer-events: none;
+      @include nb-rtl(text-align, right);
+    }
+  }
+
+  .menu-item-compact nb-badge {
+    position: static;
+  }
+
+  .menu-group-compact span {
+    display: flex;
+  }
+}
