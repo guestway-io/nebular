@@ -12,6 +12,7 @@
     display: flex;
     text-decoration: none;
     align-items: center;
+    min-width: max-content;
 
     .menu-title-compact {
       flex: 1 0 auto;
@@ -25,8 +26,12 @@
     justify-content: center;
   }
 
-  .menu-item-compact nb-badge {
+  .menu-items-compact > .menu-item-compact > .menu-items-compact nb-badge {
     position: static;
+  }
+
+  .menu-items-compact > .menu-item-compact > a > nb-badge {
+    position: absolute;
   }
 
   .menu-group-compact span {

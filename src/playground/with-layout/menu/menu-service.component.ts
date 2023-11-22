@@ -14,7 +14,7 @@ import { MENU_ITEMS } from './menu-service-items';
   selector: 'npg-menu-services',
   template: `
     <nb-card size="giant">
-      <nb-menu tag="menu" [items]="menuItems"></nb-menu>
+      <nb-menu tag="menu-compact" [items]="menuItems"></nb-menu>
       <div class="control-panel">
         <router-outlet></router-outlet>
         <h3 class="h4">Selected item: {{ selectedItem }}</h3>
@@ -50,21 +50,21 @@ export class MenuServiceComponent implements OnDestroy {
           url: 'https://github.com/akveo/ngx-admin',
         },
       ],
-      'menu',
+      'menu-compact',
     );
   }
 
   collapseAll() {
-    this.menuService.collapseAll('menu');
+    this.menuService.collapseAll('menu-compact');
   }
 
   navigateHome() {
-    this.menuService.navigateHome('menu');
+    this.menuService.navigateHome('menu-compact');
   }
 
   getSelectedItem() {
     this.menuService
-      .getSelectedItem('menu')
+      .getSelectedItem('menu-compact')
       .pipe(takeUntil(this.destroy$))
       .subscribe((menuBag) => {
         this.selectedItem = menuBag.item.title;

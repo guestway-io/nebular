@@ -206,7 +206,7 @@
               "docs/app/@theme/styles/styles.scss"
             ],
             "scripts": ["node_modules/pace-js/pace.min.js", "node_modules/docsearch.js/dist/cdn/docsearch.min.js"],
-            "allowedCommonJsDependencies": ["highlight.js"]
+            "allowedCommonJsDependencies": ["highlight.js", "eva-icons"]
           },
           "configurations": {
             "production": {

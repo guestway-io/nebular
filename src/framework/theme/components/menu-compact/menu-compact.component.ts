@@ -37,9 +37,12 @@ export enum NbToggleStatesMenuCompact {
   templateUrl: './menu-item-compact.component.html',
   animations: [
     trigger('toggle', [
-      state(NbToggleStatesMenuCompact.Collapsed, style({ height: 0, margin: 0 })),
-      state(NbToggleStatesMenuCompact.Expanded, style({ height: '*' })),
-      transition(`${NbToggleStatesMenuCompact.Collapsed} <=> ${NbToggleStatesMenuCompact.Expanded}`, animate(300)),
+      state(NbToggleStatesMenuCompact.Collapsed, style({ height: 0, overflow: 'hidden' })),
+      state(NbToggleStatesMenuCompact.Expanded, style({ height: '*', overflow: 'visible' })),
+      transition(
+        `${NbToggleStatesMenuCompact.Collapsed} <=> ${NbToggleStatesMenuCompact.Expanded}`,
+        animate('.15s ease-in-out'),
+      ),
     ]),
   ],
 })

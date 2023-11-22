@@ -14,7 +14,7 @@
       font-family: nb-theme(menu-text-font-family);
       font-size: nb-theme(menu-text-font-size);
       font-weight: nb-theme(menu-text-font-weight);
-      line-height: nb-theme(menu-text-line-height);
+      line-height: 1.275rem;
       padding: nb-theme(menu-item-padding);
 
       position: relative;
@@ -45,6 +45,7 @@
 
     .menu-item-compact {
       position: relative;
+      z-index: 1;
 
       a {
         color: nb-theme(menu-text-color);
@@ -73,8 +74,13 @@
       .menu-icon-compact {
         color: nb-theme(menu-item-icon-color);
         font-size: nb-theme(menu-item-icon-width);
-        width: 1em;
+        width: nb-theme(icon-width);
+        min-width: nb-theme(icon-width);
         text-align: center;
+      }
+
+      &:hover > a > .expand-state {
+        transform: rotate(180deg);
       }
 
       .expand-state {

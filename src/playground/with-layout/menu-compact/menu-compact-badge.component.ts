@@ -46,10 +46,9 @@ export class MenuCompactBadgeComponent {
       ],
     },
     {
-      title: 'Bla',
-      expanded: true,
+      title: 'Shopping bag',
       level: 0,
-      icon: 'person-outline',
+      icon: 'shopping-bag-outline',
     },
   ];
 }
