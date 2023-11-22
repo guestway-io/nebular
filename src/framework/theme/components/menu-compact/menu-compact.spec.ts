@@ -101,7 +101,7 @@ function createTestBed(routes: Routes = []) {
   iconLibs.setDefaultPack('test');
 }
 
-function createSingleMenuComponent(menuItems, menuTag = 'menu') {
+function createSingleMenuComponent(menuItems, menuTag = 'menu-compact') {
   createTestBed();
   const fixture = TestBed.createComponent(SingleMenuTestComponent);
   fixture.componentInstance.items = menuItems;
@@ -131,11 +131,11 @@ function createMenuItems(
   return items as NbMenuItemCompact[];
 }
 
-describe('NbMenuItem', () => {
+describe('NbMenuItemCompact', () => {
   it('should set tag attribute for menu services', () => {
-    const { fixture } = createSingleMenuComponent([{ title: 'Home' }], 'menu');
-    const nbMenuTag = fixture.componentInstance.menuComponent.tag;
-    expect(nbMenuTag).toEqual('menu');
+    const { fixture } = createSingleMenuComponent([{ title: 'Home' }], 'menu-compact');
+    const nbMenuCompactTag = fixture.componentInstance.menuComponent.tag;
+    expect(nbMenuCompactTag).toEqual('menu-compact');
   });
 
   it('should set icon to menu item', () => {
@@ -189,14 +189,6 @@ describe('NbMenuItem', () => {
     ]);
     const parentItem = fixture.nativeElement.querySelector('.menu-item');
     expect(parentItem.querySelector('ul.menu-items')).not.toBeNull();
-  });
-
-  it('should expand child menu items', () => {
-    const { fixture } = createSingleMenuComponent([
-      { title: 'Parent item', expanded: true, children: [{ title: 'Child item' }] },
-    ]);
-    const childList = fixture.nativeElement.querySelector('.menu-item > ul.menu-items');
-    expect(childList.classList).toContain('expanded');
   });
 
   it('should set URL', () => {
@@ -258,7 +250,7 @@ describe('menu services', () => {
     const { fixture, menuService } = createSingleMenuComponent([{ title: 'Existing item' }]);
     const itemToAdd = { title: 'Added item' };
     const menuListOnInit = fixture.nativeElement.querySelectorAll('li').length;
-    menuService.addItems([itemToAdd], 'menu');
+    menuService.addItems([itemToAdd], 'menu-compact');
     fixture.detectChanges();
     const menuListItemAdded = fixture.nativeElement.querySelectorAll('li').length;
     expect(menuListItemAdded).toEqual(menuListOnInit + 1);
@@ -268,41 +260,12 @@ describe('menu services', () => {
     const selectedItem = { title: 'Menu item selected', selected: true };
     const { menuService } = createSingleMenuComponent([{ title: 'Menu item not selected' }, selectedItem]);
     menuService
-      .getSelectedItem('menu')
+      .getSelectedItem('menu-compact')
       .pipe(take(1))
       .subscribe((menuBag: NbMenuBag) => {
         expect(menuBag.item.title).toEqual(selectedItem.title);
         done();
       });
-  }, 1000);
-
-  it('should hide all expanded menu items', (done) => {
-    const { fixture, menuService } = createSingleMenuComponent([
-      {
-        title: 'Menu item collapsed',
-        children: [{ title: 'Menu item inner' }],
-      },
-      {
-        title: 'Menu item expanded 1',
-        expanded: true,
-        children: [{ title: 'Menu item inner' }],
-      },
-      {
-        title: 'Menu item expanded 2',
-        expanded: true,
-        children: [{ title: 'Menu item inner' }],
-      },
-    ]);
-    menuService
-      .onSubmenuToggle()
-      .pipe(pairwise(), take(1))
-      .subscribe(([menuBagFirstCollapsed, menuBagSecondCollapsed]: NbMenuBag[]) => {
-        expect(menuBagFirstCollapsed.item.title).toEqual('Menu item expanded 1');
-        expect(menuBagSecondCollapsed.item.title).toEqual('Menu item expanded 2');
-        done();
-      });
-    menuService.collapseAll();
-    fixture.detectChanges();
   }, 1000);
 });
 
@@ -517,7 +480,7 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should not select menu item if url contains fragment without link', function (done) {
-      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix' }];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix', level: 0 }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
