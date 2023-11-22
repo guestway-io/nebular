@@ -45,6 +45,11 @@ export class NbMenuItemCompact {
    */
   title: string;
   /**
+   * Level of the menu item
+   * @type {number}
+   */
+  level: number;
+  /**
    * Item relative link (for routerLink)
    * @type {string}
    */

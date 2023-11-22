@@ -47,6 +47,7 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
       title: 'Menu Items Compact',
       group: true,
       icon: 'home-outline',
+      level: 0,
     },
     {
       title: 'Menu Compact #1',
@@ -54,30 +55,37 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
       icon: 'home-outline',
       queryParams: { param: 1 },
       fragment: '#fragment',
+      level: 0,
     },
     {
       title: 'Menu Compact #2',
       link: '/menu-compact/menu-compact-test.component/2',
       icon: 'home-outline',
+      level: 0,
     },
     {
       title: 'Menu Compact #3',
       icon: 'home-outline',
+      level: 0,
       children: [
         {
           title: 'Menu Compact #3.1',
           link: '/menu-compact/menu-compact-test.component/3/1',
+          level: 0,
         },
         {
           title: 'Menu Compact #3.2',
           link: '/menu-compact/menu-compact-test.component/3/2',
+          level: 0,
         },
         {
           title: 'Menu Compact #3.3',
+          level: 0,
           children: [
             {
               title: 'Menu Compact #3.3.1',
               link: '/menu-compact/menu-compact-test.component/3/3/1',
+              level: 0,
             },
             {
               title: 'Menu Compact #3.3.2',
@@ -85,11 +93,13 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
               queryParams: { param: 2 },
               fragment: '#fragment',
               home: true,
+              level: 0,
             },
             {
               title: '@nebular/theme',
               target: '_blank',
               url: 'https://github.com/akveo/ng2-admin',
+              level: 0,
             },
           ],
         },
@@ -101,6 +111,7 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
       title: 'Menu Items Compact',
       group: true,
       icon: 'home-outline',
+      level: 0,
     },
     {
       title: 'Menu Compact #1',
@@ -108,48 +119,58 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
       icon: 'home-outline',
       queryParams: { param: 1 },
       fragment: '#fragment',
+      level: 0,
     },
     {
       title: 'Menu Compact #2',
       link: '/menu-compact/menu-compact-test.component/2',
       icon: 'home-outline',
+      level: 0,
     },
   ];
   secondMenuItems: NbMenuItemCompact[] = [
     {
       title: 'Menu items compact with fragments ',
       group: true,
+      level: 0,
     },
     {
       title: 'Menu Compact #1',
       link: '/menu-compact/menu-compact-test.component/1',
       icon: 'home-outline',
       pathMatch: 'prefix',
+      level: 0,
     },
     {
       title: 'Menu Compact #12 + fragment',
       link: '/menu-compact/menu-compact-test.component/12',
       fragment: 'fragment',
       icon: 'home-outline',
+      level: 0,
     },
     {
       title: 'Menu Compact #3',
       link: '/menu-compact/menu-compact-test.component/3',
       icon: 'home-outline',
+      level: 0,
     },
   ];
   thirdMenuItems = [
     {
       title: 'Menu Compact #1',
+      level: 0,
     },
     {
       title: 'Menu Compact #2',
+      level: 0,
       children: [
         {
           title: 'Menu Compact #2.1',
+          level: 1,
         },
         {
           title: 'Hidden Submenu Item Compact',
+          level: 2,
           hidden: true,
         },
       ],
@@ -157,6 +178,7 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
     {
       title: 'Hidden Menu Item Compact',
       hidden: true,
+      level: 0,
     },
   ];
 
@@ -188,21 +210,26 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
         {
           title: 'Menu Compact #3',
           icon: 'home-outline',
+          level: 0,
           children: [
             {
               title: 'Menu Compact #3.1',
               link: '/menu-compact/menu-compact-test.component/3/1',
+              level: 1,
             },
             {
               title: 'Menu Compact #3.2',
               link: '/menu-compact/menu-compact-test.component/3/2',
+              level: 1,
             },
             {
               title: 'Menu Compact #3.3',
+              level: 1,
               children: [
                 {
                   title: 'Menu Compact #3.3.1',
                   link: '/menu-compact/menu-compact-test.component/3/3/1',
+                  level: 2,
                 },
                 {
                   title: 'Menu Compact #3.3.2',
@@ -210,11 +237,13 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
                   queryParams: { param: 2 },
                   fragment: '#fragment',
                   home: true,
+                  level: 2,
                 },
                 {
                   title: '@nebular/theme',
                   target: '_blank',
                   url: 'https://github.com/akveo/ng2-admin',
+                  level: 2,
                 },
               ],
             },
@@ -231,7 +260,7 @@ export class MenuCompactTestComponent implements OnInit, OnDestroy {
   }
 
   addMenuItem() {
-    this.menuService.addItems([{ title: 'New Menu Item Compact' }], 'firstMenu');
+    this.menuService.addItems([{ title: 'New Menu Item Compact', level: 0 }], 'firstMenu');
   }
 
   navigateHome() {

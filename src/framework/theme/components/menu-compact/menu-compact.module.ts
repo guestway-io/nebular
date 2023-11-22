@@ -6,9 +6,9 @@ import { NbMenuCompactService, NbMenuCompactInternalService } from './menu-compa
 import { NbIconModule } from '../icon/icon.module';
 import { NbBadgeModule } from '../badge/badge.module';
 
-const nbMenuCompactComponents = [NbMenuCompactComponent, NbMenuItemCompactComponent];
+export const nbMenuCompactComponents = [NbMenuCompactComponent, NbMenuItemCompactComponent];
 
-const NB_MENU_COMPACT_PROVIDERS = [NbMenuCompactService, NbMenuCompactInternalService];
+export const NB_MENU_COMPACT_PROVIDERS = [NbMenuCompactService, NbMenuCompactInternalService];
 
 @NgModule({
   imports: [NbSharedModule, NbIconModule, NbBadgeModule],

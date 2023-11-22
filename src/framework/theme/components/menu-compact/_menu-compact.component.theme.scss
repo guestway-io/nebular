@@ -1,8 +1,8 @@
 @use '../../styles/theming' as *;
 
-@mixin nb-menu-theme() {
+@mixin nb-menu-compact-theme() {
   nb-menu-compact {
-    background-color: nb-theme(menu-background-color);
+    width: nb-theme(sidebar-width-compact);
 
     ul.menu-items-compact {
       margin: 0;
@@ -16,6 +16,12 @@
       font-weight: nb-theme(menu-text-font-weight);
       line-height: nb-theme(menu-text-line-height);
       padding: nb-theme(menu-item-padding);
+
+      position: relative;
+
+      > nb-badge {
+        position: absolute;
+      }
     }
 
     .menu-group-compact,
@@ -23,7 +29,23 @@
       color: nb-theme(menu-group-text-color);
     }
 
+    .menu-items-compact.expanded {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      overflow: visible;
+    }
+
+    .menu-items-compact.collapsed {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      overflow: hidden;
+    }
+
     .menu-item-compact {
+      position: relative;
+
       a {
         color: nb-theme(menu-text-color);
         border-radius: nb-theme(menu-item-border-radius);
@@ -51,7 +73,6 @@
       .menu-icon-compact {
         color: nb-theme(menu-item-icon-color);
         font-size: nb-theme(menu-item-icon-width);
-        margin: nb-theme(menu-item-icon-margin);
         width: 1em;
         text-align: center;
       }
@@ -78,9 +99,7 @@
     }
 
     .menu-item-compact > .menu-items-compact {
-      background-color: nb-theme(menu-submenu-background-color);
       margin: nb-theme(menu-submenu-margin);
-      padding: nb-theme(menu-submenu-padding);
     }
 
     .menu-item-compact > .menu-items-compact > .menu-item-compact {
@@ -130,6 +149,18 @@
       & nb-icon.menu-icon-compact {
         color: nb-theme(menu-group-text-color);
       }
+    }
+
+    .menu-items-compact > .menu-item-compact > .menu-items-section-compact > a {
+      background-color: nb-theme(background-basic-color-4);
+    }
+
+    .menu-items-compact > .menu-item-compact > .menu-items-section-compact > li {
+      background-color: nb-theme(background-basic-color-2);
+    }
+
+    .menu-items-compact > .menu-item-compact > .menu-items-section-compact > .menu-item-compact .menu-icon-compact {
+      margin: nb-theme(menu-item-icon-margin);
     }
   }
 }

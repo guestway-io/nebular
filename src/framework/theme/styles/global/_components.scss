@@ -57,6 +57,7 @@
 @use '../../components/tabset/tabset.component.theme' as tabset-theme;
 @use '../../components/route-tabset/route-tabset.component.theme' as route-tabset-theme;
 @use '../../components/menu/menu.component.theme' as menu-theme;
+@use '../../components/menu-compact/menu-compact.component.theme' as menu-compact-theme;
 @use '../../components/user/user.component.theme' as user-theme;
 @use '../../components/actions/actions.component.theme' as actions-theme;
 @use '../../components/search/search.component.theme' as search-theme;
@@ -101,6 +102,7 @@
   @include tabset-theme.nb-tabset-theme();
   @include route-tabset-theme.nb-route-tabset-theme();
   @include menu-theme.nb-menu-theme();
+  @include menu-compact-theme.nb-menu-compact-theme();
   @include user-theme.nb-user-theme();
   @include actions-theme.nb-actions-theme();
   @include search-theme.nb-search-theme();

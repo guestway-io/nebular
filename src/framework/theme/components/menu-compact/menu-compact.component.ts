@@ -37,7 +37,7 @@ export enum NbToggleStatesMenuCompact {
   templateUrl: './menu-item-compact.component.html',
   animations: [
     trigger('toggle', [
-      state(NbToggleStatesMenuCompact.Collapsed, style({ height: '0', margin: '0' })),
+      state(NbToggleStatesMenuCompact.Collapsed, style({ height: 0, margin: 0 })),
       state(NbToggleStatesMenuCompact.Expanded, style({ height: '*' })),
       transition(`${NbToggleStatesMenuCompact.Collapsed} <=> ${NbToggleStatesMenuCompact.Expanded}`, animate(300)),
     ]),
@@ -217,7 +217,7 @@ export class NbMenuItemCompactComponent implements DoCheck, AfterViewInit, OnDes
   selector: 'nb-menu-compact',
   styleUrls: ['./menu-compact.component.scss'],
   template: `
-    <ul class="menu-items">
+    <ul class="menu-items-compact">
       <ng-container *ngFor="let item of items">
         <li
           nbMenuItemCompact

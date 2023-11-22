@@ -19,27 +19,27 @@ import { MenuCompactBadgeComponent } from './menu-compact-badge.component';
 
 const routes: Route[] = [
   {
-    path: 'menu-children.component',
+    path: 'menu-compact-children.component',
     component: MenuCompactChildrenComponent,
   },
   {
-    path: 'menu-showcase.component',
+    path: 'menu-compact-showcase.component',
     component: MenuCompactShowcaseComponent,
   },
   {
-    path: 'menu-autocollapse.component',
+    path: 'menu-compact-autocollapse.component',
     component: MenuCompactAutoCollapseComponent,
   },
   {
-    path: 'menu-link-params.component',
+    path: 'menu-compact-link-params.component',
     component: MenuCompactLinkParamsComponent,
   },
   {
-    path: 'menu-badge.component',
+    path: 'menu-compact-badge.component',
     component: MenuCompactBadgeComponent,
   },
   {
-    path: 'menu-service.component',
+    path: 'menu-compact-service.component',
     component: MenuCompactServiceComponent,
     children: [
       {

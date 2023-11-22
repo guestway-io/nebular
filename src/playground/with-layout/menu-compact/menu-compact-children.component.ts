@@ -17,23 +17,35 @@ export class MenuCompactChildrenComponent {
     {
       title: 'Profile',
       expanded: true,
+      level: 0,
+      icon: 'person-outline',
       children: [
         {
           title: 'Change Password',
+          icon: 'person-outline',
+          level: 1,
         },
         {
           title: 'Privacy Policy',
+          icon: 'person-outline',
+          level: 1,
         },
         {
           title: 'Logout',
+          icon: 'person-outline',
+          level: 1,
         },
       ],
     },
     {
       title: 'Shopping Bag',
+      icon: 'shopping-bag-outline',
+      level: 0,
     },
     {
       title: 'Orders',
+      icon: 'shopping-cart-outline',
+      level: 0,
     },
   ];
 }

@@ -6,7 +6,6 @@
   .menu-items-compact,
   .menu-item-compact > .menu-items-compact {
     list-style-type: none;
-    overflow: hidden;
   }
 
   .menu-item-compact a {
@@ -17,8 +16,13 @@
     .menu-title-compact {
       flex: 1 0 auto;
       pointer-events: none;
+      margin-right: 1rem;
       @include nb-rtl(text-align, right);
     }
+  }
+
+  .menu-item-compact > a {
+    justify-content: center;
   }
 
   .menu-item-compact nb-badge {

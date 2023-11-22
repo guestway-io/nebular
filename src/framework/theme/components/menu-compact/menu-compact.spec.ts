@@ -31,7 +31,7 @@ import {
   NbLayoutDirectionService,
   NbMenuModule,
   NbMenuBag,
-  NbMenuItem,
+  NbMenuItemCompact,
   NbMenuService,
   NbMenuComponent,
   NbThemeModule,
@@ -46,7 +46,7 @@ export class NoopComponent {}
 })
 export class SingleMenuTestComponent {
   constructor(public menuPublicService: NbMenuService) {}
-  @Input() items: NbMenuItem[];
+  @Input() items: NbMenuItemCompact[];
   @Input() menuTag: string;
   @ViewChild(NbMenuComponent) menuComponent: NbMenuComponent;
 }
@@ -59,8 +59,8 @@ export class SingleMenuTestComponent {
 })
 export class DoubleMenusTestComponent {
   constructor(public menuPublicService: NbMenuService) {}
-  @Input() firstMenuItems: NbMenuItem[];
-  @Input() secondMenuItems: NbMenuItem[];
+  @Input() firstMenuItems: NbMenuItemCompact[];
+  @Input() secondMenuItems: NbMenuItemCompact[];
   @Input() firstMenuTag: string;
   @Input() secondMenuTag: string;
   @ViewChildren(NbMenuComponent) menuComponent: QueryList<NbMenuComponent>;
@@ -124,11 +124,11 @@ function createDoubleMenuComponent(firstMenuItems, firstMenuTag, secondMenuItems
 }
 
 function createMenuItems(
-  items: Partial<NbMenuItem>[],
+  items: Partial<NbMenuItemCompact>[],
   menuInternaleService: NbMenuCompactInternalService,
-): NbMenuItem[] {
-  menuInternaleService.prepareItems(items as NbMenuItem[]);
-  return items as NbMenuItem[];
+): NbMenuItemCompact[] {
+  menuInternaleService.prepareItems(items as NbMenuItemCompact[]);
+  return items as NbMenuItemCompact[];
 }
 
 describe('NbMenuItem', () => {
@@ -328,9 +328,9 @@ describe('NbMenuCompactInternalService', () => {
 
   describe('selectFromUrl pathMatch full', () => {
     it('should select menu item with matching path', (done) => {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -342,9 +342,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should select menu item with matching path and fragment', (done) => {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -356,15 +356,15 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should select child menu item and its parent', (done) => {
-      const items: Partial<NbMenuItem>[] = [
+      const items: Partial<NbMenuItemCompact>[] = [
         {
           link: '/menu-2',
-          children: [{ link: '/menu-2/menu-2-level-2' }] as NbMenuItem[],
+          children: [{ link: '/menu-2/menu-2-level-2' }] as NbMenuItemCompact[],
         },
       ];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const parentMenuItem: NbMenuItem = menuItems[0];
-      const childMenuItem: NbMenuItem = parentMenuItem.children[0];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const parentMenuItem: NbMenuItemCompact = menuItems[0];
+      const childMenuItem: NbMenuItemCompact = parentMenuItem.children[0];
 
       expect(parentMenuItem.selected).toBeFalsy();
       expect(childMenuItem.selected).toBeFalsy();
@@ -378,15 +378,15 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should select child menu item with fragment', (done) => {
-      const items: Partial<NbMenuItem>[] = [
+      const items: Partial<NbMenuItemCompact>[] = [
         {
           link: '/menu-2',
-          children: [{ link: '/menu-2/menu-2-level-2', fragment: '22' }] as NbMenuItem[],
+          children: [{ link: '/menu-2/menu-2-level-2', fragment: '22' }] as NbMenuItemCompact[],
         },
       ];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const parentMenuItem: NbMenuItem = menuItems[0];
-      const childMenuItem: NbMenuItem = parentMenuItem.children[0];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const parentMenuItem: NbMenuItemCompact = menuItems[0];
+      const childMenuItem: NbMenuItemCompact = parentMenuItem.children[0];
 
       expect(parentMenuItem.selected).toBeFalsy();
       expect(childMenuItem.selected).toBeFalsy();
@@ -400,9 +400,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it("should not select menu item with matching path if fragment doesn't match", function (done) {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -414,9 +414,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it("should not select menu item with matching fragment if path doesn't match", function (done) {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -429,9 +429,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should not select menu item with fragment if no fragment in url', (done) => {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -443,9 +443,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should not select menu item if path not matches fully', (done) => {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -458,9 +458,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should not select menu item if path and fragment not matches fully', (done) => {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -474,9 +474,9 @@ describe('NbMenuCompactInternalService', () => {
 
   describe('selectFromUrl pathMatch prefix', () => {
     it('should select menu item if url contains menu link', function (done) {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', pathMatch: 'prefix' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', pathMatch: 'prefix' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -489,9 +489,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should select menu item if url contains menu link and fragment', function (done) {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -503,9 +503,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should not select menu item if url contains link without fragment', function (done) {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 
@@ -517,9 +517,9 @@ describe('NbMenuCompactInternalService', () => {
     });
 
     it('should not select menu item if url contains fragment without link', function (done) {
-      const items: Partial<NbMenuItem>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix' }];
-      const menuItems: NbMenuItem[] = createMenuItems(items, menuInternalService);
-      const menuItem: NbMenuItem = menuItems[0];
+      const items: Partial<NbMenuItemCompact>[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix' }];
+      const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
+      const menuItem: NbMenuItemCompact = menuItems[0];
 
       expect(menuItem.selected).toBeFalsy();
 

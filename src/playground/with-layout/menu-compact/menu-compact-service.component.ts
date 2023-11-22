@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { NbMenuService } from '@nebular/theme';
+import { NbMenuCompactService } from '@nebular/theme';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MENU_COMPACT_ITEMS } from './menu-compact-service-items';
@@ -27,7 +27,7 @@ export class MenuCompactServiceComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   selectedItem: string;
 
-  constructor(private menuService: NbMenuService) {}
+  constructor(private menuService: NbMenuCompactService) {}
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -42,26 +42,27 @@ export class MenuCompactServiceComponent implements OnDestroy {
           target: '_blank',
           icon: 'plus-outline',
           url: 'https://github.com/akveo/ngx-admin',
+          level: 0,
         },
       ],
-      'menu',
+      'menu-compact',
     );
   }
 
   collapseAll() {
-    this.menuService.collapseAll('menu');
+    this.menuService.collapseAll('menu-compact');
   }
 
   navigateHome() {
-    this.menuService.navigateHome('menu');
+    this.menuService.navigateHome('menu-compact');
   }
 
   getSelectedItem() {
     this.menuService
-      .getSelectedItem('menu')
+      .getSelectedItem('menu-compact')
       .pipe(takeUntil(this.destroy$))
       .subscribe((menuBag) => {
-        this.selectedItem = menuBag.item.title;
+        this.selectedItem = menuBag.item?.title;
       });
   }
 }
