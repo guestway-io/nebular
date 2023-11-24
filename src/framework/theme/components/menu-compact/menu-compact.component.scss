@@ -1,0 +1,34 @@
+@use '../../styles/theming' as *;
+
+:host ::ng-deep {
+  display: block;
+
+  .menu-items,
+  .menu-item > .menu-items {
+    list-style-type: none;
+  }
+
+  .menu-item a {
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+
+    .menu-title {
+      flex: 1 0 auto;
+      pointer-events: none;
+      @include nb-rtl(text-align, right);
+    }
+  }
+
+  .menu-items > .menu-item > div > .menu-items nb-badge {
+    position: static;
+  }
+
+  .menu-items > .menu-item > a > nb-badge {
+    position: absolute;
+  }
+
+  .menu-group-compact span {
+    display: flex;
+  }
+}

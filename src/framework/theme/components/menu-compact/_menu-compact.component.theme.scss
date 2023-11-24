@@ -1,0 +1,181 @@
+/**
+ * @license
+ * Copyright Akveo. All Rights Reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ */
+
+@use '../../styles/theming' as *;
+
+@mixin nb-menu-compact-theme() {
+  nb-menu-compact {
+    background-color: nb-theme(menu-background-color);
+    width: nb-theme(sidebar-width-compact);
+
+    ul.menu-items {
+      margin: 0;
+      padding: 0;
+    }
+
+    .menu-group,
+    .menu-item a {
+      font-family: nb-theme(menu-text-font-family);
+      font-size: nb-theme(menu-text-font-size);
+      font-weight: nb-theme(menu-text-font-weight);
+      line-height: 1.275rem;
+      padding: nb-theme(menu-item-padding);
+    }
+
+    .menu-group,
+    .menu-group nb-icon.menu-icon {
+      color: nb-theme(menu-group-text-color);
+    }
+
+    .menu-item {
+      width: 100%;
+      a {
+        color: nb-theme(menu-text-color);
+        border-radius: nb-theme(menu-item-border-radius);
+        width: 100%;
+      }
+
+      a.active {
+        background-color: nb-theme(menu-item-active-background-color);
+        color: nb-theme(menu-item-active-text-color);
+
+        .menu-icon {
+          color: nb-theme(menu-item-icon-active-color);
+        }
+      }
+
+      a:hover {
+        background-color: nb-theme(menu-item-hover-background-color);
+        color: nb-theme(menu-item-hover-text-color);
+        cursor: nb-theme(menu-item-hover-cursor);
+
+        .menu-icon {
+          color: nb-theme(menu-item-icon-hover-color);
+        }
+      }
+
+      .menu-icon {
+        color: nb-theme(menu-item-icon-color);
+        font-size: nb-theme(menu-item-icon-width);
+        width: nb-theme(icon-width);
+        min-width: nb-theme(icon-width);
+        text-align: center;
+      }
+
+      .menu-title {
+        white-space: nowrap;
+      }
+
+      .menu-icon ~ .menu-title {
+        margin-left: 0.5rem;
+        white-space: nowrap;
+      }
+
+      .menu-title ~ nb-badge {
+        margin-left: 0.5rem;
+      }
+
+      .menu-title ~ nb-icon {
+        margin-left: 0.5rem;
+      }
+
+      .expand-state {
+        color: nb-theme(menu-item-icon-color);
+      }
+    }
+
+    $divider: nb-theme(menu-item-divider-width) nb-theme(menu-item-divider-style) nb-theme(menu-item-divider-color);
+    .menu-item {
+      border-bottom: $divider;
+
+      &:first-child {
+        border-top: none;
+      }
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .menu-item:first-child {
+        border-top: $divider;
+      }
+    }
+
+    .menu-item > .menu-items {
+      background-color: nb-theme(menu-submenu-background-color);
+      margin: nb-theme(menu-submenu-margin);
+      padding: nb-theme(menu-submenu-padding);
+    }
+
+    .menu-item > .menu-items > .menu-item {
+      background: nb-theme(menu-submenu-background-color);
+      color: nb-theme(menu-submenu-text-color);
+
+      a {
+        border-color: nb-theme(menu-submenu-item-border-color);
+        border-style: nb-theme(menu-submenu-item-border-style);
+        border-width: nb-theme(menu-submenu-item-border-width);
+        padding: nb-theme(menu-submenu-item-padding);
+      }
+
+      a.active {
+        background-color: nb-theme(menu-submenu-item-active-background-color);
+        border-color: nb-theme(menu-submenu-item-active-border-color);
+        color: nb-theme(menu-submenu-item-active-text-color);
+
+        .menu-icon {
+          color: nb-theme(menu-submenu-item-icon-active-color);
+        }
+      }
+
+      a:hover {
+        background-color: nb-theme(menu-submenu-item-hover-background-color);
+        border-color: nb-theme(menu-submenu-item-hover-border-color);
+        color: nb-theme(menu-submenu-item-hover-text-color);
+
+        .menu-icon {
+          color: nb-theme(menu-submenu-item-icon-hover-color);
+        }
+      }
+
+      a.active:hover {
+        background-color: nb-theme(menu-submenu-item-active-hover-background-color);
+        border-color: nb-theme(menu-submenu-item-active-hover-border-color);
+        color: nb-theme(menu-submenu-item-active-hover-text-color);
+
+        .menu-icon {
+          color: nb-theme(menu-submenu-item-icon-active-hover-color);
+        }
+      }
+    }
+
+    .menu-item > .menu-items > .menu-group {
+      &,
+      & nb-icon.menu-icon {
+        color: nb-theme(menu-group-text-color);
+      }
+    }
+
+    .menu-items > .menu-item > .menu-item-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .menu-items > .menu-item > .menu-items__submenu > a,
+    .menu-items > .menu-item > .menu-item-container > .menu-items__submenu > a {
+      background-color: nb-theme(background-basic-color-4);
+      white-space: nowrap;
+    }
+
+    .menu-items > .menu-item > .menu-items__submenu > li,
+    .menu-items > .menu-item > .menu-item-container > .menu-items__submenu > li {
+      background-color: nb-theme(background-basic-color-2);
+    }
+
+    .menu-items > .menu-item > .menu-item-container > .menu-items__submenu > .menu-item .menu-icon {
+      margin: nb-theme(menu-item-icon-margin);
+    }
+  }
+}

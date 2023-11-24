@@ -20,32 +20,58 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router, NavigationEnd, NavigationExtras } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil, filter, map } from 'rxjs/operators';
-import { NbMenuInternalService, NbMenuItem, NbMenuBag, NbMenuService, NbMenuBadgeConfig } from './menu.service';
 import { convertToBoolProperty, NbBooleanInput } from '../helpers';
 import { NB_WINDOW } from '../../theme.options';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { NbLayoutDirectionService } from '../../services/direction.service';
+import {
+  NbMenuCompactBag,
+  NbMenuCompactInternalService,
+  NbMenuCompactService,
+  NbMenuItemCompact,
+  NbMenuCompactBadgeConfig,
+} from './menu-compact.service';
 
-export enum NbToggleStates {
+export enum NbToggleStatesCompact {
   Expanded = 'expanded',
   Collapsed = 'collapsed',
 }
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: '[nbMenuItem]',
-  templateUrl: './menu-item.component.html',
+  selector: '[nbMenuItemCompact]',
+  templateUrl: './menu-item-compact.component.html',
   animations: [
     trigger('toggle', [
-      state(NbToggleStates.Collapsed, style({ height: '0', margin: '0' })),
-      state(NbToggleStates.Expanded, style({ height: '*' })),
-      transition(`${NbToggleStates.Collapsed} <=> ${NbToggleStates.Expanded}`, animate(300)),
+      state(
+        NbToggleStatesCompact.Collapsed,
+        style({
+          position: 'absolute',
+          transform: 'translate3d(0, 0, 0)',
+          opacity: 0,
+          display: 'none',
+          top: '{{menuItemLevel}}',
+        }),
+        { params: { menuItemLevel: 'auto' } },
+      ),
+      state(
+        NbToggleStatesCompact.Expanded,
+        style({
+          position: 'absolute',
+          transform: 'translate3d(var(--sidebar-width-compact), 0, 0)',
+          opacity: 1,
+          display: 'block',
+          top: '{{menuItemLevel}}',
+        }),
+        { params: { menuItemLevel: 'auto' } },
+      ),
+      transition(`${NbToggleStatesCompact.Collapsed} <=> ${NbToggleStatesCompact.Expanded}`, animate('.15s ease-in')),
     ]),
   ],
 })
-export class NbMenuItemComponent implements DoCheck, AfterViewInit, OnDestroy {
-  @Input() menuItem = <NbMenuItem>null;
-  @Input() badge: NbMenuBadgeConfig;
+export class NbMenuItemCompactComponent implements DoCheck, AfterViewInit, OnDestroy {
+  @Input() menuItem = <NbMenuItemCompact>null;
+  @Input() badge: NbMenuCompactBadgeConfig;
 
   @Output() hoverItem = new EventEmitter<any>();
   @Output() toggleSubMenu = new EventEmitter<any>();
@@ -53,15 +79,15 @@ export class NbMenuItemComponent implements DoCheck, AfterViewInit, OnDestroy {
   @Output() itemClick = new EventEmitter<any>();
 
   protected destroy$ = new Subject<void>();
-  toggleState: NbToggleStates;
+  toggleState: NbToggleStatesCompact;
 
   constructor(
-    protected menuService: NbMenuService,
+    protected menuService: NbMenuCompactService,
     protected directionService: NbLayoutDirectionService,
   ) {}
 
   ngDoCheck() {
-    this.toggleState = this.menuItem.expanded ? NbToggleStates.Expanded : NbToggleStates.Collapsed;
+    this.toggleState = this.menuItem.expanded ? NbToggleStatesCompact.Expanded : NbToggleStatesCompact.Collapsed;
   }
 
   ngAfterViewInit() {
@@ -69,10 +95,13 @@ export class NbMenuItemComponent implements DoCheck, AfterViewInit, OnDestroy {
       .onSubmenuToggle()
       .pipe(
         filter(({ item }) => item === this.menuItem),
-        map(({ item }: NbMenuBag) => item.expanded),
+        map(({ item }: NbMenuCompactBag) => item.expanded),
         takeUntil(this.destroy$),
       )
-      .subscribe((isExpanded) => (this.toggleState = isExpanded ? NbToggleStates.Expanded : NbToggleStates.Collapsed));
+      .subscribe(
+        (isExpanded) =>
+          (this.toggleState = isExpanded ? NbToggleStatesCompact.Expanded : NbToggleStatesCompact.Collapsed),
+      );
   }
 
   ngOnDestroy() {
@@ -80,20 +109,19 @@ export class NbMenuItemComponent implements DoCheck, AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onToggleSubMenu(item: NbMenuItem) {
-    console.log(item);
+  onToggleSubMenu(item: NbMenuItemCompact) {
     this.toggleSubMenu.emit(item);
   }
 
-  onHoverItem(item: NbMenuItem) {
+  onHoverItem(item: NbMenuItemCompact) {
     this.hoverItem.emit(item);
   }
 
-  onSelectItem(item: NbMenuItem) {
+  onSelectItem(item: NbMenuItemCompact) {
     this.selectItem.emit(item);
   }
 
-  onItemClick(item: NbMenuItem) {
+  onItemClick(item: NbMenuItemCompact) {
     this.itemClick.emit(item);
   }
 
@@ -102,7 +130,7 @@ export class NbMenuItemComponent implements DoCheck, AfterViewInit, OnDestroy {
       return 'chevron-down-outline';
     }
 
-    return this.directionService.isLtr() ? 'chevron-left-outline' : 'chevron-right-outline';
+    return this.directionService.isLtr() ? 'chevron-up-outline' : 'chevron-right-outline';
   }
 }
 
@@ -210,13 +238,13 @@ export class NbMenuItemComponent implements DoCheck, AfterViewInit, OnDestroy {
  * menu-submenu-item-icon-active-hover-color:
  */
 @Component({
-  selector: 'nb-menu',
-  styleUrls: ['./menu.component.scss'],
+  selector: 'nb-menu-compact',
+  styleUrls: ['./menu-compact.component.scss'],
   template: `
     <ul class="menu-items">
       <ng-container *ngFor="let item of items">
         <li
-          nbMenuItem
+          nbMenuItemCompact
           *ngIf="!item.hidden"
           [menuItem]="item"
           [badge]="item.badge"
@@ -231,7 +259,7 @@ export class NbMenuItemComponent implements DoCheck, AfterViewInit, OnDestroy {
     </ul>
   `,
 })
-export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NbMenuCompactComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Tags a menu with some ID, can be later used in the menu service
    * to determine which menu triggered the action, if multiple menus exist on the page.
@@ -244,7 +272,7 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
    * List of menu items.
    * @type List<NbMenuItem> | List<any> | any
    */
-  @Input() items: NbMenuItem[];
+  @Input() items: NbMenuItemCompact[];
 
   /**
    * Collapse all opened submenus on the toggle event
@@ -266,7 +294,7 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     @Inject(NB_WINDOW) protected window,
     @Inject(PLATFORM_ID) protected platformId,
-    protected menuInternalService: NbMenuInternalService,
+    protected menuInternalService: NbMenuCompactInternalService,
     protected router: Router,
   ) {}
 
@@ -276,7 +304,7 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.menuInternalService
       .onAddItem()
       .pipe(
-        filter((data: { tag: string; items: NbMenuItem[] }) => this.compareTag(data.tag)),
+        filter((data: { tag: string; items: NbMenuItemCompact[] }) => this.compareTag(data.tag)),
         takeUntil(this.destroy$),
       )
       .subscribe((data) => this.onAddItem(data));
@@ -292,10 +320,10 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.menuInternalService
       .onGetSelectedItem()
       .pipe(
-        filter((data: { tag: string; listener: BehaviorSubject<NbMenuBag> }) => this.compareTag(data.tag)),
+        filter((data: { tag: string; listener: BehaviorSubject<NbMenuCompactBag> }) => this.compareTag(data.tag)),
         takeUntil(this.destroy$),
       )
-      .subscribe((data: { tag: string; listener: BehaviorSubject<NbMenuBag> }) => {
+      .subscribe((data: { tag: string; listener: BehaviorSubject<NbMenuCompactBag> }) => {
         data.listener.next({ tag: this.tag, item: this.getSelectedItem(this.items) });
       });
 
@@ -321,18 +349,18 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => this.menuInternalService.selectFromUrl(this.items, this.tag, this.autoCollapse));
   }
 
-  onAddItem(data: { tag: string; items: NbMenuItem[] }) {
+  onAddItem(data: { tag: string; items: NbMenuItemCompact[] }) {
     this.items.push(...data.items);
 
     this.menuInternalService.prepareItems(this.items);
     this.menuInternalService.selectFromUrl(this.items, this.tag, this.autoCollapse);
   }
 
-  onHoverItem(item: NbMenuItem) {
+  onHoverItem(item: NbMenuItemCompact) {
     this.menuInternalService.itemHover(item, this.tag);
   }
 
-  onToggleSubMenu(item: NbMenuItem) {
+  onToggleSubMenu(item: NbMenuItemCompact) {
     if (this.autoCollapse) {
       this.menuInternalService.collapseAll(this.items, this.tag, item);
     }
@@ -341,11 +369,11 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // TODO: is not fired on page reload
-  onSelectItem(item: NbMenuItem) {
+  onSelectItem(item: NbMenuItemCompact) {
     this.menuInternalService.selectItem(item, this.items, this.autoCollapse, this.tag);
   }
 
-  onItemClick(item: NbMenuItem) {
+  onItemClick(item: NbMenuItemCompact) {
     this.menuInternalService.itemClick(item, this.tag);
   }
 
@@ -378,7 +406,7 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.menuInternalService.collapseAll(this.items, this.tag);
   }
 
-  protected getHomeItem(items: NbMenuItem[]): NbMenuItem {
+  protected getHomeItem(items: NbMenuItemCompact[]): NbMenuItemCompact {
     for (const item of items) {
       if (item.home) {
         return item;
@@ -397,9 +425,9 @@ export class NbMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     return !tag || tag === this.tag;
   }
 
-  protected getSelectedItem(items: NbMenuItem[]): NbMenuItem {
+  protected getSelectedItem(items: NbMenuItemCompact[]): NbMenuItemCompact {
     let selected = null;
-    items.forEach((item: NbMenuItem) => {
+    items.forEach((item: NbMenuItemCompact) => {
       if (item.selected) {
         selected = item;
       }
