@@ -69,7 +69,7 @@
     [attr.title]="menuItem.title"
     [attr.role]="menuItem.ariaRole"
     [class.active]="menuItem.selected"
-    (click)="$event.preventDefault(); onItemClick(menuItem)"
+    (click)="$event.preventDefault(); onToggleSubMenu(menuItem)"
   >
     <ng-container [ngTemplateOutlet]="subMenuNoChildrenTemplate"></ng-container>
   </a>
@@ -87,13 +87,12 @@
   class="menu-item-compact__container"
 >
   <a
-    (click)="$event.preventDefault(); onItemClick(menuItem)"
+    (click)="onToggleSubMenu(menuItem)"
     [attr.target]="menuItem.target"
     [attr.title]="menuItem.title"
     [attr.aria-expanded]="menuItem.expanded ?? false"
     [attr.role]="menuItem.ariaRole"
     [class.active]="menuItem.selected"
-    href="#"
   >
     <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
     <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
@@ -116,7 +115,6 @@
   >
     <a
       *ngIf="menuItem.level === 0"
-      (click)="$event.preventDefault(); onToggleSubMenu(menuItem)"
       [attr.target]="menuItem.target"
       [attr.title]="menuItem.title"
       [attr.aria-expanded]="menuItem.expanded ?? false"
