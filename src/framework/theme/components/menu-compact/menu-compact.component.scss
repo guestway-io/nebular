@@ -3,29 +3,26 @@
 :host ::ng-deep {
   display: block;
 
-  .menu-items,
-  .menu-item > .menu-items {
+  .menu-items-compact,
+  .menu-item-compact > .menu-items-compact {
     list-style-type: none;
   }
 
-  .menu-item a {
+  .menu-item-compact a {
     display: flex;
     text-decoration: none;
     align-items: center;
 
-    .menu-title {
+    .menu-title-compact {
       flex: 1 0 auto;
       pointer-events: none;
       @include nb-rtl(text-align, right);
     }
   }
 
-  .menu-items > .menu-item > div > .menu-items nb-badge {
+  .menu-items-compact > .menu-item-compact > .menu-item-compact__container > .menu-items-compact nb-badge {
     position: static;
-  }
-
-  .menu-items > .menu-item > a > nb-badge {
-    position: absolute;
+    margin-left: 0.5rem;
   }
 
   .menu-group-compact span {

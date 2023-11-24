@@ -1,6 +1,6 @@
 <!-- GROUP === TRUE -->
 <span *ngIf="menuItem.group">
-  <nb-icon class="menu-icon" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+  <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
   {{ menuItem.title }}
 </span>
 <!------------------------------------------------------------------------------>
@@ -11,7 +11,7 @@
   *ngIf="menuItem.link && !menuItem.url && !menuItem.children && !menuItem.group"
   (mouseenter)="onToggleSubMenu(menuItem)"
   (mouseleave)="onToggleSubMenu(menuItem)"
-  class="menu-item-container"
+  class="menu-item-compact__container"
 >
   <a
     [routerLink]="menuItem.link"
@@ -25,10 +25,9 @@
     [attr.role]="menuItem.ariaRole"
     [class.active]="menuItem.selected"
     (click)="onItemClick(menuItem)"
-    class="menu-item-container"
   >
-    <nb-icon class="menu-icon" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span *ngIf="menuItem.level !== 0" class="menu-title">{{ menuItem.title }}</span>
+    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+    <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
     <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
   </a>
   <ng-container *ngIf="menuItem.level < 1">
@@ -42,7 +41,7 @@
   *ngIf="menuItem.url && !menuItem.children && !menuItem.link && !menuItem.group"
   (mouseenter)="onToggleSubMenu(menuItem)"
   (mouseleave)="onToggleSubMenu(menuItem)"
-  class="menu-item-container"
+  class="menu-item-compact__container"
 >
   <a
     [attr.href]="menuItem.url"
@@ -53,8 +52,8 @@
     (mouseenter)="onHoverItem(menuItem)"
     (click)="onSelectItem(menuItem)"
   >
-    <nb-icon class="menu-icon" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span class="menu-title">{{ menuItem.title }}</span>
+    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+    <span class="menu-title-compact">{{ menuItem.title }}</span>
     <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
   </a>
   <ng-container *ngIf="menuItem.level < 1">
@@ -68,7 +67,7 @@
   *ngIf="!menuItem.children && !menuItem.link && !menuItem.url && !menuItem.group"
   (mouseenter)="onToggleSubMenu(menuItem)"
   (mouseleave)="onToggleSubMenu(menuItem)"
-  class="menu-item-container"
+  class="menu-item-compact__container"
 >
   <a
     [attr.target]="menuItem.target"
@@ -77,8 +76,8 @@
     [class.active]="menuItem.selected"
     (click)="$event.preventDefault(); onItemClick(menuItem)"
   >
-    <nb-icon class="menu-icon" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span *ngIf="menuItem.level !== 0" class="menu-title">{{ menuItem.title }}</span>
+    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+    <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
     <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
   </a>
   <ng-container *ngIf="menuItem.level < 1">
@@ -92,7 +91,7 @@
   *ngIf="menuItem.children"
   (mouseenter)="!menuItem.expanded ? onToggleSubMenu(menuItem) : null"
   (mouseleave)="!menuItem?.parent?.expanded || menuItem.expanded ? onToggleSubMenu(menuItem) : null"
-  class="menu-item-container"
+  class="menu-item-compact__container"
 >
   <a
     (click)="$event.preventDefault(); onItemClick(menuItem)"
@@ -102,10 +101,9 @@
     [attr.role]="menuItem.ariaRole"
     [class.active]="menuItem.selected"
     href="#"
-    class="menu-item-link"
   >
-    <nb-icon class="menu-icon" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span *ngIf="menuItem.level !== 0" class="menu-title">{{ menuItem.title }}</span>
+    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+    <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
     <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
     <nb-icon
       *ngIf="menuItem.level !== 0"
@@ -121,7 +119,7 @@
       value: toggleState,
       params: { menuItemLevel: menuItem.level === 0 && menuItem.children ? '0px' : 'auto' }
     }"
-    class="menu-items menu-items__submenu"
+    class="menu-items-compact menu-items-compact__submenu"
   >
     <a
       *ngIf="menuItem.level === 0"
@@ -133,7 +131,7 @@
       [class.active]="menuItem.selected"
       href="#"
     >
-      <span class="menu-title">{{ menuItem.title }}</span>
+      <span class="menu-title-compact">{{ menuItem.title }}</span>
       <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
     </a>
     <ng-container *ngFor="let item of menuItem.children">
@@ -147,7 +145,7 @@
         (toggleSubMenu)="onToggleSubMenu($event)"
         (selectItem)="onSelectItem($event)"
         (itemClick)="onItemClick($event)"
-        class="menu-item"
+        class="menu-item-compact"
       ></li>
     </ng-container>
   </ul>
@@ -170,7 +168,7 @@
       value: toggleState,
       params: { menuItemLevel: menuItem.level === 0 ? '0px' : 'auto' }
     }"
-    class="menu-items menu-items__submenu"
+    class="menu-items-compact menu-items-compact__submenu"
   >
     <a
       [attr.target]="menuItem.target"
@@ -180,7 +178,7 @@
       [class.active]="menuItem.selected"
       href="#"
     >
-      <span class="menu-title">{{ menuItem.title }}</span>
+      <span class="menu-title-compact">{{ menuItem.title }}</span>
       <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
     </a>
   </ul>

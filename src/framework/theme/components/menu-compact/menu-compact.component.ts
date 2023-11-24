@@ -241,7 +241,7 @@ export class NbMenuItemCompactComponent implements DoCheck, AfterViewInit, OnDes
   selector: 'nb-menu-compact',
   styleUrls: ['./menu-compact.component.scss'],
   template: `
-    <ul class="menu-items">
+    <ul class="menu-items-compact">
       <ng-container *ngFor="let item of items">
         <li
           nbMenuItemCompact
@@ -253,7 +253,7 @@ export class NbMenuItemCompactComponent implements DoCheck, AfterViewInit, OnDes
           (toggleSubMenu)="onToggleSubMenu($event)"
           (selectItem)="onSelectItem($event)"
           (itemClick)="onItemClick($event)"
-          class="menu-item"
+          class="menu-item-compact"
         ></li>
       </ng-container>
     </ul>
