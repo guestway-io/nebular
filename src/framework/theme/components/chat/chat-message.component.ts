@@ -60,7 +60,16 @@ import { NbChatCustomMessageDirective } from './chat-custom-message.directive';
 @Component({
   selector: 'nb-chat-message',
   template: `
-    <nb-chat-avatar *ngIf="notReply" [initials]="getInitials()" [avatarStyle]="avatarStyle"> </nb-chat-avatar>
+    <ng-container *ngIf="notReply">
+      <ng-container *ngIf="!avatarTemplateRef; else avatarTemplate">
+        <nb-chat-avatar [initials]="getInitials()" [avatarStyle]="avatarStyle"></nb-chat-avatar>
+      </ng-container>
+      <ng-template #avatarTemplate>
+        <ng-container
+          *ngTemplateOutlet="avatarTemplateRef; context: { sender: sender, avatar: avatarUrl }"
+        ></ng-container>
+      </ng-template>
+    </ng-container>
 
     <div class="message">
       <ng-container [ngSwitch]="type" *ngIf="_isBuiltInMessageType(); else customTemplate">
@@ -132,6 +141,7 @@ import { NbChatCustomMessageDirective } from './chat-custom-message.directive';
 export class NbChatMessageComponent {
   protected readonly builtInMessageTypes: string[] = ['text', 'file', 'map', 'quote'];
 
+  avatarUrl: string | undefined;
   avatarStyle: SafeStyle;
 
   get _addReplyClass(): boolean {
@@ -178,21 +188,21 @@ export class NbChatMessageComponent {
 
   /**
    * Message sender
-   * @type {string}
+   * @type {string | undefined}
    */
-  @Input() sender: string;
+  @Input() sender: string | undefined;
 
   /**
    * Message send date
-   * @type {Date}
+   * @type {Date | undefined}
    */
-  @Input() date: Date;
+  @Input() date: Date | undefined;
 
   /**
    * Message send date format, default 'shortTime'
-   * @type {string}
+   * @type {string | undefined}
    */
-  @Input() dateFormat: string;
+  @Input() dateFormat: string | undefined;
 
   /**
    * Array of files `{ url: 'file url', icon: 'file icon class' }`
@@ -222,9 +232,18 @@ export class NbChatMessageComponent {
    * @type {string}
    */
   @Input()
-  set avatar(value: string) {
+  set avatar(value: string | undefined) {
+    this.avatarUrl = value;
     this.avatarStyle = value ? this.domSanitizer.bypassSecurityTrustStyle(`url(${value})`) : null;
   }
+
+  /**
+   * Is message send avatar a ngSrc url
+   * @type {string}
+   */
+
+  @Input()
+  public avatarTemplateRef: TemplateRef<any> | undefined;
 
   /**
    * Message type, available options `text|file|map|quote`
