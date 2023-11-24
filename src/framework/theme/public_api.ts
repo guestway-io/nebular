@@ -79,6 +79,7 @@ export {
   NbMenuCompactBag,
 } from './components/menu-compact/menu-compact.service';
 export * from './components/menu-compact/menu-compact.component';
+export * from './components/menu-compact/menu-item-compact.component';
 export * from './components/route-tabset/route-tabset.module';
 export * from './components/route-tabset/route-tabset.component';
 export * from './components/sidebar/sidebar.module';

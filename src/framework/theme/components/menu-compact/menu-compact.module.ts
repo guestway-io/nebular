@@ -2,8 +2,9 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { NbSharedModule } from '../shared/shared.module';
 import { NbIconModule } from '../icon/icon.module';
 import { NbBadgeModule } from '../badge/badge.module';
-import { NbMenuCompactComponent, NbMenuItemCompactComponent } from './menu-compact.component';
+import { NbMenuCompactComponent } from './menu-compact.component';
 import { NbMenuCompactInternalService, NbMenuCompactService } from './menu-compact.service';
+import { NbMenuItemCompactComponent } from './menu-item-compact.component';
 
 const nbMenuComponents = [NbMenuCompactComponent, NbMenuItemCompactComponent];
 

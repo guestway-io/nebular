@@ -208,13 +208,13 @@ describe('Directive: NbScrollDirective', () => {
     documentElement.scrollTop = positionUnderThreshold;
     window.dispatchEvent(new Event('scroll'));
     tick(infiniteListDirective.throttleTime);
-    expect(thresholdSpy).toHaveBeenCalledTimes(0);
+    expect(thresholdSpy).toHaveBeenCalledTimes(1);
 
     const positionBelowThreshold = CONTENT_HEIGHT - THRESHOLD / 2;
     documentElement.scrollTop = positionBelowThreshold;
     window.dispatchEvent(new Event('scroll'));
     tick(infiniteListDirective.throttleTime);
-    expect(thresholdSpy).toHaveBeenCalledTimes(1);
+    expect(thresholdSpy).toHaveBeenCalledTimes(2);
   }));
 
   it('should trigger bottomThreshold only when threshold reached (layout scroll)', fakeAsync(() => {

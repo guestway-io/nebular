@@ -1,9 +1,3 @@
-/**
- * @license
- * Copyright Akveo. All Rights Reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- */
-
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Params, QueryParamsHandling } from '@angular/router';
@@ -44,7 +38,11 @@ export class NbMenuItemCompact {
    * @type {string}
    */
   title: string;
-  level?: number;
+  /**
+   * Item level
+   * @type {number}
+   */
+  level: number;
   /**
    * Item relative link (for routerLink)
    * @type {string}
@@ -197,9 +195,9 @@ export class NbMenuCompactService {
     return itemSelect$.pipe(share());
   }
 
-  onItemHover(): Observable<NbMenuCompactBag> {
+  /*  onItemHover(): Observable<NbMenuCompactBag> {
     return itemHover$.pipe(share());
-  }
+  }*/
 
   onSubmenuToggle(): Observable<NbMenuCompactBag> {
     return submenuToggle$.pipe(share());
@@ -351,7 +349,7 @@ export class NbMenuCompactInternalService {
     return collapsedItems;
   }
 
-  private applyDefaults(item, defaultItem) {
+  private applyDefaults(item: NbMenuItemCompact, defaultItem: NbMenuItemCompact) {
     const menuItem = { ...item };
     Object.assign(item, defaultItem, menuItem);
     item.children &&
@@ -369,12 +367,12 @@ export class NbMenuCompactInternalService {
   }
 
   /**
-   * Find deepest item which link matches current URL path.
+   * Find the deepest item which link matches current URL path.
    * @param items array of items to search in.
    * @returns found item of undefined.
    */
   private findItemByUrl(items: NbMenuItemCompact[]): NbMenuItemCompact | undefined {
-    let selectedItem;
+    let selectedItem: NbMenuItemCompact | undefined;
 
     items.some((item) => {
       if (item.children) {

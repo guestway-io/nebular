@@ -1,15 +1,9 @@
-/**
- * @license
- * Copyright Akveo. All Rights Reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- */
-
-export function isUrlPathEqual(path, link) {
+export function isUrlPathEqual(path: string, link: string) {
   const locationPath = getPathPartOfUrl(path);
   return link === locationPath;
 }
 
-export function isUrlPathContain(path, link) {
+export function isUrlPathContain(path: string, link: string) {
   const locationPath = getPathPartOfUrl(path);
   const endOfUrlSegmentRegExp = /\/|^$/;
   return (
@@ -17,7 +11,7 @@ export function isUrlPathContain(path, link) {
   );
 }
 
-export function getPathPartOfUrl(url): string {
+export function getPathPartOfUrl(url: string): string {
   return url.match(/.*?(?=[?;#]|$)/)[0];
 }
 

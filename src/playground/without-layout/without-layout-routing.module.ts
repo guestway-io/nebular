@@ -38,6 +38,10 @@ const routes: Route[] = [
         loadChildren: () => import('./menu/menu-test.module').then((m) => m.MenuTestModule),
       },
       {
+        path: 'menu-compact',
+        loadChildren: () => import('./menu-compact/menu-compact-test.module').then((m) => m.MenuCompactTestModule),
+      },
+      {
         path: 'user',
         loadChildren: () => import('./user/user-test.module').then((m) => m.UserTestModule),
       },
