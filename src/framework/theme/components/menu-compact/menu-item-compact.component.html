@@ -26,9 +26,7 @@
     [class.active]="menuItem.selected"
     (click)="onItemClick(menuItem)"
   >
-    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
-    <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="subMenuNoChildrenTemplate"></ng-container>
   </a>
   <ng-container *ngIf="menuItem.level < 1">
     <ng-container [ngTemplateOutlet]="subMenuTitleOnlyTemplate"></ng-container>
@@ -49,12 +47,9 @@
     [attr.title]="menuItem.title"
     [attr.role]="menuItem.ariaRole"
     [class.active]="menuItem.selected"
-    (mouseenter)="onHoverItem(menuItem)"
     (click)="onSelectItem(menuItem)"
   >
-    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span class="menu-title-compact">{{ menuItem.title }}</span>
-    <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="subMenuNoChildrenTemplate"></ng-container>
   </a>
   <ng-container *ngIf="menuItem.level < 1">
     <ng-container [ngTemplateOutlet]="subMenuTitleOnlyTemplate"></ng-container>
@@ -76,9 +71,7 @@
     [class.active]="menuItem.selected"
     (click)="$event.preventDefault(); onItemClick(menuItem)"
   >
-    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
-    <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="subMenuNoChildrenTemplate"></ng-container>
   </a>
   <ng-container *ngIf="menuItem.level < 1">
     <ng-container [ngTemplateOutlet]="subMenuTitleOnlyTemplate"></ng-container>
@@ -156,6 +149,14 @@
 <!-- Badge Template -->
 <ng-template #badgeTemplate>
   <nb-badge [text]="badge.text" [dotMode]="badge.dotMode" [status]="badge.status"> </nb-badge>
+</ng-template>
+<!------------------------------------------------------------------------------>
+
+<!-- NO CHILDREN TEMPLATE -->
+<ng-template #subMenuNoChildrenTemplate>
+  <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+  <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
+  <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
 </ng-template>
 <!------------------------------------------------------------------------------>
 
