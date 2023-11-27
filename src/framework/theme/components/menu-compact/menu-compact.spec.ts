@@ -138,38 +138,39 @@ function createMenuItems(
 
 describe('NbMenuItem', () => {
   it('should set tag attribute for menu services', () => {
-    const { fixture } = createSingleMenuComponent([{ title: 'Home', level: 0 }], 'menu-compact');
+    const { fixture } = createSingleMenuComponent([{ title: 'Home' }], 'menu-compact');
     const nbMenuTag = fixture.componentInstance.menuComponent.tag;
     expect(nbMenuTag).toEqual('menu-compact');
   });
 
   it('should set icon to menu item', () => {
-    const { fixture } = createSingleMenuComponent([{ title: 'Home', icon: 'some-icon', level: 0 }]);
+    const { fixture } = createSingleMenuComponent([{ title: 'Home', icon: 'some-icon' }]);
     const iconWrapper = fixture.nativeElement.querySelector('.menu-icon-compact');
     expect(iconWrapper.textContent).toContain('some-icon');
   });
 
   it('should set title to menu item', () => {
-    const { fixture } = createSingleMenuComponent([{ title: 'Test title', level: 0 }]);
+    const { fixture } = createSingleMenuComponent([{ title: 'Test title' }]);
     const titleWrapper = fixture.nativeElement.querySelector('.menu-title-compact').innerHTML;
     expect(titleWrapper).toEqual('Test title');
   });
 
   it('should set link target to menu item', () => {
     const { fixture } = createSingleMenuComponent([
-      { title: 'Link with _blank target', target: '_blank', level: 0 },
-      { title: 'Link with _self target', target: '_self', level: 0 },
-      { title: 'Link with any not valid target', target: 'anyNotValid', level: 0 },
+      { title: 'Link with _blank target', link: '/profile', target: '_blank' },
+      { title: 'Link with _self target', link: '/profile', target: '_self' },
+      { title: 'Link with any not valid target', link: '/profile', target: 'anyNotValid' },
     ]);
 
-    const menuLinks = fixture.nativeElement.querySelectorAll('div');
-    expect(menuLinks[0].querySelectorAll('a')[0].getAttribute('target')).toEqual('_blank');
-    expect(menuLinks[1].querySelectorAll('a')[0].getAttribute('target')).toEqual('_self');
-    expect(menuLinks[2].querySelectorAll('a')[0].getAttribute('target')).toEqual('anyNotValid');
+    const menuLinks = fixture.nativeElement.querySelectorAll('div.menu-item-compact__container');
+
+    expect(menuLinks[0].querySelector('ul.menu-items-compact > a').getAttribute('target')).toEqual('_blank');
+    expect(menuLinks[1].querySelector('ul.menu-items-compact > a').getAttribute('target')).toEqual('_self');
+    expect(menuLinks[2].querySelector('ul.menu-items-compact > a').getAttribute('target')).toEqual('anyNotValid');
   });
 
   it('should have only span, without link on group element', () => {
-    const { fixture } = createSingleMenuComponent([{ title: 'Group item', group: true, level: 0 }]);
+    const { fixture } = createSingleMenuComponent([{ title: 'Group item', group: true }]);
     const menuItem = fixture.nativeElement.querySelector('.menu-item-compact');
     expect(menuItem.querySelector('a')).toBeNull();
     expect(menuItem.querySelector('span')).not.toBeNull();
@@ -177,9 +178,9 @@ describe('NbMenuItem', () => {
 
   it('should not render hidden element', () => {
     const { fixture } = createSingleMenuComponent([
-      { title: 'Visible item', level: 0 },
-      { title: 'Hidden item', hidden: true, level: 0 },
-      { title: 'Visible item', level: 0 },
+      { title: 'Visible item' },
+      { title: 'Hidden item', hidden: true },
+      { title: 'Visible item' },
     ]);
     const menuList = fixture.nativeElement.querySelectorAll('.menu-item-compact');
     expect(menuList.length).toEqual(2);
@@ -190,8 +191,7 @@ describe('NbMenuItem', () => {
       {
         title: 'Parent item',
         expanded: true,
-        level: 0,
-        children: [{ title: 'Child item', level: 0 }],
+        children: [{ title: 'Child item' }],
       },
     ]);
     const parentItem = fixture.nativeElement.querySelector('.menu-item-compact');
@@ -200,7 +200,7 @@ describe('NbMenuItem', () => {
 
   it('should expand child menu items', () => {
     const { fixture } = createSingleMenuComponent([
-      { title: 'Parent item', expanded: true, level: 0, children: [{ title: 'Child item', level: 0 }] },
+      { title: 'Parent item', expanded: true, children: [{ title: 'Child item' }] },
     ]);
 
     const childList = fixture.nativeElement.querySelectorAll(
@@ -210,9 +210,7 @@ describe('NbMenuItem', () => {
   });
 
   it('should set URL', () => {
-    const { fixture } = createSingleMenuComponent([
-      { title: 'Menu Item with link', url: 'https://test.link', level: 0 },
-    ]);
+    const { fixture } = createSingleMenuComponent([{ title: 'Menu Item with link', url: 'https://test.link' }]);
     const menuItem = fixture.nativeElement.querySelector('.menu-item-compact');
     expect(menuItem.querySelector('a').getAttribute('href')).toEqual('https://test.link');
   });
@@ -220,21 +218,18 @@ describe('NbMenuItem', () => {
   it('should set selected item', () => {
     const selectedItem = {
       title: 'Menu item 1',
-      level: 0,
-      children: [{ title: 'Menu item selected', selected: true, level: 1 }],
+      children: [{ title: 'Menu item selected', selected: true }],
     };
     const { fixture } = createSingleMenuComponent([selectedItem]);
     const activeItem = fixture.nativeElement.querySelector(
-      'nb-menu-compact > ul.menu-items-compact > li.menu-item-compact > div > ul.menu-items-compact > a',
+      'nb-menu-compact > ul.menu-items-compact > li.menu-item-compact > div.menu-item-compact__container > ul.menu-items-compact > li.menu-item-compact > div.menu-item-compact__container > div.menu-item-compact__container--default',
     );
 
-    expect(activeItem.querySelector('span').innerHTML).toEqual(selectedItem.title);
+    expect(activeItem.querySelector('span').innerHTML).toEqual(selectedItem.children[0].title);
   });
 
   it('should change arrow direction when document direction changes', () => {
-    const menuItems = [
-      { title: '', level: 0, children: [{ title: '', level: 1, children: [{ title: '', level: 1 }] }] },
-    ];
+    const menuItems = [{ title: '', children: [{ title: '', children: [{ title: '' }] }] }];
     const { fixture } = createSingleMenuComponent(menuItems);
     const iconComponent = fixture.debugElement.query(By.directive(NbIconComponent)) as DebugElement;
     const directionService: NbLayoutDirectionService = TestBed.inject(NbLayoutDirectionService);
@@ -250,12 +245,12 @@ describe('NbMenuItem', () => {
 describe('menu services', () => {
   it('should operate with menu by tag', () => {
     const { fixture, menuService } = createDoubleMenuComponent(
-      [{ title: 'Home', level: 0 }],
+      [{ title: 'Home' }],
       'menuFirst',
-      [{ title: 'Home', level: 0 }],
+      [{ title: 'Home' }],
       'menuSecond',
     );
-    const itemToAdd = { title: 'Added item', level: 0 };
+    const itemToAdd = { title: 'Added item' };
     const initialFirstMenuItemsCount = fixture.nativeElement
       .querySelector('nb-menu-compact:first-child')
       .querySelectorAll('.menu-item-compact').length;
@@ -275,8 +270,8 @@ describe('menu services', () => {
   });
 
   it('should add new items to DOM', () => {
-    const { fixture, menuService } = createSingleMenuComponent([{ title: 'Existing item', level: 0 }]);
-    const itemToAdd = { title: 'Added item', level: 0 };
+    const { fixture, menuService } = createSingleMenuComponent([{ title: 'Existing item' }]);
+    const itemToAdd = { title: 'Added item' };
     const menuListOnInit = fixture.nativeElement.querySelectorAll('li').length;
     menuService.addItems([itemToAdd], 'menu-compact');
     fixture.detectChanges();
@@ -285,8 +280,8 @@ describe('menu services', () => {
   });
 
   it('should get selected menu item', (done) => {
-    const selectedItem = { title: 'Menu item selected', selected: true, level: 0 };
-    const { menuService } = createSingleMenuComponent([{ title: 'Menu item not selected', level: 0 }, selectedItem]);
+    const selectedItem = { title: 'Menu item selected', selected: true };
+    const { menuService } = createSingleMenuComponent([{ title: 'Menu item not selected' }, selectedItem]);
     menuService
       .getSelectedItem('menu-compact')
       .pipe(take(1))
@@ -300,20 +295,17 @@ describe('menu services', () => {
     const { fixture, menuService } = createSingleMenuComponent([
       {
         title: 'Menu item collapsed',
-        level: 0,
-        children: [{ title: 'Menu item inner', level: 1 }],
+        children: [{ title: 'Menu item inner' }],
       },
       {
         title: 'Menu item expanded 1',
         expanded: true,
-        level: 0,
-        children: [{ title: 'Menu item inner', level: 1 }],
+        children: [{ title: 'Menu item inner' }],
       },
       {
         title: 'Menu item expanded 2',
         expanded: true,
-        level: 0,
-        children: [{ title: 'Menu item inner', level: 1 }],
+        children: [{ title: 'Menu item inner' }],
       },
     ]);
     menuService
@@ -351,7 +343,7 @@ describe('NbMenuInternalService', () => {
 
   describe('selectFromUrl pathMatch full', () => {
     it('should select menu item with matching path', (done) => {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -365,7 +357,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it('should select menu item with matching path and fragment', (done) => {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -383,8 +375,7 @@ describe('NbMenuInternalService', () => {
         {
           link: '/menu-2',
           title: 'menu-1',
-          level: 0,
-          children: [{ link: '/menu-2/menu-2-level-2', title: 'menu-2', level: 1 }] as NbMenuItemCompact[],
+          children: [{ link: '/menu-2/menu-2-level-2', title: 'menu-2' }] as NbMenuItemCompact[],
         },
       ];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
@@ -407,9 +398,8 @@ describe('NbMenuInternalService', () => {
         {
           link: '/menu-2',
           title: 'menu-2',
-          level: 0,
           children: [
-            { link: '/menu-2/menu-2-level-2', fragment: '22', title: 'menu-2-level-2', level: 1 },
+            { link: '/menu-2/menu-2-level-2', fragment: '22', title: 'menu-2-level-2' },
           ] as NbMenuItemCompact[],
         },
       ];
@@ -429,7 +419,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it("should not select menu item with matching path if fragment doesn't match", function (done) {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -443,7 +433,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it("should not select menu item with matching fragment if path doesn't match", function (done) {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -458,7 +448,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it('should not select menu item with fragment if no fragment in url', (done) => {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -472,7 +462,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it('should not select menu item if path not matches fully', (done) => {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -487,7 +477,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it('should not select menu item if path and fragment not matches fully', (done) => {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -503,7 +493,7 @@ describe('NbMenuInternalService', () => {
 
   describe('selectFromUrl pathMatch prefix', () => {
     it('should select menu item if url contains menu link', function (done) {
-      const items: NbMenuItemCompact[] = [{ link: '/menu-1', pathMatch: 'prefix', title: 'menu-1', level: 0 }];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', pathMatch: 'prefix', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -518,9 +508,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it('should select menu item if url contains menu link and fragment', function (done) {
-      const items: NbMenuItemCompact[] = [
-        { link: '/menu-1', fragment: '1', pathMatch: 'prefix', title: 'menu-1', level: 0 },
-      ];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -534,9 +522,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it('should not select menu item if url contains link without fragment', function (done) {
-      const items: NbMenuItemCompact[] = [
-        { link: '/menu-1', fragment: '1', pathMatch: 'prefix', title: 'menu-1', level: 0 },
-      ];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 
@@ -550,9 +536,7 @@ describe('NbMenuInternalService', () => {
     });
 
     it('should not select menu item if url contains fragment without link', function (done) {
-      const items: NbMenuItemCompact[] = [
-        { link: '/menu-1', fragment: '1', pathMatch: 'prefix', title: 'menu-1', level: 0 },
-      ];
+      const items: NbMenuItemCompact[] = [{ link: '/menu-1', fragment: '1', pathMatch: 'prefix', title: 'menu-1' }];
       const menuItems: NbMenuItemCompact[] = createMenuItems(items, menuInternalService);
       const menuItem: NbMenuItemCompact = menuItems[0];
 

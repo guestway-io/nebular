@@ -11,7 +11,13 @@
     }
 
     .menu-group-compact,
-    .menu-item-compact a {
+    .menu-item-compact a,
+    .menu-item-compact__container--default,
+    .menu-items-compact
+      > .menu-item-compact
+      > .menu-item-compact__container
+      > .menu-items-compact__submenu
+      > .submenu__header {
       font-family: nb-theme(menu-text-font-family), sans-serif;
       font-size: nb-theme(menu-text-font-size);
       font-weight: nb-theme(menu-text-font-weight);
@@ -19,13 +25,33 @@
       padding: nb-theme(menu-item-padding);
     }
 
+    .submenu__header {
+      display: flex;
+      justify-content: space-between;
+    }
+
     .menu-group-compact,
     .menu-group-compact .menu-icon-compact {
       color: nb-theme(menu-group-text-color);
     }
 
+    $divider: nb-theme(menu-item-divider-width) nb-theme(menu-item-divider-style) nb-theme(menu-item-divider-color);
+
     .menu-item-compact {
       width: 100%;
+      border-bottom: $divider;
+
+      &:first-child {
+        border-top: none;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .menu-item-compact:first-child {
+        border-top: $divider;
+      }
 
       a {
         color: nb-theme(menu-text-color);
@@ -60,6 +86,7 @@
         text-align: center;
       }
 
+      .menu-item-compact__container--default,
       .menu-title-compact {
         white-space: nowrap;
       }
@@ -79,24 +106,6 @@
 
       .expand-state {
         color: nb-theme(menu-item-icon-color);
-      }
-    }
-
-    $divider: nb-theme(menu-item-divider-width) nb-theme(menu-item-divider-style) nb-theme(menu-item-divider-color);
-
-    .menu-item-compact {
-      border-bottom: $divider;
-
-      &:first-child {
-        border-top: none;
-      }
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .menu-item-compact:first-child {
-        border-top: $divider;
       }
     }
 
@@ -160,8 +169,21 @@
       width: 100%;
     }
 
+    .menu-items-compact > .menu-item-compact > .menu-item-compact__container > .submenu__content {
+      font-family: nb-theme(menu-text-font-family), sans-serif;
+      font-size: nb-theme(menu-text-font-size);
+      font-weight: nb-theme(menu-text-font-weight);
+      padding: nb-theme(menu-item-padding);
+      white-space: nowrap;
+    }
+
     .menu-items-compact > .menu-item-compact > .menu-items-compact__submenu > a,
-    .menu-items-compact > .menu-item-compact > .menu-item-compact__container > .menu-items-compact__submenu > a {
+    .menu-items-compact > .menu-item-compact > .menu-item-compact__container > .menu-items-compact__submenu > a,
+    .menu-items-compact
+      > .menu-item-compact
+      > .menu-item-compact__container
+      > .menu-items-compact__submenu
+      > .submenu__header {
       background-color: nb-theme(background-basic-color-4);
       white-space: nowrap;
     }

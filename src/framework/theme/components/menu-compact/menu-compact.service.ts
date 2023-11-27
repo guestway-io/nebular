@@ -42,7 +42,7 @@ export class NbMenuItemCompact {
    * Item level
    * @type {number}
    */
-  level: number;
+  level?: number;
   /**
    * Item relative link (for routerLink)
    * @type {string}
@@ -350,11 +350,11 @@ export class NbMenuCompactInternalService {
   }
 
   private applyDefaults(item: NbMenuItemCompact, defaultItem: NbMenuItemCompact) {
-    const menuItem = { ...item };
+    const menuItem = { ...item, level: item?.level || 0 };
     Object.assign(item, defaultItem, menuItem);
     item.children &&
       item.children.forEach((child) => {
-        this.applyDefaults(child, defaultItem);
+        this.applyDefaults({ ...child, level: item?.level + 1 }, defaultItem);
       });
   }
 

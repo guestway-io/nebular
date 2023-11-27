@@ -16,7 +16,6 @@ export class MenuCompactBadgeComponent {
         text: '30',
         status: 'primary',
       },
-      level: 0,
       icon: 'person-outline',
       children: [
         {
@@ -25,7 +24,6 @@ export class MenuCompactBadgeComponent {
             text: '99+',
             status: 'danger',
           },
-          level: 1,
         },
         {
           title: 'Notifications',
@@ -33,7 +31,6 @@ export class MenuCompactBadgeComponent {
             dotMode: true,
             status: 'warning',
           },
-          level: 1,
         },
         {
           title: 'Emails',
@@ -41,13 +38,11 @@ export class MenuCompactBadgeComponent {
             text: 'new',
             status: 'success',
           },
-          level: 1,
         },
       ],
     },
     {
       title: 'Shopping bag',
-      level: 0,
       icon: 'shopping-bag-outline',
     },
   ];
