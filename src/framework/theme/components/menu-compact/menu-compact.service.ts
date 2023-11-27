@@ -354,7 +354,7 @@ export class NbMenuCompactInternalService {
     Object.assign(item, defaultItem, menuItem);
     item.children &&
       item.children.forEach((child) => {
-        this.applyDefaults({ ...child, level: item?.level + 1 }, defaultItem);
+        this.applyDefaults({ ...child, level: item.level + 1 }, defaultItem);
       });
   }
 
