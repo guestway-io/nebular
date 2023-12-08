@@ -70,7 +70,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="menuItem.level === 0">
-    <a
+    <div
       [attr.target]="menuItem.target"
       [attr.title]="menuItem.title"
       [attr.role]="menuItem.ariaRole"
@@ -79,7 +79,7 @@
       <!--(click)="$event.preventDefault(); onToggleSubMenu(menuItem)"-->
 
       <ng-container [ngTemplateOutlet]="subMenuNoChildrenTemplate"></ng-container>
-    </a>
+    </div>
     <ng-container [ngTemplateOutlet]="subMenuTitleOnlyTemplate"></ng-container>
   </ng-container>
 </div>
@@ -93,24 +93,47 @@
   class="menu-item-compact__container"
 >
   <!-- root level icon only -->
-  <a
-    (click)="onToggleSubMenu(menuItem)"
-    [attr.target]="menuItem.target"
-    [attr.title]="menuItem.title"
-    [attr.aria-expanded]="menuItem.expanded ?? false"
-    [attr.role]="menuItem.ariaRole"
-    [class.active]="menuItem.selected"
-  >
-    <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
-    <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
-    <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
-    <nb-icon
-      *ngIf="menuItem.level !== 0"
-      class="expand-state"
-      [icon]="getExpandStateIcon()"
-      pack="nebular-essentials"
-    ></nb-icon>
-  </a>
+  <ng-container *ngIf="!menuItem.link && !menuItem.url">
+    <div
+      (click)="onToggleSubMenu(menuItem)"
+      [attr.target]="menuItem.target"
+      [attr.title]="menuItem.title"
+      [attr.aria-expanded]="menuItem.expanded ?? false"
+      [attr.role]="menuItem.ariaRole"
+      [class.active]="menuItem.selected"
+    >
+      <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+      <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
+      <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
+      <nb-icon
+        *ngIf="menuItem.level !== 0"
+        class="expand-state"
+        [icon]="getExpandStateIcon()"
+        pack="nebular-essentials"
+      ></nb-icon>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="menuItem.link && menuItem.url">
+    <a
+      (click)="onToggleSubMenu(menuItem)"
+      [attr.target]="menuItem.target"
+      [attr.title]="menuItem.title"
+      [attr.aria-expanded]="menuItem.expanded ?? false"
+      [attr.role]="menuItem.ariaRole"
+      [class.active]="menuItem.selected"
+    >
+      <nb-icon class="menu-icon-compact" [config]="menuItem.icon" *ngIf="menuItem.icon"></nb-icon>
+      <span *ngIf="menuItem.level !== 0" class="menu-title-compact">{{ menuItem.title }}</span>
+      <ng-container *ngIf="badge" [ngTemplateOutlet]="badgeTemplate"></ng-container>
+      <nb-icon
+        *ngIf="menuItem.level !== 0"
+        class="expand-state"
+        [icon]="getExpandStateIcon()"
+        pack="nebular-essentials"
+      ></nb-icon>
+    </a>
+  </ng-container>
+
   <!-- Root level children or submenu item children -->
   <ul
     [class.collapsed]="!(menuItem.children && menuItem.expanded)"
