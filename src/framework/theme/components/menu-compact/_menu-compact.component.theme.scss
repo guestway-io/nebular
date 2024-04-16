@@ -8,6 +8,8 @@
     .menu-items-compact {
       margin: 0;
       padding: 0;
+
+      cursor: pointer;
     }
 
     .submenu__header {
@@ -112,6 +114,14 @@
       > .menu-item-compact__container {
         position: relative;
         width: 100%;
+
+        > div {
+          display: flex;
+          align-items: center;
+          padding: var(--menu-item-padding);
+
+          cursor: pointer;
+        }
       }
 
       > .menu-item-compact__container > .submenu__content {
