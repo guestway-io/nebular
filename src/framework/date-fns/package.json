@@ -1,6 +1,6 @@
 {
   "name": "@guestway-io/nebular-date-fns",
-  "version": "13.0.0",
+  "version": "13.0.1",
   "description": "@nebular/date-fns",
   "author": "akveo",
   "license": "MIT",
@@ -22,7 +22,7 @@
   ],
   "peerDependencies": {
     "@guestway-io/nebular-theme": "^13.0.0",
-    "date-fns": "^2.0.0"
+    "date-fns": "^3.0.0"
   },
   "dependencies": {
     "tslib": "^2.6.0"
