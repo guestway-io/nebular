@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-icon-showcase',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './icon-showcase.component.html',
+  standalone: false,
 })
 export class IconShowcaseComponent {
   constructor() {}

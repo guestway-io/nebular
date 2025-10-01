@@ -22,5 +22,6 @@ import { Component } from '@angular/core';
       <nb-sidebar right> Right </nb-sidebar>
     </nb-layout>
   `,
+  standalone: false,
 })
 export class SidebarOneTestComponent {}

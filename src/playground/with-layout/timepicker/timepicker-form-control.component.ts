@@ -19,6 +19,7 @@ import { FormControl } from '@angular/forms';
     </nb-card>
   `,
   styleUrls: ['./timepicker-example.scss'],
+  standalone: false,
 })
 export class TimepickerFormControlComponent {
   formControl = new FormControl(new Date());

@@ -13,6 +13,7 @@ import { NbComponentSize } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class SelectTestComponent {
   sizes: NbComponentSize[] = ['tiny', 'small', 'medium', 'large', 'giant'];

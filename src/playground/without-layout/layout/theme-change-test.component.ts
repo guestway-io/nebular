@@ -28,6 +28,7 @@ import { NbThemeService } from '@nebular/theme';
       <nb-layout-footer fixed> &copy; Akveo 2017 </nb-layout-footer>
     </nb-layout>
   `,
+  standalone: false,
 })
 export class ThemeChangeTestComponent {
   currentTheme = 'default';

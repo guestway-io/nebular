@@ -23,6 +23,7 @@ import { NbToastrService, NbComponentStatus } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class ToastrStatusesComponent {
   private index: number = 0;

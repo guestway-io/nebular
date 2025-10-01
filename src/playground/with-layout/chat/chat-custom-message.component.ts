@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   templateUrl: './chat-custom-message.component.html',
   styleUrls: ['./chat-custom-message.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChatCustomMessageComponent implements OnInit {
   readonly tableData = {

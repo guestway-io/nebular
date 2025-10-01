@@ -21,6 +21,7 @@ import { Component } from '@angular/core';
       </nb-layout-column>
     </nb-layout>
   `,
+  standalone: false,
 })
 export class ContextMenuTestComponent {
   items = [{ title: 'Profile', link: '/user' }, { title: 'Logout', link: '/popover' }, { title: 'Another action' }];

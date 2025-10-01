@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-badge-showcase',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './badge-showcase.component.html',
+  standalone: false,
 })
 export class BadgeShowcaseComponent {}

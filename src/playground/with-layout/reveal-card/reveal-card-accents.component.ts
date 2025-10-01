@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-reveal-card-accents',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './reveal-card-accents.component.html',
+  standalone: false,
 })
 export class RevealCardAccentsComponent {}

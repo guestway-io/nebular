@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-alert-sizes',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './alert-sizes.component.html',
+  standalone: false,
 })
 export class AlertSizesComponent {}

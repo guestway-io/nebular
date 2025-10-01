@@ -26,5 +26,6 @@ import { Component } from '@angular/core';
       <nb-layout-footer></nb-layout-footer>
     </nb-layout>
   `,
+  standalone: false,
 })
 export class SidebarThreeTestComponent {}

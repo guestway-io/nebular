@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-button-outline',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button-outline.component.html',
+  standalone: false,
 })
 export class ButtonOutlineComponent {}

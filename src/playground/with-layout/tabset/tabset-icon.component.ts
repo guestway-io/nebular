@@ -18,6 +18,7 @@ import { NbIconConfig } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class TabsetIconComponent {
   bellIconConfig: NbIconConfig = { icon: 'bell-outline', pack: 'eva' };

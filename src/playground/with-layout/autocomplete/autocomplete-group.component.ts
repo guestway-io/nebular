@@ -19,6 +19,7 @@ export interface Group {
   selector: 'npg-autocomplete-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './autocomplete-group.component.html',
+  standalone: false,
 })
 export class AutocompleteGroupComponent implements OnInit {
   groups: Group[];

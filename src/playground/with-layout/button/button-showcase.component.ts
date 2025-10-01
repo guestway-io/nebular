@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-button-showcase',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button-showcase.component.html',
+  standalone: false,
 })
 export class ButtonShowcaseComponent {}

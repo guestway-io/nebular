@@ -15,5 +15,6 @@ import { Component } from '@angular/core';
       </nb-layout-header>
     </nb-layout>
   `,
+  standalone: false,
 })
 export class LayoutHeaderTestComponent {}

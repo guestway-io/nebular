@@ -20,6 +20,7 @@ import { NbDuplicateToastBehaviour, NbToastrService } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class ToastrPreventDuplicatesBehaviourComponent {
   @HostBinding('class')

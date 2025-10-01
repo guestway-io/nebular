@@ -25,6 +25,7 @@ import { FormControl } from '@angular/forms';
       </nb-card-body>
     </nb-card>
   `,
+  standalone: false,
 })
 export class InputFormComponent {
   inputItemNgModel;

@@ -11,6 +11,7 @@ import { NbSidebarService } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class SidebarToggleComponent {
   constructor(private sidebarService: NbSidebarService) {}

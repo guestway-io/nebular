@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-card-full',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './card-full.component.html',
+  standalone: false,
 })
 export class CardFullComponent {}

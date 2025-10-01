@@ -9,6 +9,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'npg-select-showcase',
   templateUrl: './select-showcase.component.html',
+  standalone: false,
 })
 export class SelectShowcaseComponent {
   selectedItem = '2';

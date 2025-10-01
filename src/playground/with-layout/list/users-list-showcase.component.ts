@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
     </nb-card>
   `,
   styleUrls: ['./simple-list-showcase.component.scss'],
+  standalone: false,
 })
 export class UsersListShowcaseComponent {
   users: { name: string; title: string }[] = [

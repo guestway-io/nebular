@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-alert-showcase',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './alert-showcase.component.html',
+  standalone: false,
 })
 export class AlertShowcaseComponent {}

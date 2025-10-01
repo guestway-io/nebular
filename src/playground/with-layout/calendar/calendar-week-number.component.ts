@@ -26,6 +26,7 @@ import { NbDateService, NbCalendarRange } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class CalendarWeekNumberComponent {
   showWeekNumber = false;

@@ -9,5 +9,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'npg-select-status',
   templateUrl: './select-status.component.html',
+  standalone: false,
 })
 export class SelectStatusComponent {}

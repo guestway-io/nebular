@@ -22,6 +22,7 @@ import { DynamicToAddComponent } from './components/dynamic.components';
       }
     `,
   ],
+  standalone: false,
 })
 export class PopoverCustomComponentComponent {
   customComponent = DynamicToAddComponent;

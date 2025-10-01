@@ -14,6 +14,7 @@ import { map, startWith } from 'rxjs/operators';
   selector: 'npg-autocomplete-custom-display',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './autocomplete-custom-display.component.html',
+  standalone: false,
 })
 export class AutocompleteCustomDisplayComponent implements OnInit {
   options: string[];

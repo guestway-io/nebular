@@ -18,5 +18,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </nb-card>
   `,
   styleUrls: ['./timepicker-example.scss'],
+  standalone: false,
 })
 export class TimepickerWithSecondsComponent {}

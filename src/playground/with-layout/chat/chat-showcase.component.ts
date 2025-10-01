@@ -23,6 +23,7 @@ import { NbChatMessageFile } from '../../../framework/theme/components/chat/chat
       }
     `,
   ],
+  standalone: false,
 })
 export class ChatShowcaseComponent {
   messages: any[];

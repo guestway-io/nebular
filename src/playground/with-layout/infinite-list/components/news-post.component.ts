@@ -10,6 +10,7 @@ import { NewsPost } from '../news.service';
       <a [attr.href]="post.link">Read full article</a>
     </article>
   `,
+  standalone: false,
 })
 export class NewsPostComponent {
   @Input()

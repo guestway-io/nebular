@@ -102,6 +102,7 @@ import { Component } from '@angular/core';
       </nb-card-back>
     </nb-flip-card>
   `,
+  standalone: false,
 })
 export class CardTestComponent {
   sizes = ['tiny', 'small', 'medium', 'large', 'giant'];

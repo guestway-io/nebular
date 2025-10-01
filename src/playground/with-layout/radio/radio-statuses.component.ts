@@ -24,6 +24,7 @@ import { NbComponentStatus } from '../../../framework/theme/components/component
     </nb-card>
   `,
   styleUrls: ['./radio-statuses-group.component.scss'],
+  standalone: false,
 })
 export class RadioStatusesComponent {
   options = [

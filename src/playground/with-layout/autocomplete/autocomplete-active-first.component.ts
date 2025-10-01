@@ -14,6 +14,7 @@ import { map, startWith } from 'rxjs/operators';
   selector: 'npg-autocomplete-active-first',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './autocomplete-active-first.component.html',
+  standalone: false,
 })
 export class AutocompleteActiveFirstComponent implements OnInit {
   options: string[];

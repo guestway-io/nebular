@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
   selector: 'npg-autocomplete-showcase',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './autocomplete-showcase.component.html',
+  standalone: false,
 })
 export class AutocompleteShowcaseComponent implements OnInit {
   options: string[];

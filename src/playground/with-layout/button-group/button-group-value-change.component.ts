@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 @Component({
   templateUrl: './button-group-value-change.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ButtonGroupValueChangeComponent {
   singleSelectGroupValue = [];

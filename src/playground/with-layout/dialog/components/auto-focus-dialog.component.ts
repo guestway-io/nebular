@@ -17,6 +17,7 @@ import { NbDialogRef } from '@nebular/theme';
       </nb-card-footer>
     </nb-card>
   `,
+  standalone: false,
 })
 export class AutoFocusDialogComponent {
   @Input() title: string;

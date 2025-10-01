@@ -9,5 +9,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'npg-select-hero',
   templateUrl: './select-hero.component.html',
+  standalone: false,
 })
 export class SelectHeroComponent {}

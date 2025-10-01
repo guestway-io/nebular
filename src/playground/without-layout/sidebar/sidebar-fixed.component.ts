@@ -4,6 +4,7 @@ import { NbSidebarService } from '@nebular/theme';
 @Component({
   selector: 'npg-sidebar-fixed',
   templateUrl: './sidebar-fixed.component.html',
+  standalone: false,
 })
 export class SidebarFixedComponent {
   constructor(private sidebarService: NbSidebarService) {}

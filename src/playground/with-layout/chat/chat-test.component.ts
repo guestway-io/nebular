@@ -28,6 +28,7 @@ import { NbComponentSize } from '@nebular/theme';
       <nb-chat-form (send)="sendMessage($event)"> </nb-chat-form>
     </nb-chat>
   `,
+  standalone: false,
 })
 export class ChatTestComponent {
   messages = [];

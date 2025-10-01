@@ -10,6 +10,7 @@ import { FirebaseAPIService } from '../firebase-api.service';
   selector: 'npg-password-auth-showcase',
   templateUrl: './password-auth-showcase.component.html',
   styleUrls: ['./password-auth-showcase.component.scss'],
+  standalone: false,
 })
 export class PasswordAuthShowcaseComponent {
   userToken$: Observable<NbAuthToken>;

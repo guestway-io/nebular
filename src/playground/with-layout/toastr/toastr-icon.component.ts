@@ -15,6 +15,7 @@ import { NbToastrService, NbIconConfig } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class ToastrIconComponent {
   private index: number = 0;

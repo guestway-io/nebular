@@ -4,6 +4,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, HostBinding } from '@ang
   selector: 'npg-accordion-toggle',
   templateUrl: './accordion-toggle.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AccordionToggleComponent {
   @HostBinding('class') classes = 'example-height-60';

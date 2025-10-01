@@ -49,5 +49,6 @@ import { Component } from '@angular/core';
     </nb-card>
   `,
   styleUrls: ['./stepper-disabled-step-nav.component.scss'],
+  standalone: false,
 })
 export class StepperDisabledStepNavComponent {}

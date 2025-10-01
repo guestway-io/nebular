@@ -14,6 +14,7 @@ import { NbToastrService } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class ToastrDestroyByClickComponent {
   private index: number = 0;

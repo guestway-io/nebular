@@ -37,5 +37,6 @@ import { Component } from '@angular/core';
       </nb-step>
     </nb-stepper>
   `,
+  standalone: false,
 })
 export class StepperTestComponent {}

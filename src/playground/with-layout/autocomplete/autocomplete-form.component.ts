@@ -14,6 +14,7 @@ import { map, startWith } from 'rxjs/operators';
   selector: 'npg-autocomplete-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './autocomplete-form.component.html',
+  standalone: false,
 })
 export class AutocompleteFormComponent implements OnInit {
   options: string[];

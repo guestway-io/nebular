@@ -11,6 +11,7 @@ import { NbMenuItem } from '@nebular/theme';
   selector: 'npg-menu-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './menu-children.component.html',
+  standalone: false,
 })
 export class MenuChildrenComponent {
   items: NbMenuItem[] = [

@@ -21,6 +21,7 @@ import { FormControl } from '@angular/forms';
     </nb-card>
   `,
   styleUrls: ['./datepicker-example.scss'],
+  standalone: false,
 })
 export class DatepickerFormsComponent {
   formControl = new FormControl(new Date());

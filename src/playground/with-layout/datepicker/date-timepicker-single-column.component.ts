@@ -18,5 +18,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </nb-card>
   `,
   styleUrls: ['./datepicker-example.scss'],
+  standalone: false,
 })
 export class DateTimepickerSingleColumnComponent {}

@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-user-sizes',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-sizes.component.html',
+  standalone: false,
 })
 export class UserSizesComponent {}

@@ -23,5 +23,6 @@ import { Component } from '@angular/core';
     </nb-card>
   `,
   styleUrls: [`./input-colors.component.scss`],
+  standalone: false,
 })
 export class InputColorsComponent {}

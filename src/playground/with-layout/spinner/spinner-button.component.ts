@@ -29,6 +29,7 @@ import { Component } from '@angular/core';
       </nb-card-body>
     </nb-card>
   `,
+  standalone: false,
 })
 export class SpinnerButtonComponent {
   loading = false;

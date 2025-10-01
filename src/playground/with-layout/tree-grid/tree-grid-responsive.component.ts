@@ -50,6 +50,7 @@ interface FSEntry {
     </nb-card>
   `,
   styleUrls: ['./tree-grid-shared.scss'],
+  standalone: false,
 })
 export class TreeGridResponsiveComponent {
   allColumns = ['name', 'size', 'kind', 'items'];

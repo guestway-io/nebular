@@ -15,6 +15,7 @@ import { Component } from '@angular/core';
     `,
   ],
   templateUrl: './chat-size.component.html',
+  standalone: false,
 })
 export class ChatSizesComponent {
   chats: any[] = [

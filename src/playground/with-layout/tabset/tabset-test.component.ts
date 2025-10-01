@@ -121,6 +121,7 @@ import { Router } from '@angular/router';
       </nb-tab>
     </nb-tabset>
   `,
+  standalone: false,
 })
 export class TabsetTestComponent {
   constructor(private router: Router) {}

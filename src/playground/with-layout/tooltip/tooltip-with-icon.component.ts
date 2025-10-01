@@ -10,5 +10,6 @@ import { Component } from '@angular/core';
   selector: 'npg-tooltip-with-icon',
   templateUrl: './tooltip-with-icon.component.html',
   styleUrls: ['./tooltip-examples.scss'],
+  standalone: false,
 })
 export class TooltipWithIconComponent {}

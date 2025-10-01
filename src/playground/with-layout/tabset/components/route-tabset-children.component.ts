@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
       }
     `,
   ],
+  standalone: false,
 })
 export class RouteTabsetShowcaseChild1Component {}
 
@@ -23,6 +24,7 @@ export class RouteTabsetShowcaseChild1Component {}
       }
     `,
   ],
+  standalone: false,
 })
 export class RouteTabsetShowcaseChild2Component {}
 
@@ -36,5 +38,6 @@ export class RouteTabsetShowcaseChild2Component {}
       }
     `,
   ],
+  standalone: false,
 })
 export class RouteTabsetShowcaseChild3Component {}

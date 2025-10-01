@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
       <strong>Hello from custom component: {{ text }}</strong>
     </div>
   `,
+  standalone: false,
 })
 export class DynamicToAddComponent {
   @Input()
@@ -32,6 +33,7 @@ export class DynamicToAddComponent {
       </nb-list>
     </nb-card>
   `,
+  standalone: false,
 })
 export class PopoverListComponent {}
 
@@ -62,5 +64,6 @@ export class PopoverListComponent {}
       </nb-tabset>
     </nb-card>
   `,
+  standalone: false,
 })
 export class PopoverTabsComponent {}

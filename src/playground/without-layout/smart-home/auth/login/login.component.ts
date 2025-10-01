@@ -9,5 +9,6 @@ import { NbLoginComponent } from '@nebular/auth';
 @Component({
   selector: 'npg-ngx-login',
   templateUrl: './login.component.html',
+  standalone: false,
 })
 export class LoginComponent extends NbLoginComponent {}

@@ -11,6 +11,7 @@ import { CalendarKitMonthCellComponent } from './components/calendar-kit-month-c
       </nb-card-body>
     </nb-card>
   `,
+  standalone: false,
 })
 export class CalendarKitFullCalendarShowcaseComponent {
   month = new Date();

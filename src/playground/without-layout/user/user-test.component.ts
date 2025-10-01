@@ -130,5 +130,6 @@ import { Component } from '@angular/core';
       </nb-layout-column>
     </nb-layout>
   `,
+  standalone: false,
 })
 export class UserTestComponent {}

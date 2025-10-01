@@ -9,5 +9,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'npg-select-disabled',
   templateUrl: './select-disabled.component.html',
+  standalone: false,
 })
 export class SelectDisabledComponent {}

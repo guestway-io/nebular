@@ -12,6 +12,7 @@ import { filter, map } from 'rxjs/operators';
       }
     `,
   ],
+  standalone: false,
 })
 export class ContextMenuClickComponent implements OnInit {
   items = [{ title: 'Profile' }, { title: 'Logout' }];

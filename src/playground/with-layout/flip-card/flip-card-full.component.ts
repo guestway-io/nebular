@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-flip-card-full',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './flip-card-full.component.html',
+  standalone: false,
 })
 export class FlipCardFullComponent {}

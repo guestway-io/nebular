@@ -16,6 +16,7 @@ import { NewsService } from './news.service';
   `,
   styleUrls: ['infinite-news-list.component.scss'],
   providers: [NewsService],
+  standalone: false,
 })
 export class InfiniteListShowcaseComponent {
   news = [];

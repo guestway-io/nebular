@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'npg-progress-bar-status',
   templateUrl: './progress-bar-status.component.html',
   styleUrls: ['./progress-bar-status.component.scss'],
+  standalone: false,
 })
 export class ProgressBarStatusComponent {}

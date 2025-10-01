@@ -13,6 +13,7 @@ import { NbWindowService } from '@nebular/theme';
       <p>Content</p>
     </ng-template>
   `,
+  standalone: false,
 })
 export class WindowTemplateTitleComponent {
   @ViewChild('titleTemplate') titleTemplate: TemplateRef<any>;

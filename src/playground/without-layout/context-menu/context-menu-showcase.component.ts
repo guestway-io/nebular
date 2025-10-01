@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
       }
     `,
   ],
+  standalone: false,
 })
 export class ContextMenuShowcaseComponent {
   items = [{ title: 'Profile' }, { title: 'Logout' }];

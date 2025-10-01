@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-user-showcase',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-showcase.component.html',
+  standalone: false,
 })
 export class UserShowcaseComponent {}

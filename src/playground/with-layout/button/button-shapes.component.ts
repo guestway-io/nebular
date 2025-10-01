@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-button-shapes',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button-shapes.component.html',
+  standalone: false,
 })
 export class ButtonShapesComponent {}

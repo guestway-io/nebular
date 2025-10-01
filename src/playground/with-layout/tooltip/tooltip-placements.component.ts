@@ -10,5 +10,6 @@ import { Component } from '@angular/core';
   selector: 'npg-tooltip-placements',
   templateUrl: './tooltip-placements.component.html',
   styleUrls: ['./tooltip-examples.scss'],
+  standalone: false,
 })
 export class TooltipPlacementsComponent {}

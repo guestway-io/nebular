@@ -101,6 +101,7 @@ import { DynamicToAddComponent } from './components/dynamic.components';
       </nb-card-body>
     </nb-card>
   `,
+  standalone: false,
 })
 export class PopoverTestComponent {
   customPopoverComponent = DynamicToAddComponent;

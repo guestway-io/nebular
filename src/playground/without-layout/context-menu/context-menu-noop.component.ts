@@ -24,6 +24,7 @@ import { NbContextMenuDirective } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class ContextMenuNoopComponent {
   @ViewChild(NbContextMenuDirective) contextMenu: NbContextMenuDirective;

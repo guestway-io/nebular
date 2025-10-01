@@ -18,6 +18,7 @@ import { Component } from '@angular/core';
     `,
   ],
   templateUrl: './chat-conversation-showcase.component.html',
+  standalone: false,
 })
 export class ChatConversationShowcaseComponent {
   messages: any[] = [];

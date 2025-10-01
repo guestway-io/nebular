@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   selector: 'npg-stepper-validation',
   styleUrls: ['stepper-playground.component.scss'],
   templateUrl: './stepper-validation.component.html',
+  standalone: false,
 })
 export class StepperValidationComponent implements OnInit {
   firstForm: FormGroup;

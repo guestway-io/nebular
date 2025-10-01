@@ -13,6 +13,7 @@ import { fruits } from './fruits-list';
     </nb-card>
   `,
   styleUrls: ['./simple-list-showcase.component.scss'],
+  standalone: false,
 })
 export class SimpleListShowcaseComponent {
   fruits = fruits;

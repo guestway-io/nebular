@@ -30,6 +30,7 @@ import { Component } from '@angular/core';
       }
     `,
   ],
+  standalone: false,
 })
 export class SpinnerTabsComponent {
   loading = false;

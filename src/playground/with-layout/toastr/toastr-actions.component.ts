@@ -16,6 +16,7 @@ import { NbToastrService, NbToastRef } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class ToastrActionsComponent {
   private index: number = 0;

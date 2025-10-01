@@ -18,6 +18,7 @@ import { NbContextMenuDirective } from '@nebular/theme';
       }
     `,
   ],
+  standalone: false,
 })
 export class ContextMenuRightClickComponent {
   @ViewChild(NbContextMenuDirective) contextMenu: NbContextMenuDirective;

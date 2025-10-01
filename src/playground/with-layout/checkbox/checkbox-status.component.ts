@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'npg-checkbox-status',
   templateUrl: './checkbox-status.component.html',
   styleUrls: ['./checkbox-status.component.scss'],
+  standalone: false,
 })
 export class CheckboxStatusComponent {}

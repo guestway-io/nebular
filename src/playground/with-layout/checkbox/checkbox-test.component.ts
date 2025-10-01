@@ -25,5 +25,6 @@ import { Component } from '@angular/core';
       <nb-checkbox id="danger" status="danger">Danger</nb-checkbox>
     </div>
   `,
+  standalone: false,
 })
 export class CheckboxTestComponent {}

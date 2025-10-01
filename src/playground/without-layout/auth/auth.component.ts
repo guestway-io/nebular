@@ -9,5 +9,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'npg-playground-auth',
   template: ` <router-outlet></router-outlet> `,
+  standalone: false,
 })
 export class AuthPlaygroundComponent {}

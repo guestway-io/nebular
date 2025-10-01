@@ -23,6 +23,7 @@ import { Component } from '@angular/core';
       Success message!
     </nb-alert>
   `,
+  standalone: false,
 })
 export class AlertTestComponent {
   sizes = ['tiny', 'small', 'medium', 'large', 'giant'];

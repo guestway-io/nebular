@@ -16,6 +16,7 @@ import { NbChatMessageFile } from '../../../framework/theme/components/chat/chat
     `,
   ],
   templateUrl: './chat-drop.component.html',
+  standalone: false,
 })
 export class ChatDropComponent {
   messages: any[] = [

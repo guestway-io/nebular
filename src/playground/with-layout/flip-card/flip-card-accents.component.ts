@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-flip-card-accents',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './flip-card-accents.component.html',
+  standalone: false,
 })
 export class FlipCardAccentsComponent {}

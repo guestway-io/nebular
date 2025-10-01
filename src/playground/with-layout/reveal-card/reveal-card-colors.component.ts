@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'npg-reveal-card-colors',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './reveal-card-colors.component.html',
+  standalone: false,
 })
 export class RevealCardColorsComponent {}

@@ -11,6 +11,7 @@ import { NbMenuItem } from '@nebular/theme';
   selector: 'npg-menu-link-params',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './menu-link-params.component.html',
+  standalone: false,
 })
 export class MenuLinkParamsComponent {
   items: NbMenuItem[] = [

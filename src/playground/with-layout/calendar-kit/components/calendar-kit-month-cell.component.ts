@@ -27,6 +27,7 @@ import {
       }
     `,
   ],
+  standalone: false,
 })
 export class CalendarKitMonthCellComponent
   extends NbCalendarDayPickerComponent<Date, Date>

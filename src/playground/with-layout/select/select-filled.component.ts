@@ -9,5 +9,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'npg-select-filled',
   templateUrl: './select-filled.component.html',
+  standalone: false,
 })
 export class SelectFilledComponent {}

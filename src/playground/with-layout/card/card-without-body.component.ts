@@ -29,6 +29,7 @@ import { fruits } from '../list/fruits-list';
       }
     `,
   ],
+  standalone: false,
 })
 export class CardWithoutBodyComponent {
   @HostBinding('class') classes = 'example-height-60 example-horizontal-spread';
