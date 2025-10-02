@@ -11,7 +11,6 @@ import {
   addImportToModule,
   addSymbolToNgModuleMetadata,
   getDecoratorMetadata,
-  parseSourceFile,
 } from '@angular/cdk/schematics';
 import {
   addRoute,
@@ -44,6 +43,20 @@ import {
   componentRoutePredicate,
   isRootPlaygroundModule,
 } from '../utils';
+
+// Custom parseSourceFile function to avoid type conflicts
+function parseSourceFile(tree: Tree, path: Path): ts.SourceFile {
+  const content = tree.read(path);
+  if (!content) {
+    throw new Error(`File ${path} not found`);
+  }
+  return ts.createSourceFile(
+    path,
+    content.toString(),
+    ts.ScriptTarget.Latest,
+    true
+  );
+}
 
 export function addToModules(tree: Tree, context: SchematicContext): Tree {
   processDirs(tree, context, getPlaygroundDirs(tree));
@@ -91,7 +104,9 @@ function processService(tree: Tree, servicePath: Path): void {
     const serviceClassName = (service.name as ts.Identifier).getText();
     const importString = importPath(modulePath, servicePath);
     const source = parseSourceFile(tree, servicePath);
-    const changes = addSymbolToNgModuleMetadata(source, modulePath, 'providers', serviceClassName, importString);
+    // Convert our SourceFile to the CDK expected type
+    const cdkSource = source as any;
+    const changes = addSymbolToNgModuleMetadata(cdkSource, modulePath, 'providers', serviceClassName, importString);
 
     applyInsertChange(tree, modulePath, ...changes);
   }
@@ -227,11 +242,13 @@ function addModuleRoute(
 
 function multilineDeclarationsArray(tree: Tree, modulePath: Path): void {
   const source = parseSourceFile(tree, modulePath);
-  const decoratorNode = getDecoratorMetadata(source, 'NgModule', '@angular/core')[0] as ts.ObjectLiteralExpression;
-
-  if (!decoratorNode) {
+  // Convert our SourceFile to the CDK expected type
+  const cdkSource = source as any;
+  const decoratorNodes = getDecoratorMetadata(cdkSource, 'NgModule', '@angular/core');
+  if (!decoratorNodes || decoratorNodes.length === 0) {
     throw new SchematicsException(`Can't find NgModule decorator in ${modulePath}`);
   }
+  const decoratorNode = decoratorNodes[0] as unknown as ts.ObjectLiteralExpression;
 
   const declarationsNode = decoratorNode.properties
     .filter((prop) => prop.kind === ts.SyntaxKind.PropertyAssignment)
@@ -271,7 +288,9 @@ function processRoutingModule(tree: Tree, modulePath: Path) {
   const importString = importPath(featureModulePath, modulePath);
   for (const moduleDeclaration of moduleDeclarations) {
     const className = (moduleDeclaration.name as ts.Identifier).getText();
-    const changes = addImportToModule(featureModuleSource, featureModulePath, className, importString);
+    // Convert our SourceFile to the CDK expected type
+    const cdkSource = featureModuleSource as any;
+    const changes = addImportToModule(cdkSource, featureModulePath, className, importString);
     applyInsertChange(tree, featureModulePath, ...changes);
   }
 }

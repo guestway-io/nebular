@@ -7,18 +7,43 @@
 import * as ts from 'typescript';
 import { normalize, Path } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
-import { findNodes, parseSourceFile, getSourceNodes, addDeclarationToModule } from '@angular/cdk/schematics';
+import { addDeclarationToModule } from '@angular/cdk/schematics';
 import { applyInsertChange } from './change';
 import { getNodeIndentation } from './formatting';
+
+// Custom parseSourceFile function to avoid type conflicts
+function parseSourceFile(tree: Tree, path: Path): ts.SourceFile {
+  const content = tree.read(path);
+  if (!content) {
+    throw new Error(`File ${path} not found`);
+  }
+  return ts.createSourceFile(
+    path,
+    content.toString(),
+    ts.ScriptTarget.Latest,
+    true
+  );
+}
 
 /**
  * Returns all exported and named class declarations with a given decorator.
  */
 export function getClassWithDecorator(tree: Tree, path: Path, decoratorName: string): ts.ClassDeclaration[] {
-  return findNodes(parseSourceFile(tree, path), ts.SyntaxKind.ClassDeclaration)
-    .filter((node) => isNodeExported(node as ts.Declaration))
-    .filter((node) => (node as ts.ClassDeclaration).name != null)
-    .filter((node: ts.ClassDeclaration) => hasDecoratorCall(node, decoratorName)) as ts.ClassDeclaration[];
+  const sourceFile = parseSourceFile(tree, path);
+  const classDeclarations: ts.ClassDeclaration[] = [];
+  
+  function visit(node: ts.Node) {
+    if (node.kind === ts.SyntaxKind.ClassDeclaration) {
+      const classNode = node as ts.ClassDeclaration;
+      if (classNode.name && isNodeExported(classNode) && hasDecoratorCall(classNode, decoratorName)) {
+        classDeclarations.push(classNode);
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  
+  visit(sourceFile);
+  return classDeclarations;
 }
 
 /**
@@ -50,10 +75,22 @@ export function isNodeExported(node: ts.Declaration): boolean {
   );
 }
 
-export function findDeclarationByIdentifier(source: ts.SourceFile, identifierText: string): ts.VariableDeclaration {
-  return getSourceNodes(source)
-    .filter((node) => node.kind === ts.SyntaxKind.VariableDeclaration)
-    .find((node: ts.VariableDeclaration) => node.name.getText() === identifierText) as ts.VariableDeclaration;
+export function findDeclarationByIdentifier(source: ts.SourceFile, identifierText: string): ts.VariableDeclaration | undefined {
+  let result: ts.VariableDeclaration | undefined;
+  
+  function visit(node: ts.Node) {
+    if (node.kind === ts.SyntaxKind.VariableDeclaration) {
+      const varDecl = node as ts.VariableDeclaration;
+      if (varDecl.name && ts.isIdentifier(varDecl.name) && varDecl.name.getText() === identifierText) {
+        result = varDecl;
+        return;
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  
+  visit(source);
+  return result;
 }
 
 export function addObjectProperty(
@@ -106,6 +143,8 @@ function addNodeArrayElement(
 
 export function addDeclaration(tree: Tree, modulePath: Path, componentClass: string, importPath: string): void {
   const source = parseSourceFile(tree, modulePath);
-  const declarationsChanges = addDeclarationToModule(source, modulePath, componentClass, importPath);
+  // Convert our SourceFile to the CDK expected type
+  const cdkSource = source as any;
+  const declarationsChanges = addDeclarationToModule(cdkSource, modulePath, componentClass, importPath);
   applyInsertChange(tree, normalize(source.fileName), ...declarationsChanges);
 }

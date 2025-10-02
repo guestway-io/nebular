@@ -7,7 +7,7 @@
 import * as ts from 'typescript';
 import { basename, dirname, join, normalize, NormalizedSep, Path } from '@angular-devkit/core';
 import { SchematicsException, Tree } from '@angular-devkit/schematics';
-import { parseSourceFile, getDecoratorMetadata, insertImport } from '@angular/cdk/schematics';
+import { getDecoratorMetadata, insertImport } from '@angular/cdk/schematics';
 import {
   addArrayElement,
   addObjectProperty,
@@ -28,13 +28,30 @@ import {
   PLAYGROUND_ROUTING_MODULE_PATH,
 } from '../utils';
 
+// Custom parseSourceFile function to avoid type conflicts
+function parseSourceFile(tree: Tree, path: Path): ts.SourceFile {
+  const content = tree.read(path);
+  if (!content) {
+    throw new Error(`File ${path} not found`);
+  }
+  return ts.createSourceFile(
+    path,
+    content.toString(),
+    ts.ScriptTarget.Latest,
+    true
+  );
+}
+
 export function findRoutesArray(tree: Tree, modulePath: Path): ts.ArrayLiteralExpression {
   const source = parseSourceFile(tree, modulePath);
 
-  const decoratorNode = getDecoratorMetadata(source, 'NgModule', '@angular/core')[0] as ts.ObjectLiteralExpression;
-  if (decoratorNode == null) {
+  // Convert our SourceFile to the CDK expected type
+  const cdkSource = source as any;
+  const decoratorNodes = getDecoratorMetadata(cdkSource, 'NgModule', '@angular/core');
+  if (!decoratorNodes || decoratorNodes.length === 0) {
     throw new SchematicsException(`Error in ${modulePath}. Can't find NgModule decorator.`);
   }
+  const decoratorNode = decoratorNodes[0] as unknown as ts.ObjectLiteralExpression;
 
   try {
     const imports = getImports(decoratorNode);
@@ -228,7 +245,9 @@ export function addRoute(
   addArrayElement(tree, source, routes, route);
 
   if (componentClass && fileImportPath) {
-    const importChange = insertImport(source, source.fileName, componentClass, fileImportPath);
+    // Convert our SourceFile to the CDK expected type
+    const cdkSource = source as any;
+    const importChange = insertImport(cdkSource, source.fileName, componentClass, fileImportPath);
     applyInsertChange(tree, normalize(source.fileName), importChange);
   }
 }
