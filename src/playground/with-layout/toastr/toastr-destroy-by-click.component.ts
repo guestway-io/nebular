@@ -2,18 +2,19 @@ import { Component, HostBinding } from '@angular/core';
 import { NbToastrService } from '@nebular/theme';
 
 @Component({
-  selector: 'npg-toastr-destroy-by-click',
-  template: `
+    selector: 'nb-toastr-destroy-by-click',
+    template: `
     <button nbButton (click)="showToast(true)">Destroy by click</button>
     <button nbButton (click)="showToast(false)">Destroy by timeout only</button>
   `,
-  styles: [
-    `
+    styles: [
+        `
       ::ng-deep nb-layout-column {
         height: 80vw;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ToastrDestroyByClickComponent {
   private index: number = 0;
@@ -21,11 +22,13 @@ export class ToastrDestroyByClickComponent {
   @HostBinding('class')
   className = 'example-items-rows';
 
-  constructor(private toastrService: NbToastrService) {}
+  constructor(private toastrService: NbToastrService) {
+  }
 
   showToast(destroyByClick) {
-    this.toastrService.show('This is super toast message', `This is toast number: ${++this.index}`, undefined, {
-      destroyByClick,
-    });
+    this.toastrService.show(
+      'This is super toast message',
+      `This is toast number: ${++this.index}`,
+      { destroyByClick });
   }
 }

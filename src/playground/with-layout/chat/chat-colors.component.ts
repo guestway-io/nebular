@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-chat-colors',
-  templateUrl: './chat-colors.component.html',
-  styles: [
-    `
-      ::ng-deep nb-layout-column {
-        justify-content: center;
-        display: flex;
-      }
-      nb-chat {
-        width: 500px;
-        margin: 0.5rem 0 2rem 2rem;
-      }
-    `,
-  ],
+    selector: 'nb-chat-colors',
+    templateUrl: './chat-colors.component.html',
+    styles: [`
+    ::ng-deep nb-layout-column {
+      justify-content: center;
+      display: flex;
+    }
+    nb-chat {
+      width: 500px;
+      margin: 0.5rem 0 2rem 2rem;
+    }
+  `],
+    standalone: false
 })
 export class ChatColorsComponent {
   chats: any[] = [

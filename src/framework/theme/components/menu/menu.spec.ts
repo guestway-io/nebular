@@ -44,14 +44,14 @@ import {
 import { NbMenuInternalService } from './menu.service';
 
 @Component({
-  template: '',
-  standalone: false,
+    template: '',
+    standalone: false
 })
 export class NoopComponent {}
 
 @Component({
-  template: `<nb-menu [items]="items" [tag]="menuTag"></nb-menu>`,
-  standalone: false,
+    template: `<nb-menu [items]="items" [tag]="menuTag"></nb-menu>`,
+    standalone: false
 })
 export class SingleMenuTestComponent {
   constructor(public menuPublicService: NbMenuService) {}
@@ -61,11 +61,11 @@ export class SingleMenuTestComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <nb-menu [items]="firstMenuItems" [tag]="firstMenuTag"></nb-menu>
     <nb-menu [items]="secondMenuItems" [tag]="secondMenuTag"></nb-menu>
   `,
-  standalone: false,
+    standalone: false
 })
 export class DoubleMenusTestComponent {
   constructor(public menuPublicService: NbMenuService) {}
@@ -225,12 +225,12 @@ describe('NbMenuItem', () => {
     const iconComponent = fixture.debugElement.query(By.directive(NbIconComponent)) as DebugElement;
     const directionService: NbLayoutDirectionService = TestBed.inject(NbLayoutDirectionService);
 
-    expect(iconComponent.componentInstance.icon).toEqual('chevron-down-outline');
+    expect(iconComponent.componentInstance.icon).toEqual('chevron-left-outline');
 
     directionService.setDirection(NbLayoutDirection.RTL);
     fixture.detectChanges();
 
-    expect(iconComponent.componentInstance.icon).toEqual('chevron-down-outline');
+    expect(iconComponent.componentInstance.icon).toEqual('chevron-right-outline');
   });
 });
 

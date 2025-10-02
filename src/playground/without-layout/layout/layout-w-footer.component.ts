@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-w-footer-showcase',
-  templateUrl: './layout-w-footer.component.html',
+    selector: 'nb-w-footer-showcase',
+    templateUrl: './layout-w-footer.component.html',
+    standalone: false
 })
-export class LayoutWFooterComponent {}
+
+export class LayoutWFooterComponent {
+}

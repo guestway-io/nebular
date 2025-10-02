@@ -21,8 +21,8 @@ import {
 } from '@nebular/theme';
 
 @Component({
-  selector: 'nb-datepicker-test',
-  template: `
+    selector: 'nb-datepicker-test',
+    template: `
     <nb-layout>
       <nb-layout-column>
         <input [nbDatepicker]="datepicker" />
@@ -30,7 +30,7 @@ import {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbDatepickerTestComponent {
   @ViewChild(NbDatepickerComponent) datepicker: NbDatepickerComponent<Date>;
@@ -38,8 +38,8 @@ export class NbDatepickerTestComponent {
 }
 
 @Component({
-  selector: 'nb-rangepicker-test',
-  template: `
+    selector: 'nb-rangepicker-test',
+    template: `
     <nb-layout>
       <nb-layout-column>
         <input [nbDatepicker]="rangepicker" />
@@ -47,7 +47,7 @@ export class NbDatepickerTestComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbRangepickerTestComponent {
   @ViewChild(NbRangepickerComponent) rangepicker: NbRangepickerComponent<Date>;
@@ -55,8 +55,8 @@ export class NbRangepickerTestComponent {
 }
 
 @Component({
-  selector: 'nb-date-timepicker-test',
-  template: `
+    selector: 'nb-date-timepicker-test',
+    template: `
     <nb-layout>
       <nb-layout-column>
         <input [nbDatepicker]="rangepicker" />
@@ -64,7 +64,7 @@ export class NbRangepickerTestComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbDateTimepickerTestComponent {
   @ViewChild(NbDateTimePickerComponent) dateTimepicker: NbDateTimePickerComponent<Date>;

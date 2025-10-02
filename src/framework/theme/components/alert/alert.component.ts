@@ -11,6 +11,7 @@ import { NbComponentSize } from '../component-size';
 import { NbComponentOrCustomStatus, NbComponentStatus } from '../component-status';
 import { convertToBoolProperty, NbBooleanInput } from '../helpers';
 
+
 /**
  * Alert component.
  *
@@ -108,17 +109,18 @@ import { convertToBoolProperty, NbBooleanInput } from '../helpers';
  * alert-outline-control-color:
  */
 @Component({
-  selector: 'nb-alert',
-  styleUrls: ['./alert.component.scss'],
-  template: `
+    selector: 'nb-alert',
+    styleUrls: ['./alert.component.scss'],
+    template: `
     <button *ngIf="closable" type="button" class="close" aria-label="Close" (click)="onClose()">
       <span aria-hidden="true">&times;</span>
     </button>
     <ng-content></ng-content>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbAlertComponent {
+
   /**
    * Alert size, available sizes:
    * `tiny`, `small`, `medium`, `large`, `giant`
@@ -164,10 +166,10 @@ export class NbAlertComponent {
    * Emits when chip is removed
    * @type EventEmitter<any>
    */
-  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() close = new EventEmitter();
 
-  constructor(protected statusService: NbStatusService) {}
+  constructor(protected statusService: NbStatusService) {
+  }
 
   /**
    * Emits the removed chip event

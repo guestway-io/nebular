@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-stepper-showcase',
-  styleUrls: ['stepper-playground.component.scss'],
-  templateUrl: './stepper-showcase.component.html',
+    selector: 'nb-stepper-showcase',
+    styleUrls: ['stepper-playground.component.scss'],
+    templateUrl: './stepper-showcase.component.html',
+    standalone: false
 })
-export class StepperShowcaseComponent {}
+
+export class StepperShowcaseComponent {
+}

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  template: `
+    template: `
     <nb-card>
       <nb-card-header> Attribute </nb-card-header>
       <nb-card-body>
@@ -24,6 +24,7 @@ import { FormControl } from '@angular/forms';
       </nb-card-body>
     </nb-card>
   `,
+    standalone: false
 })
 export class RadioDisabledGroupComponent {
   options = [

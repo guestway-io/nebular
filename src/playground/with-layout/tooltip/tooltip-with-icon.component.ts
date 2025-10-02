@@ -6,9 +6,12 @@
 
 import { Component } from '@angular/core';
 
+
 @Component({
-  selector: 'npg-tooltip-with-icon',
-  templateUrl: './tooltip-with-icon.component.html',
-  styleUrls: ['./tooltip-examples.scss'],
+    selector: 'nb-tooltip-with-icon',
+    templateUrl: './tooltip-with-icon.component.html',
+    styleUrls: ['./tooltip-examples.scss'],
+    standalone: false
 })
-export class TooltipWithIconComponent {}
+export class TooltipWithIconComponent {
+}

@@ -36,10 +36,10 @@ export interface NbButtonToggleChange {
  * `[nbButtonToggle]` is a directive to add a `pressed` state to a button.
  */
 @Directive({
-  selector: 'button[nbButtonToggle]',
-  providers: [{ provide: NbButton, useExisting: NbButtonToggleDirective }],
-  exportAs: 'nbButtonToggle',
-  standalone: false,
+    selector: 'button[nbButtonToggle]',
+    providers: [{ provide: NbButton, useExisting: NbButtonToggleDirective }],
+    exportAs: 'nbButtonToggle',
+    standalone: false
 })
 export class NbButtonToggleDirective extends NbButton {
   protected readonly _pressedChange$ = new Subject<NbButtonToggleChange>();
@@ -123,15 +123,10 @@ export class NbButtonToggleDirective extends NbButton {
   }
 
   @HostListener('click')
-  onClick(event): void {
-    if (this.disabled) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    } else {
-      // Don't remove the pressed state of the button in single-toggle button-groups
-      if (this.buttonGroup?.multiple || !this.pressed) {
-        this.pressed = !this.pressed;
-      }
+  onClick(): void {
+    // Don't remove the pressed state of the button in single-toggle button-groups
+    if (this.buttonGroup?.multiple || !this.pressed) {
+      this.pressed = !this.pressed;
     }
   }
 

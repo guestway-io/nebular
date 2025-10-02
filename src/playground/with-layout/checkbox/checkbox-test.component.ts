@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-checkbox-test',
-  template: `
+    selector: 'nb-app-checkbox-test',
+    template: `
     <div>
       <nb-checkbox id="first"></nb-checkbox>
     </div>
@@ -25,5 +25,7 @@ import { Component } from '@angular/core';
       <nb-checkbox id="danger" status="danger">Danger</nb-checkbox>
     </div>
   `,
+    standalone: false
 })
-export class CheckboxTestComponent {}
+export class CheckboxTestComponent {
+}

@@ -6,25 +6,24 @@
 
 import { Component } from '@angular/core';
 import { ChatShowcaseService } from './chat-showcase.service';
-import { NbChatMessageFile } from '../../../framework/theme/components/chat/chat-message-file.component';
 
 @Component({
-  selector: 'npg-chat-showcase',
-  templateUrl: './chat-showcase.component.html',
-  providers: [ChatShowcaseService],
-  styles: [
-    `
-      ::ng-deep nb-layout-column {
-        justify-content: center;
-        display: flex;
-      }
-      nb-chat {
-        width: 500px;
-      }
-    `,
-  ],
+    selector: 'nb-chat-showcase',
+    templateUrl: './chat-showcase.component.html',
+    providers: [ChatShowcaseService],
+    styles: [`
+    ::ng-deep nb-layout-column {
+      justify-content: center;
+      display: flex;
+    }
+    nb-chat {
+      width: 500px;
+    }
+  `],
+    standalone: false
 })
 export class ChatShowcaseComponent {
+
   messages: any[];
 
   constructor(protected chatShowcaseService: ChatShowcaseService) {
@@ -32,15 +31,13 @@ export class ChatShowcaseComponent {
   }
 
   sendMessage(event: any) {
-    const files: NbChatMessageFile[] = !event.files
-      ? []
-      : event.files.map((file) => {
-          return <NbChatMessageFile>{
-            src: file.src,
-            type: file.type,
-            icon: 'file-text-outline',
-          };
-        });
+    const files = !event.files ? [] : event.files.map((file) => {
+      return {
+        url: file.src,
+        type: file.type,
+        icon: 'file-text-outline',
+      };
+    });
 
     this.messages.push({
       text: event.message,
@@ -55,9 +52,7 @@ export class ChatShowcaseComponent {
     });
     const botReply = this.chatShowcaseService.reply(event.message);
     if (botReply) {
-      setTimeout(() => {
-        this.messages.push(botReply);
-      }, 500);
+      setTimeout(() => { this.messages.push(botReply) }, 500);
     }
   }
 }

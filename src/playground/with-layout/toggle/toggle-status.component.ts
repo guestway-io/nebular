@@ -7,8 +7,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-toggle-status',
-  template: `
+    selector: 'nb-toggle-status',
+    template: `
     <nb-card>
       <nb-card-body class="example-items-rows">
         <nb-toggle status="basic">Basic</nb-toggle>
@@ -23,12 +23,12 @@ import { Component } from '@angular/core';
       </nb-card-body>
     </nb-card>
   `,
-  styles: [
-    `
-      .example-items-rows {
-        align-items: center;
-      }
-    `,
-  ],
+    styles: [`
+    .example-items-rows {
+      align-items: center;
+    }
+  `],
+    standalone: false
 })
-export class ToggleStatusComponent {}
+export class ToggleStatusComponent {
+}

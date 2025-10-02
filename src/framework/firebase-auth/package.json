@@ -1,6 +1,6 @@
 {
   "name": "@guestway-io/nebular-firebase-auth",
-  "version": "14.0.26",
+  "version": "19.0.0",
   "description": "@nebular/firebase-auth",
   "author": "akveo",
   "license": "MIT",
@@ -26,10 +26,10 @@
   ],
   "peerDependencies": {
     "@angular/core": "^19.2.15",
-    "@nebular/auth": "^14.0.2",
+    "@nebular/auth": "^19.0.0",
     "rxjs": "^6.5.3 || ^7.4.0",
-    "firebase": "^10.7.2",
-    "@angular/fire": "^18.0.1"
+    "firebase": "^11.3.1",
+    "@angular/fire": "^19.0.0"
   },
   "dependencies": {
     "tslib": "^2.6.0"

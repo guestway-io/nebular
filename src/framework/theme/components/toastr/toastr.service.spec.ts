@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,15 +16,15 @@ import {
 } from '@nebular/theme';
 
 @Component({
-  selector: 'nb-toastr-test',
-  template: `
+    selector: 'nb-toastr-test',
+    template: `
     <nb-layout>
       <nb-layout-column>
         <div class="test-div"></div>
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbToastrTestComponent {
   constructor(private toastrService: NbToastrService) {}
@@ -242,15 +242,10 @@ describe('toastr-container-registry', () => {
   });
 
   beforeEach(() => {
-    const cfr = TestBed.configureTestingModule({
-      imports: [NbToastrModule.forRoot()],
-    }).inject(ComponentFactoryResolver);
-
     toastrContainerRegistry = new NbToastrContainerRegistry(
       overlayStub,
       positionBuilder,
       positionHelper,
-      cfr,
       documentStub,
     );
   });

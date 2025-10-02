@@ -7,28 +7,31 @@
 import { Component, ViewChild } from '@angular/core';
 import { NbContextMenuDirective } from '@nebular/theme';
 
+
 @Component({
-  selector: 'npg-context-menu-noop',
-  templateUrl: './context-menu-noop.component.html',
-  styles: [
-    `
-      :host nb-layout-column {
-        height: 50vw;
-      }
-      .menu-target {
-        margin-bottom: 7rem;
-      }
-      button {
-        margin-right: 1rem;
-        margin-top: 1rem;
-      }
-    `,
-  ],
+    selector: 'nb-context-menu-noop',
+    templateUrl: './context-menu-noop.component.html',
+    styles: [`
+    :host nb-layout-column {
+      height: 50vw;
+    }
+    .menu-target {
+      margin-bottom: 7rem;
+    }
+    button {
+      margin-right: 1rem;
+      margin-top: 1rem;
+    }
+  `],
+    standalone: false
 })
 export class ContextMenuNoopComponent {
   @ViewChild(NbContextMenuDirective) contextMenu: NbContextMenuDirective;
 
-  items = [{ title: 'Profile' }, { title: 'Logout' }];
+  items = [
+    { title: 'Profile' },
+    { title: 'Logout' },
+  ];
 
   open() {
     this.contextMenu.show();
@@ -37,4 +40,5 @@ export class ContextMenuNoopComponent {
   close() {
     this.contextMenu.hide();
   }
+
 }

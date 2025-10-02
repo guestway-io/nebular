@@ -7,8 +7,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-action-test',
-  template: `
+    selector: 'nb-action-test',
+    template: `
     <nb-layout>
       <nb-layout-header>
         <nb-actions>
@@ -20,10 +20,13 @@ import { Component } from '@angular/core';
           <nb-action icon="search-outline"></nb-action>
           <nb-action icon="search-outline"></nb-action>
           <nb-action icon="search-outline" disabled></nb-action>
-          <nb-action> Hello </nb-action>
+          <nb-action>
+            Hello
+          </nb-action>
         </nb-actions>
       </nb-layout-header>
       <nb-layout-column>
+
         <nb-card>
           <nb-card-body>
             <nb-actions inverse>
@@ -35,7 +38,9 @@ import { Component } from '@angular/core';
               <nb-action icon="search-outline"></nb-action>
               <nb-action icon="search-outline"></nb-action>
               <nb-action icon="search-outline" disabled></nb-action>
-              <nb-action> Hello </nb-action>
+              <nb-action>
+                Hello
+              </nb-action>
             </nb-actions>
           </nb-card-body>
         </nb-card>
@@ -51,7 +56,9 @@ import { Component } from '@angular/core';
               <nb-action icon="search-outline"></nb-action>
               <nb-action icon="search-outline"></nb-action>
               <nb-action icon="search-outline" disabled></nb-action>
-              <nb-action> Hello </nb-action>
+              <nb-action>
+                Hello
+              </nb-action>
             </nb-actions>
           </nb-card-body>
         </nb-card>
@@ -67,7 +74,9 @@ import { Component } from '@angular/core';
               <nb-action icon="search-outline"></nb-action>
               <nb-action icon="search-outline"></nb-action>
               <nb-action icon="search-outline" disabled></nb-action>
-              <nb-action> Hello </nb-action>
+              <nb-action>
+                Hello
+              </nb-action>
             </nb-actions>
           </nb-card-body>
         </nb-card>
@@ -75,17 +84,42 @@ import { Component } from '@angular/core';
         <nb-card>
           <nb-card-body>
             <nb-actions size="large">
-              <nb-action badgeText="29" badgeStatus="success" badgePosition="bottom left">
+              <nb-action
+                badgeText="29"
+                badgeStatus="success"
+                badgePosition="bottom left">
                 <nb-user></nb-user>
               </nb-action>
-              <nb-action badgeText="29" badgeStatus="danger" badgePosition="top left" icon="search-outline">
+              <nb-action
+                badgeText="29"
+                badgeStatus="danger"
+                badgePosition="top left"
+                icon="search-outline">
               </nb-action>
-              <nb-action badgeText="29" badgeStatus="warning" badgePosition="bottom right" icon="search-outline">
+              <nb-action
+                badgeText="29"
+                badgeStatus="warning"
+                badgePosition="bottom right"
+                icon="search-outline">
               </nb-action>
-              <nb-action badgeText="29" badgeStatus="success" badgePosition="bottom left" icon="search-outline">
+              <nb-action
+                badgeText="29"
+                badgeStatus="success"
+                badgePosition="bottom left"
+                icon="search-outline">
               </nb-action>
-              <nb-action badgeText="29" badgeStatus="info" badgePosition="top right" icon="search-outline"> </nb-action>
-              <nb-action badgeText="29" badgeStatus="info" badgePosition="top right" icon="search-outline" disabled>
+              <nb-action
+                badgeText="29"
+                badgeStatus="info"
+                badgePosition="top right"
+                icon="search-outline">
+              </nb-action>
+              <nb-action
+                badgeText="29"
+                badgeStatus="info"
+                badgePosition="top right"
+                icon="search-outline"
+                disabled>
               </nb-action>
               <nb-action badgeText="29">Badge</nb-action>
             </nb-actions>
@@ -94,8 +128,10 @@ import { Component } from '@angular/core';
       </nb-layout-column>
     </nb-layout>
   `,
+    standalone: false
 })
 export class ActionTestComponent {
+
   actionOnClick(event: any) {
     console.info(event);
   }

@@ -1,6 +1,6 @@
 {
   "name": "@guestway-io/nebular-auth",
-  "version": "14.0.26",
+  "version": "19.0.0",
   "description": "@nebular/auth",
   "author": "akveo",
   "license": "MIT",
@@ -28,7 +28,7 @@
     "@angular/core": "^19.2.15",
     "@angular/router": "^19.2.15",
     "@angular/forms": "^19.2.15",
-    "@nebular/theme": "^19.2.15",
+    "@nebular/theme": "^19.0.0",
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {

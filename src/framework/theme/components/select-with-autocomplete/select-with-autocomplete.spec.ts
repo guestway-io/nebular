@@ -65,8 +65,8 @@ const TEST_GROUPS = [
 ];
 
 @Component({
-  selector: 'nb-select-test',
-  template: `
+    selector: 'nb-select-test',
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete
@@ -88,7 +88,7 @@ const TEST_GROUPS = [
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbSelectTestComponent {
   @Input() selected: any = null;
@@ -101,7 +101,7 @@ export class NbSelectTestComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete>
@@ -112,12 +112,12 @@ export class NbSelectTestComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class BasicSelectTestComponent {}
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete [selected]="selected" [compareWith]="compareFn">
@@ -126,7 +126,7 @@ export class BasicSelectTestComponent {}
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbSelectWithOptionsObjectsComponent {
   @Input() compareFn = (o1: any, o2: any) => JSON.stringify(o1) === JSON.stringify(o2);
@@ -137,7 +137,7 @@ export class NbSelectWithOptionsObjectsComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete [selected]="selected">
@@ -146,7 +146,7 @@ export class NbSelectWithOptionsObjectsComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbSelectWithInitiallySelectedOptionComponent {
   @Input() selected = 1;
@@ -154,7 +154,7 @@ export class NbSelectWithInitiallySelectedOptionComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete *ngIf="showSelect" [formControl]="formControl">
@@ -163,7 +163,7 @@ export class NbSelectWithInitiallySelectedOptionComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbReactiveFormSelectComponent {
   options: number[] = [1];
@@ -175,7 +175,7 @@ export class NbReactiveFormSelectComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete [(ngModel)]="selectedValue">
@@ -184,7 +184,7 @@ export class NbReactiveFormSelectComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbNgModelSelectComponent {
   options: number[] = [1];
@@ -194,7 +194,7 @@ export class NbNgModelSelectComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete>
@@ -210,7 +210,7 @@ export class NbNgModelSelectComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbSelectWithFalsyOptionValuesComponent {
   nanValue = NaN;
@@ -269,7 +269,7 @@ export class NbSelectWithFalsyOptionValuesComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete multiple>
@@ -285,12 +285,12 @@ export class NbSelectWithFalsyOptionValuesComponent {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbMultipleSelectWithFalsyOptionValuesComponent extends NbSelectWithFalsyOptionValuesComponent {}
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete>
@@ -301,7 +301,7 @@ export class NbMultipleSelectWithFalsyOptionValuesComponent extends NbSelectWith
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbOptionDisabledTestComponent {
   optionGroupDisabled = false;
@@ -742,11 +742,9 @@ describe('NbSelectComponent - falsy values', () => {
   it('should clean selection when selected option does not have a value', fakeAsync(() => {
     select.selected = testComponent.truthyOption.value;
     fixture.detectChanges();
-    flush();
 
     testComponent.noValueOption.onClick(eventMock);
     fixture.detectChanges();
-    flush();
 
     expect(select.selectionModel.length).toEqual(0);
   }));
@@ -754,11 +752,9 @@ describe('NbSelectComponent - falsy values', () => {
   it('should clean selection when selected option has null value', fakeAsync(() => {
     select.selected = testComponent.truthyOption.value;
     fixture.detectChanges();
-    flush();
 
     testComponent.nullOption.onClick(eventMock);
     fixture.detectChanges();
-    flush();
 
     expect(select.selectionModel.length).toEqual(0);
   }));
@@ -766,11 +762,9 @@ describe('NbSelectComponent - falsy values', () => {
   it('should clean selection when selected option has undefined value', fakeAsync(() => {
     select.selected = testComponent.truthyOption.value;
     fixture.detectChanges();
-    flush();
 
     testComponent.undefinedOption.onClick(eventMock);
     fixture.detectChanges();
-    flush();
 
     expect(select.selectionModel.length).toEqual(0);
   }));
@@ -778,11 +772,9 @@ describe('NbSelectComponent - falsy values', () => {
   it('should not reset selection when selected option has false value', fakeAsync(() => {
     select.selected = testComponent.truthyOption.value;
     fixture.detectChanges();
-    flush();
 
     testComponent.falseOption.onClick(eventMock);
     fixture.detectChanges();
-    flush();
 
     expect(select.selectionModel.length).toEqual(1);
   }));
@@ -790,11 +782,9 @@ describe('NbSelectComponent - falsy values', () => {
   it('should not reset selection when selected option has zero value', fakeAsync(() => {
     select.selected = testComponent.truthyOption.value;
     fixture.detectChanges();
-    flush();
 
     testComponent.zeroOption.onClick(eventMock);
     fixture.detectChanges();
-    flush();
 
     expect(select.selectionModel.length).toEqual(1);
   }));
@@ -802,11 +792,9 @@ describe('NbSelectComponent - falsy values', () => {
   it('should not reset selection when selected option has empty string value', fakeAsync(() => {
     select.selected = testComponent.truthyOption.value;
     fixture.detectChanges();
-    flush();
 
     testComponent.emptyStringOption.onClick(eventMock);
     fixture.detectChanges();
-    flush();
 
     expect(select.selectionModel.length).toEqual(1);
   }));
@@ -814,11 +802,9 @@ describe('NbSelectComponent - falsy values', () => {
   it('should not reset selection when selected option has NaN value', fakeAsync(() => {
     select.selected = testComponent.truthyOption.value;
     fixture.detectChanges();
-    flush();
 
     testComponent.nanOption.onClick(eventMock);
     fixture.detectChanges();
-    flush();
 
     expect(select.selectionModel.length).toEqual(1);
   }));
@@ -1265,13 +1251,13 @@ describe('NbSelect - dynamic options', () => {
 });
 
 @Component({
-  template: `
+    template: `
     <nb-layout>
       <nb-layout-column>
         <nb-select-with-autocomplete
           [(ngModel)]="selectedValue"
-          [withOptionsAutocomplete]="true"
-          (optionsAutocompleteInputChange)="filterValue = $event"
+          [withOptionSearch]="true"
+          (optionSearchChange)="filterValue = $event"
           (selectOpen)="isOpened = true"
           (selectClose)="isOpened = false"
         >
@@ -1280,7 +1266,7 @@ describe('NbSelect - dynamic options', () => {
       </nb-layout-column>
     </nb-layout>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbSelectWithExperimentalSearchComponent {
   options: number[] = [1, 2, 3, 4, 5];
@@ -1313,7 +1299,7 @@ describe('NbSelect - experimental search', () => {
   });
 
   it("should update search input and don't emit filterChange when value of select is changed", fakeAsync(() => {
-    const searchInput = testComponent.selectComponent.optionsAutocompleteInput.nativeElement;
+    const searchInput = testComponent.selectComponent.optionSearchInput.nativeElement;
 
     expect(searchInput.value).toEqual('');
     expect(testComponent.filterValue).toEqual('');

@@ -7,8 +7,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-user-hide-captions',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './user-hide-captions.component.html',
+    selector: 'nb-user-hide-captions',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './user-hide-captions.component.html',
+    standalone: false
 })
-export class UserHideCaptionsComponent {}
+export class UserHideCaptionsComponent {
+
+}

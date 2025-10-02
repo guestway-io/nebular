@@ -21,40 +21,39 @@ import { NbCalendarDayCellComponent } from './calendar-day-cell.component';
 import { NbCalendarCell, NbCalendarSize, NbCalendarSizeValues } from '../../model';
 import { convertToBoolProperty, NbBooleanInput } from '../../../helpers';
 
+
 /**
  * Provides capability pick days.
  * */
 @Component({
-  selector: 'nb-calendar-day-picker',
-  template: `
-    <nb-calendar-week-numbers
-      *ngIf="showWeekNumber"
-      [weeks]="weeks"
-      [size]="size"
-      [weekNumberSymbol]="weekNumberSymbol"
-    >
+    selector: 'nb-calendar-day-picker',
+    template: `
+    <nb-calendar-week-numbers *ngIf="showWeekNumber"
+                              [weeks]="weeks"
+                              [size]="size"
+                              [weekNumberSymbol]="weekNumberSymbol">
     </nb-calendar-week-numbers>
     <div class="days-container">
       <nb-calendar-days-names [size]="size" [firstDayOfWeek]="firstDayOfWeek"></nb-calendar-days-names>
       <nb-calendar-picker
-        [data]="weeks"
-        [visibleDate]="visibleDate"
-        [selectedValue]="date"
-        [cellComponent]="cellComponent"
-        [min]="min"
-        [max]="max"
-        [filter]="filter"
-        [size]="size"
-        (select)="onSelect($event)"
-      >
+          [data]="weeks"
+          [visibleDate]="visibleDate"
+          [selectedValue]="date"
+          [cellComponent]="cellComponent"
+          [min]="min"
+          [max]="max"
+          [filter]="filter"
+          [size]="size"
+          (select)="onSelect($event)">
       </nb-calendar-picker>
     </div>
   `,
-  styleUrls: ['./calendar-day-picker.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    styleUrls: ['./calendar-day-picker.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbCalendarDayPickerComponent<D, T> implements OnChanges {
+
   /**
    * Describes which month picker have to render.
    * */
@@ -84,7 +83,6 @@ export class NbCalendarDayPickerComponent<D, T> implements OnChanges {
   /**
    * Custom day cell component. Have to implement `NbCalendarCell` interface.
    * */
-  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('cellComponent')
   set setCellComponent(cellComponent: Type<NbCalendarCell<D, T>>) {
     if (cellComponent) {
@@ -147,7 +145,8 @@ export class NbCalendarDayPickerComponent<D, T> implements OnChanges {
    * */
   weeks: D[][];
 
-  constructor(private monthModel: NbCalendarMonthModelService<D>) {}
+  constructor(private monthModel: NbCalendarMonthModelService<D>) {
+  }
 
   ngOnChanges({ visibleDate, boundingMonths, firstDayOfWeek }: SimpleChanges) {
     if (visibleDate || boundingMonths || firstDayOfWeek) {

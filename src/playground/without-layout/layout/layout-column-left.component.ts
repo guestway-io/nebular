@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-layout-column-left',
-  templateUrl: './layout-column-left.component.html',
+    selector: 'nb-layout-column-left',
+    templateUrl: './layout-column-left.component.html',
+    standalone: false
 })
-export class LayoutColumnLeftComponent {}
+
+export class LayoutColumnLeftComponent {
+}

@@ -7,7 +7,7 @@ import { NbListItemComponent, NbLayoutScrollService, NB_WINDOW, NbLayoutRulerSer
 import { NewsService } from './news.service';
 
 @Component({
-  template: `
+    template: `
     <nb-card>
       <nb-list
         nbInfiniteList
@@ -18,24 +18,25 @@ import { NewsService } from './news.service';
         nbListPageTracker
         [pageSize]="pageSize"
         [startPage]="startPage"
-        (pageChange)="updateUrl($event)"
-      >
+        (pageChange)="updateUrl($event)">
         <nb-list-item *ngFor="let _ of topPlaceholders">
-          <npg-news-post-placeholder></npg-news-post-placeholder>
+          <nb-news-post-placeholder></nb-news-post-placeholder>
         </nb-list-item>
         <nb-list-item *ngFor="let newsPost of news">
-          <npg-news-post [post]="newsPost"></npg-news-post>
+          <nb-news-post [post]="newsPost"></nb-news-post>
         </nb-list-item>
         <nb-list-item *ngFor="let _ of bottomPlaceholders">
-          <npg-news-post-placeholder></npg-news-post-placeholder>
+          <nb-news-post-placeholder></nb-news-post-placeholder>
         </nb-list-item>
       </nb-list>
     </nb-card>
   `,
-  styleUrls: ['infinite-news-list.component.scss'],
-  providers: [NewsService],
+    styleUrls: ['infinite-news-list.component.scss'],
+    providers: [NewsService],
+    standalone: false
 })
 export class InfiniteListPlaceholdersComponent implements OnInit, OnDestroy {
+
   news = [];
   topPlaceholders = [];
   bottomPlaceholders = [];
@@ -98,14 +99,15 @@ export class InfiniteListPlaceholdersComponent implements OnInit, OnDestroy {
     this.topPlaceholders = new Array(this.pageSize);
     this.restoreScrollPosition();
     this.startPage--;
-    this.newsService.load(this.startPage, this.pageSize).subscribe(
-      (news) => {
-        this.topPlaceholders = [];
-        this.news.unshift(...news);
-        this.loadingPrevious = false;
-      },
-      (error) => this.startPage++,
-    );
+    this.newsService.load(this.startPage, this.pageSize)
+      .subscribe(
+        news => {
+          this.topPlaceholders = [];
+          this.news.unshift(...news);
+          this.loadingPrevious = false;
+        },
+        error => this.startPage++,
+      );
   }
 
   loadNext() {
@@ -115,24 +117,25 @@ export class InfiniteListPlaceholdersComponent implements OnInit, OnDestroy {
 
     this.loadingNext = true;
     this.bottomPlaceholders = new Array(this.pageSize);
-    this.newsService.load(this.pageToLoadNext, this.pageSize).subscribe((news) => {
-      this.bottomPlaceholders = [];
-      this.news.push(...news);
-      this.loadingNext = false;
-      this.pageToLoadNext++;
-    });
+    this.newsService.load(this.pageToLoadNext, this.pageSize)
+      .subscribe(news => {
+        this.bottomPlaceholders = [];
+        this.news.push(...news);
+        this.loadingNext = false;
+        this.pageToLoadNext++;
+      });
   }
 
   private restoreScrollPosition() {
     concat(
-      this.layoutService.getDimensions(),
-      this.scrollService.getPosition(),
-      this.listItems.changes.pipe(take(1)),
-      this.layoutService.getDimensions(),
-      this.scrollService.getPosition(),
-    )
+        this.layoutService.getDimensions(),
+        this.scrollService.getPosition(),
+        this.listItems.changes.pipe(take(1)),
+        this.layoutService.getDimensions(),
+        this.scrollService.getPosition(),
+      )
       .pipe(toArray())
-      .subscribe(([oldDimensions, oldScrollPosition, , dimensions, scrollPosition]) => {
+      .subscribe(([ oldDimensions, oldScrollPosition, , dimensions, scrollPosition ]) => {
         const oldHeight = oldDimensions.scrollHeight;
         const oldScrollTop = oldScrollPosition.y;
         const currentHeight = dimensions.scrollHeight;

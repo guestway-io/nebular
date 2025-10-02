@@ -6,20 +6,21 @@
 
 import { Component } from '@angular/core';
 
-@Component({
-  selector: 'npg-popover-placements',
-  templateUrl: './popover-placements.component.html',
-  styles: [
-    `
-      :host {
-        display: block;
-        margin: 4rem 0;
-      }
 
-      button {
-        margin: 1rem;
-      }
-    `,
-  ],
+@Component({
+    selector: 'nb-popover-placements',
+    templateUrl: './popover-placements.component.html',
+    styles: [`
+    :host {
+      display: block;
+      margin: 4rem 0;
+    }
+
+    button {
+      margin: 1rem;
+    }
+  `],
+    standalone: false
 })
-export class PopoverPlacementsComponent {}
+export class PopoverPlacementsComponent {
+}

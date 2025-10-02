@@ -33,16 +33,17 @@ import { NbOptionComponent } from './option.component';
  * option-group-giant-start-padding:
  **/
 @Component({
-  selector: 'nb-option-group',
-  styleUrls: ['./option-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'nb-option-group',
+    styleUrls: ['./option-group.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <span class="option-group-title">{{ title }}</span>
     <ng-content select="nb-option, ng-container"></ng-content>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbOptionGroupComponent implements AfterContentInit, OnDestroy {
+
   protected destroy$ = new Subject<void>();
 
   @Input() title: string;
@@ -73,7 +74,9 @@ export class NbOptionGroupComponent implements AfterContentInit, OnDestroy {
       this.asyncUpdateOptionsDisabledState();
     }
 
-    this.options.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.asyncUpdateOptionsDisabledState());
+    this.options.changes
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.asyncUpdateOptionsDisabledState());
   }
 
   ngOnDestroy() {
@@ -100,3 +103,5 @@ export class NbOptionGroupComponent implements AfterContentInit, OnDestroy {
       .subscribe(() => this.updateOptionsDisabledState());
   }
 }
+
+

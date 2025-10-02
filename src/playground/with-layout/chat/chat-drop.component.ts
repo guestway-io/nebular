@@ -2,22 +2,22 @@ import { Component } from '@angular/core';
 import { NbChatMessageFile } from '../../../framework/theme/components/chat/chat-message-file.component';
 
 @Component({
-  selector: 'npg-chat-drop',
-  styles: [
-    `
-      ::ng-deep nb-layout-column {
-        justify-content: center;
-        display: flex;
-      }
-      nb-chat {
-        width: 500px;
-        height: 80vw;
-      }
-    `,
-  ],
-  templateUrl: './chat-drop.component.html',
+    selector: 'nb-chat-drop',
+    styles: [`
+    ::ng-deep nb-layout-column {
+      justify-content: center;
+      display: flex;
+    }
+    nb-chat {
+      width: 500px;
+      height: 80vw;
+    }
+  `],
+    templateUrl: './chat-drop.component.html',
+    standalone: false
 })
 export class ChatDropComponent {
+
   messages: any[] = [
     {
       text: 'Drag & drop a file or a group of files.',

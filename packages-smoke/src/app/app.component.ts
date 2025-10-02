@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  template: 'Nebular Works!!!',
+    selector: 'bs-root',
+    template: 'Nebular Works!!!',
+    standalone: false
 })
-export class AppComponent {}
+export class AppComponent {
+}

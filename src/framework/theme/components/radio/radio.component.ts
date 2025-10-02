@@ -212,8 +212,8 @@ import { NbComponentOrCustomStatus } from '../component-status';
  * radio-control-disabled-checked-inner-circle-color:
  * */
 @Component({
-  selector: 'nb-radio',
-  template: `
+    selector: 'nb-radio',
+    template: `
     <label>
       <input
         #input
@@ -224,8 +224,7 @@ import { NbComponentOrCustomStatus } from '../component-status';
         [checked]="checked"
         [disabled]="disabled"
         (change)="onChange($event)"
-        (click)="onClick($event)"
-      />
+        (click)="onClick($event)">
       <span class="outer-circle"></span>
       <span class="inner-circle"></span>
       <span class="text">
@@ -233,11 +232,12 @@ import { NbComponentOrCustomStatus } from '../component-status';
       </span>
     </label>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./radio.component.scss'],
-  standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./radio.component.scss'],
+    standalone: false
 })
 export class NbRadioComponent {
+
   @Input()
   get name(): string {
     return this._name;
@@ -290,7 +290,6 @@ export class NbRadioComponent {
 
   @Output() valueChange: EventEmitter<any> = new EventEmitter();
 
-  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() blur: EventEmitter<void> = new EventEmitter();
 
   @ViewChild('input', { read: ElementRef }) input: ElementRef<HTMLInputElement>;

@@ -8,6 +8,7 @@ import {
   Input,
   LOCALE_ID,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -37,12 +38,12 @@ interface NbTimePartOption {
  * Provides a proxy to `TimePicker` options as well as custom picker options.
  */
 @Component({
-  selector: 'nb-timepicker',
-  templateUrl: './timepicker.component.html',
-  styleUrls: ['./timepicker.component.scss'],
-  exportAs: 'nbTimepicker',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    selector: 'nb-timepicker',
+    templateUrl: './timepicker.component.html',
+    styleUrls: ['./timepicker.component.scss'],
+    exportAs: 'nbTimepicker',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbTimePickerComponent<D> implements OnChanges {
   protected blur$: Subject<void> = new Subject<void>();
@@ -177,7 +178,6 @@ export class NbTimePickerComponent<D> implements OnChanges {
   /**
    * Emits date when selected.
    * */
-  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onSelectTime: EventEmitter<NbSelectedTimePayload<D>> = new EventEmitter<NbSelectedTimePayload<D>>();
   @ViewChild(NbPortalDirective, { static: true }) portal: NbPortalDirective;
 

@@ -7,7 +7,9 @@ import { Component } from '@angular/core';
 import { NbLoginComponent } from '@nebular/auth';
 
 @Component({
-  selector: 'npg-ngx-login',
-  templateUrl: './login.component.html',
+    selector: 'ngx-login',
+    templateUrl: './login.component.html',
+    standalone: false
 })
-export class LoginComponent extends NbLoginComponent {}
+export class LoginComponent extends NbLoginComponent {
+}

@@ -20,19 +20,18 @@ import { NbCalendarRange } from './calendar-range.component';
 import { NbBaseCalendarRangeCell } from './base-calendar-range-cell';
 
 @Component({
-  selector: 'nb-calendar-range-month-cell',
-  template: `
+    selector: 'nb-calendar-range-month-cell',
+    template: `
     <div class="cell-content">
       {{ month }}
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
-export class NbCalendarRangeMonthCellComponent<D>
-  extends NbBaseCalendarRangeCell<D>
-  implements NbCalendarCell<D, NbCalendarRange<D>>
-{
+export class NbCalendarRangeMonthCellComponent<D> extends NbBaseCalendarRangeCell<D>
+                                                  implements NbCalendarCell<D, NbCalendarRange<D>> {
+
   get month(): string {
     return this.dateService.getMonthName(this.date);
   }
@@ -47,7 +46,6 @@ export class NbCalendarRangeMonthCellComponent<D>
   @Input() size: NbCalendarSize = NbCalendarSize.MEDIUM;
   static ngAcceptInputType_size: NbCalendarSizeValues;
 
-  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() select: EventEmitter<D> = new EventEmitter(true);
 
   @HostBinding('class.month-cell')

@@ -7,9 +7,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-alert-outline',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './alert-outline.component.html',
-  styleUrls: ['./alert-example.component.scss'],
+    selector: 'nb-alert-outline',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './alert-outline.component.html',
+    styleUrls: ['./alert-example.component.scss'],
+    standalone: false
 })
-export class AlertOutlineComponent {}
+export class AlertOutlineComponent {
+}

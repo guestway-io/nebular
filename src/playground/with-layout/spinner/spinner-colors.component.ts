@@ -7,9 +7,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-spinner-colors',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './spinner-colors.component.html',
-  styleUrls: ['./spinner-colors.component.scss'],
+    selector: 'nb-spinner-colors',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './spinner-colors.component.html',
+    styleUrls: ['./spinner-colors.component.scss'],
+    standalone: false
 })
-export class SpinnerColorsComponent {}
+export class SpinnerColorsComponent {
+}

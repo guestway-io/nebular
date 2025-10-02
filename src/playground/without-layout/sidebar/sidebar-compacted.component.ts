@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-sidebar-compacted',
-  templateUrl: './sidebar-compacted.component.html',
+    selector: 'nb-sidebar-compacted',
+    templateUrl: './sidebar-compacted.component.html',
+    standalone: false
 })
-export class SidebarCompactedComponent {}
+
+export class SidebarCompactedComponent {
+}

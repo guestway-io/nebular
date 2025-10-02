@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-context-menu-showcase',
-  templateUrl: './context-menu-showcase.component.html',
-  styles: [
-    `
-      :host nb-layout-header ::ng-deep nav {
-        justify-content: flex-end;
-      }
-    `,
-  ],
+    selector: 'nb-context-menu-showcase',
+    templateUrl: './context-menu-showcase.component.html',
+    styles: [`
+    :host nb-layout-header ::ng-deep nav {
+      justify-content: flex-end;
+    }
+  `],
+    standalone: false
 })
+
 export class ContextMenuShowcaseComponent {
-  items = [{ title: 'Profile' }, { title: 'Logout' }];
+  items = [
+    { title: 'Profile' },
+    { title: 'Logout' },
+  ];
 }

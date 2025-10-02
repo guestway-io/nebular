@@ -3,15 +3,17 @@ import { NbDialogService } from '@nebular/theme';
 import { HasBackdropDialogComponent } from './components/has-backdrop-dialog.component';
 
 @Component({
-  selector: 'npg-dialog-has-backdrop',
-  template: `
+    selector: 'nb-dialog-has-backdrop',
+    template: `
     <button nbButton (click)="openWithBackdrop()">With backdrop</button>
     <button nbButton (click)="openWithoutBackdrop()">Without backdrop</button>
   `,
-  styleUrls: ['./dialog-common.scss'],
+    styleUrls: ['./dialog-common.scss'],
+    standalone: false
 })
 export class DialogHasBackdropComponent {
-  constructor(private dialogService: NbDialogService) {}
+  constructor(private dialogService: NbDialogService) {
+  }
 
   openWithBackdrop() {
     this.open(true);

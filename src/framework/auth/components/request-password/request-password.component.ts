@@ -12,13 +12,14 @@ import { NbAuthService } from '../../services/auth.service';
 import { NbAuthResult } from '../../services/auth-result';
 
 @Component({
-  selector: 'nb-request-password-page',
-  styleUrls: ['./request-password.component.scss'],
-  templateUrl: './request-password.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    selector: 'nb-request-password-page',
+    styleUrls: ['./request-password.component.scss'],
+    templateUrl: './request-password.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbRequestPasswordComponent {
+
   redirectDelay: number = 0;
   showMessages: any = {};
   strategy: string = '';
@@ -28,12 +29,11 @@ export class NbRequestPasswordComponent {
   messages: string[] = [];
   user: any = {};
 
-  constructor(
-    protected service: NbAuthService,
-    @Inject(NB_AUTH_OPTIONS) protected options = {},
-    protected cd: ChangeDetectorRef,
-    protected router: Router,
-  ) {
+  constructor(protected service: NbAuthService,
+              @Inject(NB_AUTH_OPTIONS) protected options = {},
+              protected cd: ChangeDetectorRef,
+              protected router: Router) {
+
     this.redirectDelay = this.getConfigValue('forms.requestPassword.redirectDelay');
     this.showMessages = this.getConfigValue('forms.requestPassword.showMessages');
     this.strategy = this.getConfigValue('forms.requestPassword.strategy');

@@ -115,8 +115,8 @@ describe('Component: NbToggle', () => {
 
 // Test component with reactive forms
 @Component({
-  template: `<nb-toggle [formControl]="formControl"></nb-toggle>`,
-  standalone: false,
+    template: `<nb-toggle [formControl]="formControl"></nb-toggle>`,
+    standalone: false
 })
 class ToggleWithFormControlComponent {
   formControl = new FormControl();

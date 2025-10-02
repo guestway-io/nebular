@@ -1,12 +1,14 @@
-import { Component, ChangeDetectionStrategy, ViewChild, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'npg-accordion-toggle',
-  templateUrl: './accordion-toggle.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'nb-accordion-toggle',
+    templateUrl: './accordion-toggle.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'example-height-60' },
+    standalone: false
 })
 export class AccordionToggleComponent {
-  @HostBinding('class') classes = 'example-height-60';
+
   @ViewChild('item') accordion;
 
   toggle() {

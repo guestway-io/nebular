@@ -8,12 +8,15 @@ import { AfterViewInit, Component, OnDestroy, TemplateRef, ViewChild } from '@an
 import { PopoverListComponent, PopoverTabsComponent } from './components/dynamic.components';
 import { NbPopoverDirective } from '@nebular/theme';
 
+
 @Component({
-  selector: 'npg-popover-dynamic-code',
-  templateUrl: './popover-dynamic-code.component.html',
-  styleUrls: ['./popover-dynamic.scss'],
+    selector: 'nb-popover-dynamic-code',
+    templateUrl: './popover-dynamic-code.component.html',
+    styleUrls: ['./popover-dynamic.scss'],
+    standalone: false
 })
 export class PopoverDynamicCodeComponent implements OnDestroy, AfterViewInit {
+
   @ViewChild(NbPopoverDirective) popover: NbPopoverDirective;
   @ViewChild('tabs', { read: TemplateRef }) templateTabs: TemplateRef<any>;
   @ViewChild('list', { read: TemplateRef }) templateList: TemplateRef<any>;
@@ -58,7 +61,13 @@ export class PopoverDynamicCodeComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.items = [this.componentList, this.componentTabs, this.templateList, this.templateTabs, this.textContent];
+    this.items = [
+      this.componentList,
+      this.componentTabs,
+      this.templateList,
+      this.templateTabs,
+      this.textContent,
+    ];
   }
 
   ngOnDestroy() {

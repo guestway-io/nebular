@@ -108,13 +108,14 @@ export interface NbIconConfig {
  * icon-control-color:
  */
 @Component({
-  selector: 'nb-icon',
-  styleUrls: [`./icon.component.scss`],
-  template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    selector: 'nb-icon',
+    styleUrls: [`./icon.component.scss`],
+    template: '',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbIconComponent implements NbIconConfig, OnChanges, OnInit {
+
   protected iconDef;
   protected prevClasses = [];
 

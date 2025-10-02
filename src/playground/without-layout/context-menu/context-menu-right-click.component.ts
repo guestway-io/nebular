@@ -4,25 +4,28 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
 
-import { Component, HostListener, ViewChild } from '@angular/core';
+import {Component, HostListener, ViewChild} from '@angular/core';
 import { NbContextMenuDirective } from '@nebular/theme';
 
+
 @Component({
-  selector: 'npg-context-menu-right-click',
-  templateUrl: './context-menu-right-click.component.html',
-  styles: [
-    `
-      button {
-        margin-right: 1rem;
-        margin-top: 1rem;
-      }
-    `,
-  ],
+    selector: 'nb-context-menu-right-click',
+    templateUrl: './context-menu-right-click.component.html',
+    styles: [`
+    button {
+      margin-right: 1rem;
+      margin-top: 1rem;
+    }
+  `],
+    standalone: false
 })
 export class ContextMenuRightClickComponent {
   @ViewChild(NbContextMenuDirective) contextMenu: NbContextMenuDirective;
 
-  items = [{ title: 'Profile' }, { title: 'Logout' }];
+  items = [
+    { title: 'Profile' },
+    { title: 'Logout' },
+  ];
 
   open() {
     this.contextMenu.show();
@@ -33,4 +36,5 @@ export class ContextMenuRightClickComponent {
   close() {
     this.contextMenu.hide();
   }
+
 }

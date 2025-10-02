@@ -7,9 +7,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-button-group-shapes',
-  templateUrl: './button-group-shapes.component.html',
-  styleUrls: ['./button-group-spacing.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'nb-button-group-shapes',
+    templateUrl: './button-group-shapes.component.html',
+    styleUrls: ['./button-group-spacing.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
-export class ButtonGroupShapesComponent {}
+export class ButtonGroupShapesComponent {
+}

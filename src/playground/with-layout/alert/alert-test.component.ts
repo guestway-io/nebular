@@ -7,27 +7,32 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-alert-test',
-  template: `
+    selector: 'nb-alert-test',
+    template: `
     <nb-alert
       *ngFor="let alert of alerts"
       [size]="alert.size"
       [status]="alert.status"
       closable
-      (close)="onClose(alert)"
-    >
+      (close)="onClose(alert)">
       Success message!
     </nb-alert>
 
-    <nb-alert *ngFor="let alert of accentAlerts" [size]="alert.size" [status]="alert.status" [accent]="alert.accent">
+    <nb-alert
+      *ngFor="let alert of accentAlerts"
+      [size]="alert.size"
+      [status]="alert.status"
+      [accent]="alert.accent">
       Success message!
     </nb-alert>
   `,
+    standalone: false
 })
 export class AlertTestComponent {
-  sizes = ['tiny', 'small', 'medium', 'large', 'giant'];
-  statuses = ['primary', 'success', 'info', 'warning', 'danger'];
-  accents = ['primary', 'success', 'info', 'warning', 'danger'];
+
+  sizes = [ 'tiny', 'small', 'medium', 'large', 'giant' ];
+  statuses = [ 'primary', 'success', 'info', 'warning', 'danger' ];
+  accents = [ 'primary', 'success', 'info', 'warning', 'danger' ];
 
   alerts: any[];
   accentAlerts: any;

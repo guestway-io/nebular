@@ -1,9 +1,10 @@
-import rxjs from "eslint-plugin-rxjs";
+import rxjs from "eslint-plugin-rxjs-x";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
+import tseslint from "@typescript-eslint/eslint-plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,9 +17,6 @@ const compat = new FlatCompat({
 export default [{
     ignores: [
         "src/framework/**/*",
-        "docs/**/*",
-        "packages-smoke/**/*",
-        "tools/dev-schematics/*/files",
     ],
 }, ...compat.extends(
     "plugin:@angular-eslint/recommended",
@@ -32,6 +30,7 @@ export default [{
 
     plugins: {
         rxjs,
+        "@typescript-eslint": tseslint,
     },
 
     languageOptions: {
@@ -48,8 +47,13 @@ export default [{
         quotes: "off",
         "dot-notation": "off",
         "no-restricted-globals": ["error", "fit", "fdescribe"],
+        "@typescript-eslint/dot-notation": "error",
         "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error",
         "no-underscore-dangle": "off",
+        "@typescript-eslint/consistent-type-definitions": "error",
+        "@angular-eslint/prefer-standalone": "off",
+        "@angular-eslint/prefer-inject": "off",
 
         "rxjs/no-unsafe-takeuntil": ["error", {
             allow: [

@@ -17,11 +17,13 @@ import { NbSelectedTimeModel } from './model';
 import { NbPlatform } from '../cdk/platform/platform-service';
 
 @Component({
-  selector: 'nb-timepicker-cell',
-  template: ` <div #valueContainer>{{ value }}</div> `,
-  styleUrls: ['./timepicker-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    selector: 'nb-timepicker-cell',
+    template: `
+    <div #valueContainer>{{ value }}</div>
+  `,
+    styleUrls: ['./timepicker-cell.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbTimePickerCellComponent implements AfterViewInit, OnDestroy {
   protected selectedChange$ = new Subject<boolean>();
@@ -35,17 +37,18 @@ export class NbTimePickerCellComponent implements AfterViewInit, OnDestroy {
       this.scrollToElement();
     }
     this.selectedChange$.next(selected);
-  }
+  };
   get selected(): boolean {
     return this._selected;
   }
   @Input() value: string;
-  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() select: EventEmitter<NbSelectedTimeModel> = new EventEmitter();
 
   @ViewChild('valueContainer') valueContainerElement: ElementRef;
 
-  constructor(protected ngZone: NgZone, protected platformService: NbPlatform) {}
+  constructor(protected ngZone: NgZone,
+              protected platformService: NbPlatform) {
+  }
 
   @HostListener('click')
   onClick() {
@@ -58,14 +61,17 @@ export class NbTimePickerCellComponent implements AfterViewInit, OnDestroy {
       // timepicker could be not fully rendered and placed. Because of it, we're waiting for Angular
       // to finish change detection run and only then scroll to the selected cell.
       this.ngZone.onStable
-        .pipe(take(1), takeUntil(merge(this.unselected$, this.destroy$)))
-        .subscribe(() => this.scrollToElement());
+      .pipe(
+        take(1),
+        takeUntil(merge(this.unselected$, this.destroy$)))
+      .subscribe(() => this.scrollToElement());
     }
   }
 
   protected scrollToElement() {
     if (this.valueContainerElement && this.platformService.isBrowser) {
-      this.ngZone.runOutsideAngular(() => this.valueContainerElement.nativeElement.scrollIntoView({ block: 'center' }));
+      this.ngZone.runOutsideAngular(() =>
+        this.valueContainerElement.nativeElement.scrollIntoView({block: 'center'}));
     }
   }
 

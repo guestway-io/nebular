@@ -20,18 +20,18 @@ import {
 import { NbCalendarCell, NbCalendarSize, NbCalendarSizeValues } from '../../model';
 
 @Component({
-  selector: 'nb-calendar-picker-row',
-  styles: [
-    `
+    selector: 'nb-calendar-picker-row',
+    styles: [
+        `
       :host {
         display: flex;
         justify-content: space-between;
       }
     `,
-  ],
-  template: '<ng-template></ng-template>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    ],
+    template: '<ng-template></ng-template>',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbCalendarPickerRowComponent<D, T> implements OnChanges {
   @Input() row: D[];
@@ -51,10 +51,9 @@ export class NbCalendarPickerRowComponent<D, T> implements OnChanges {
 
   ngOnChanges() {
     this.containerRef.clear();
+
     this.row.forEach((date: D) => {
-      const component = this.containerRef.createComponent(this.component, {
-        index: this.containerRef.length,
-      });
+      const component = this.containerRef.createComponent(this.component, { index: this.containerRef.length });
       this.patchWithContext(component.instance, date);
       component.changeDetectorRef.detectChanges();
     });

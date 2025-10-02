@@ -28,16 +28,17 @@ import { convertToBoolProperty, NbBooleanInput } from '../helpers';
  * Component intended to be used within `<nb-accordion>` component
  */
 @Component({
-  selector: 'nb-accordion-item',
-  styleUrls: ['./accordion-item.component.scss'],
-  template: `
+    selector: 'nb-accordion-item',
+    styleUrls: ['./accordion-item.component.scss'],
+    template: `
     <ng-content select="nb-accordion-item-header"></ng-content>
     <ng-content select="nb-accordion-item-body"></ng-content>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbAccordionItemComponent implements OnInit, OnChanges, OnDestroy {
+
   /**
    * Item is collapse (`true` by default)
    * @type {boolean}
@@ -95,7 +96,8 @@ export class NbAccordionItemComponent implements OnInit, OnChanges, OnDestroy {
   private disabledValue = false;
   private destroy$ = new Subject<void>();
 
-  constructor(@Host() private accordion: NbAccordionComponent, private cd: ChangeDetectorRef) {}
+  constructor(@Host() private accordion: NbAccordionComponent, private cd: ChangeDetectorRef) {
+  }
 
   /**
    * Open/close the item
@@ -127,8 +129,10 @@ export class NbAccordionItemComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.accordion.openCloseItems.pipe(takeUntil(this.destroy$)).subscribe((collapsed) => {
-      !this.disabled && (this.collapsed = collapsed);
+    this.accordion.openCloseItems
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(collapsed => {
+        !this.disabled && (this.collapsed = collapsed);
     });
   }
 

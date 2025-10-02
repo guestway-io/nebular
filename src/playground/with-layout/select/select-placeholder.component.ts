@@ -7,7 +7,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-select-placeholder',
-  templateUrl: './select-placeholder.component.html',
+    selector: 'nb-select-placeholder',
+    templateUrl: './select-placeholder.component.html',
+    standalone: false
 })
-export class SelectPlaceholderComponent {}
+export class SelectPlaceholderComponent {
+}

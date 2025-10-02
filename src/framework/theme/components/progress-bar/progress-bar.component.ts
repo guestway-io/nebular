@@ -95,9 +95,9 @@ import { NbComponentOrCustomStatus } from '../component-status';
  * progress-bar-control-text-color:
  */
 @Component({
-  selector: 'nb-progress-bar',
-  styleUrls: ['./progress-bar.component.scss'],
-  template: `
+    selector: 'nb-progress-bar',
+    styleUrls: ['./progress-bar.component.scss'],
+    template: `
     <div class="progress-container">
       <div class="progress-value" [style.width.%]="value">
         <span *ngIf="displayValue">{{ value }}%</span>
@@ -105,9 +105,10 @@ import { NbComponentOrCustomStatus } from '../component-status';
       </div>
     </div>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbProgressBarComponent {
+
   /**
    * Progress bar value in percent (0 - 100)
    */
@@ -196,5 +197,6 @@ export class NbProgressBarComponent {
     return [];
   }
 
-  constructor(protected statusService: NbStatusService) {}
+  constructor(protected statusService: NbStatusService) {
+  }
 }

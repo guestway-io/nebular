@@ -2,22 +2,28 @@ import { Component } from '@angular/core';
 import { NewsService } from './news.service';
 
 @Component({
-  template: `
+    template: `
     <nb-card>
-      <nb-list nbInfiniteList listenWindowScroll [threshold]="500" (bottomThreshold)="loadNext()">
+      <nb-list
+        nbInfiniteList
+        listenWindowScroll
+        [threshold]="500"
+        (bottomThreshold)="loadNext()">
         <nb-list-item *ngFor="let newsPost of news">
-          <npg-news-post [post]="newsPost"></npg-news-post>
+          <nb-news-post [post]="newsPost"></nb-news-post>
         </nb-list-item>
         <nb-list-item *ngFor="let _ of placeholders">
-          <npg-news-post-placeholder></npg-news-post-placeholder>
+          <nb-news-post-placeholder></nb-news-post-placeholder>
         </nb-list-item>
       </nb-list>
     </nb-card>
   `,
-  styleUrls: ['infinite-news-list.component.scss'],
-  providers: [NewsService],
+    styleUrls: ['infinite-news-list.component.scss'],
+    providers: [NewsService],
+    standalone: false
 })
 export class InfiniteListShowcaseComponent {
+
   news = [];
   placeholders = [];
   pageSize = 10;
@@ -27,17 +33,16 @@ export class InfiniteListShowcaseComponent {
   constructor(private newsService: NewsService) {}
 
   loadNext() {
-    if (this.loading) {
-      return;
-    }
+    if (this.loading) { return }
 
     this.loading = true;
     this.placeholders = new Array(this.pageSize);
-    this.newsService.load(this.pageToLoadNext, this.pageSize).subscribe((news) => {
-      this.placeholders = [];
-      this.news.push(...news);
-      this.loading = false;
-      this.pageToLoadNext++;
-    });
+    this.newsService.load(this.pageToLoadNext, this.pageSize)
+      .subscribe(news => {
+        this.placeholders = [];
+        this.news.push(...news);
+        this.loading = false;
+        this.pageToLoadNext++;
+      });
   }
 }

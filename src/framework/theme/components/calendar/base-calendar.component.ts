@@ -23,11 +23,12 @@ import { convertToBoolProperty, NbBooleanInput } from '../helpers';
  * between pickers.
  * */
 @Component({
-  selector: 'nb-base-calendar',
-  templateUrl: './base-calendar.component.html',
-  standalone: false,
+    selector: 'nb-base-calendar',
+    templateUrl: './base-calendar.component.html',
+    standalone: false
 })
 export class NbBaseCalendarComponent<D, T> implements OnInit {
+
   /**
    * Defines if we should render previous and next months
    * in the current month view.
@@ -37,7 +38,6 @@ export class NbBaseCalendarComponent<D, T> implements OnInit {
   /**
    * Defines active view for calendar.
    * */
-  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('startView') activeViewMode: NbCalendarViewMode = NbCalendarViewMode.DATE;
   static ngAcceptInputType_activeViewMode: NbCalendarViewModeValues;
 
@@ -123,7 +123,10 @@ export class NbBaseCalendarComponent<D, T> implements OnInit {
    * */
   @Output() dateChange: EventEmitter<T> = new EventEmitter();
 
-  constructor(protected dateService: NbDateService<D>, protected yearModelService: NbCalendarYearModelService<D>) {}
+  constructor(
+    protected dateService: NbDateService<D>,
+    protected yearModelService: NbCalendarYearModelService<D>,
+  ) {}
 
   ngOnInit() {
     if (!this.visibleDate) {

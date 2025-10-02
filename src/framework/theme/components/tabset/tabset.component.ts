@@ -40,8 +40,8 @@ import { NbTabTitleDirective } from './tab-title.directive';
  * ```
  */
 @Component({
-  selector: 'nb-tab',
-  template: `
+    selector: 'nb-tab',
+    template: `
     <ng-container
       *ngIf="tabContentDirective; else projectedContent"
       [ngTemplateOutlet]="tabContentDirective.templateRef"
@@ -51,7 +51,7 @@ import { NbTabTitleDirective } from './tab-title.directive';
       <ng-content></ng-content>
     </ng-template>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbTabComponent {
   @ContentChild(NbTabContentDirective) tabContentDirective: NbTabContentDirective;
@@ -298,9 +298,9 @@ export class NbTabComponent {
  * tabset-scrollbar-width:
  */
 @Component({
-  selector: 'nb-tabset',
-  styleUrls: ['./tabset.component.scss'],
-  template: `
+    selector: 'nb-tabset',
+    styleUrls: ['./tabset.component.scss'],
+    template: `
     <ul class="tabset">
       <li
         *ngFor="let tab of tabs"
@@ -336,7 +336,7 @@ export class NbTabComponent {
     </ul>
     <ng-content select="nb-tab"></ng-content>
   `,
-  standalone: false,
+    standalone: false
 })
 export class NbTabsetComponent implements AfterContentInit, OnDestroy {
   @ContentChildren(NbTabComponent) tabs: QueryList<NbTabComponent>;
@@ -362,9 +362,9 @@ export class NbTabsetComponent implements AfterContentInit, OnDestroy {
 
   /**
    * Emits when tab is selected
-   * @type EventEmitter<NbTabComponent>
+   * @type EventEmitter<any>
    */
-  @Output() changeTab = new EventEmitter<NbTabComponent>();
+  @Output() changeTab = new EventEmitter<any>();
 
   private destroy$: Subject<void> = new Subject<void>();
 

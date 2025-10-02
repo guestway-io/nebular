@@ -8,9 +8,10 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Type, 
 
 import { NbCalendarCell, NbCalendarSize, NbCalendarSizeValues } from '../../model';
 
+
 @Component({
-  selector: 'nb-calendar-picker',
-  template: `
+    selector: 'nb-calendar-picker',
+    template: `
     <nb-calendar-picker-row
       *ngFor="let row of data"
       [row]="row"
@@ -21,12 +22,11 @@ import { NbCalendarCell, NbCalendarSize, NbCalendarSizeValues } from '../../mode
       [max]="max"
       [filter]="filter"
       [size]="size"
-      (select)="select.emit($event)"
-    >
+      (select)="select.emit($event)">
     </nb-calendar-picker-row>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbCalendarPickerComponent<D, T> {
   @Input() data: D[][];
@@ -38,7 +38,6 @@ export class NbCalendarPickerComponent<D, T> {
   @Input() filter: (D) => boolean;
   @Input() size: NbCalendarSize = NbCalendarSize.MEDIUM;
   static ngAcceptInputType_size: NbCalendarSizeValues;
-  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() select: EventEmitter<D> = new EventEmitter();
 
   @HostBinding('class.size-large')

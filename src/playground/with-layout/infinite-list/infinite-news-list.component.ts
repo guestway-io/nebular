@@ -6,7 +6,7 @@ import { NbListItemComponent, NbLayoutScrollService, NB_WINDOW } from '@nebular/
 import { NewsService } from './news.service';
 
 @Component({
-  template: `
+    template: `
     <nb-card>
       <div [nbSpinner]="loadingPrevious"></div>
       <nb-list
@@ -18,21 +18,22 @@ import { NewsService } from './news.service';
         nbListPageTracker
         [pageSize]="pageSize"
         [startPage]="startPage"
-        (pageChange)="updateUrl($event)"
-      >
+        (pageChange)="updateUrl($event)">
         <nb-list-item *ngFor="let newsPost of news">
-          <npg-news-post [post]="newsPost"></npg-news-post>
+          <nb-news-post [post]="newsPost"></nb-news-post>
         </nb-list-item>
         <nb-list-item *ngFor="let _ of placeholders">
-          <npg-news-post-placeholder></npg-news-post-placeholder>
+          <nb-news-post-placeholder></nb-news-post-placeholder>
         </nb-list-item>
       </nb-list>
     </nb-card>
   `,
-  styleUrls: ['infinite-news-list.component.scss'],
-  providers: [NewsService],
+    styleUrls: ['infinite-news-list.component.scss'],
+    providers: [NewsService],
+    standalone: false
 })
 export class InfiniteNewsListComponent implements OnInit, OnDestroy {
+
   news = [];
   placeholders = [];
   pageSize = 10;
@@ -90,27 +91,27 @@ export class InfiniteNewsListComponent implements OnInit, OnDestroy {
     }
 
     this.loadingPrevious = true;
-    this.newsService.load(this.startPage - 1, this.pageSize).subscribe((news) => {
-      this.news.unshift(...news);
-      this.loadingPrevious = false;
-      this.restoreScrollPosition();
-      this.startPage--;
-    });
+    this.newsService.load(this.startPage - 1, this.pageSize)
+      .subscribe(news => {
+        this.news.unshift(...news);
+        this.loadingPrevious = false;
+        this.restoreScrollPosition();
+        this.startPage--;
+      });
   }
 
   loadNext() {
-    if (this.loadingNext) {
-      return;
-    }
+    if (this.loadingNext) { return }
 
     this.loadingNext = true;
     this.placeholders = new Array(this.pageSize);
-    this.newsService.load(this.pageToLoadNext, this.pageSize).subscribe((news) => {
-      this.placeholders = [];
-      this.news.push(...news);
-      this.loadingNext = false;
-      this.pageToLoadNext++;
-    });
+    this.newsService.load(this.pageToLoadNext, this.pageSize)
+      .subscribe(news => {
+        this.placeholders = [];
+        this.news.push(...news);
+        this.loadingNext = false;
+        this.pageToLoadNext++;
+      });
   }
 
   private restoreScrollPosition() {
@@ -119,15 +120,13 @@ export class InfiniteNewsListComponent implements OnInit, OnDestroy {
     this.listItems.changes
       .pipe(
         map(() => this.listItems.first.nativeElement),
-        filter((newFirstItem) => newFirstItem !== previousFirstItem),
+        filter(newFirstItem => newFirstItem !== previousFirstItem),
         take(1),
       )
       .subscribe(() => {
         let heightOfAddedItems = 0;
         for (const { nativeElement } of this.listItems.toArray()) {
-          if (nativeElement === previousFirstItem) {
-            break;
-          }
+          if (nativeElement === previousFirstItem) { break }
           heightOfAddedItems += getElementHeight(this.window, nativeElement);
         }
         this.scrollService.scrollTo(null, heightOfAddedItems);

@@ -16,15 +16,16 @@ import {
 import { NbCalendarCell, NbCalendarSize, NbCalendarSizeValues } from '../../model';
 import { NbDateService } from '../../services/date.service';
 
+
 @Component({
-  selector: 'nb-calendar-month-cell',
-  template: `
+    selector: 'nb-calendar-month-cell',
+    template: `
     <div class="cell-content">
       {{ month }}
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbCalendarMonthCellComponent<D> implements NbCalendarCell<D, D> {
   @Input() date: D;
@@ -38,10 +39,10 @@ export class NbCalendarMonthCellComponent<D> implements NbCalendarCell<D, D> {
   @Input() size: NbCalendarSize = NbCalendarSize.MEDIUM;
   static ngAcceptInputType_size: NbCalendarSizeValues;
 
-  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() select: EventEmitter<D> = new EventEmitter(true);
 
-  constructor(private dateService: NbDateService<D>) {}
+  constructor(private dateService: NbDateService<D>) {
+  }
 
   @HostBinding('class.selected') get selected(): boolean {
     return this.dateService.isSameMonthSafe(this.date, this.selectedValue);

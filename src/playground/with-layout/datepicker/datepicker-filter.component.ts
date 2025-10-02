@@ -7,16 +7,17 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'npg-datepicker-filter',
-  template: `
+    selector: 'nb-datepicker-filter',
+    template: `
     <nb-card size="large">
       <nb-card-body>
-        <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" />
+        <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker">
         <nb-datepicker #dateTimePicker [filter]="filterFn"></nb-datepicker>
       </nb-card-body>
     </nb-card>
   `,
-  styleUrls: ['./datepicker-example.scss'],
+    styleUrls: ['./datepicker-example.scss'],
+    standalone: false
 })
 export class DatepickerFilterComponent {
   filterFn = (date) => date.getDay() === 0;
