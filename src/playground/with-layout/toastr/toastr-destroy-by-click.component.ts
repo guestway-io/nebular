@@ -29,6 +29,7 @@ export class ToastrDestroyByClickComponent {
     this.toastrService.show(
       'This is super toast message',
       `This is toast number: ${++this.index}`,
+      undefined,
       { destroyByClick });
   }
 }

@@ -10,13 +10,13 @@
     </button>
   </div>
 
-  <npg-custom-message-table
+  <nb-custom-message-table
     *nbCustomMessage="'table'; noStyles: true; let tableData; let isReply = isReply"
     [columns]="tableData.columns"
     [rows]="tableData.rows"
     [isReply]="isReply"
   >
-  </npg-custom-message-table>
+  </nb-custom-message-table>
 
   <nb-chat-message
     *ngFor="let msg of messages"

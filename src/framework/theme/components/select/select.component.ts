@@ -690,10 +690,17 @@ export class NbSelectComponent
   static ngAcceptInputType_multiple: NbBooleanInput;
 
   /**
-   * Determines options overlay offset (in pixels).
+   * Determines options overlay offset top (in pixels).
    **/
-  @Input() optionsOverlayOffset = 8;
-
+  @Input() optionsOverlayOffsetTop = 8;
+  /**
+   * Determines options overlay offset left (in pixels).
+   **/
+  @Input() optionsOverlayOffsetLeft = 0;
+  /**
+   * Determines options overlay position (defaults to bottom).
+   **/
+  @Input() optionsOverlayPosition = NbPosition.BOTTOM;
   /**
    * Determines options overlay scroll strategy.
    **/
@@ -1063,11 +1070,13 @@ export class NbSelectComponent
   }
 
   protected createPositionStrategy(): NbAdjustableConnectedPositionStrategy {
+    // If we modified the position we disable the adjustment.
+    const adjustment = this.optionsOverlayPosition === NbPosition.BOTTOM ? NbAdjustment.VERTICAL : NbAdjustment.NOOP;
     return this.positionBuilder
       .connectedTo(this.button)
-      .position(NbPosition.BOTTOM)
-      .offset(this.optionsOverlayOffset)
-      .adjustment(NbAdjustment.VERTICAL);
+      .position(this.optionsOverlayPosition)
+      .offset(this.optionsOverlayOffsetTop)
+      .adjustment(adjustment);
   }
 
   protected createScrollStrategy(): NbScrollStrategy {

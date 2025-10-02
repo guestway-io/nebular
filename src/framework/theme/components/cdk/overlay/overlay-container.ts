@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentRef,
-  DestroyableInjector,
   EmbeddedViewRef,
   HostBinding,
   Injector,
@@ -153,7 +152,7 @@ export class NbOverlayContainerComponent {
     this.isAttached = false;
   }
 
-  protected createChildInjector(): DestroyableInjector {
+  protected createChildInjector(): Injector {
     return Injector.create({
       parent: this.injector,
       providers: [],

@@ -12,7 +12,7 @@
           {{ customColumn }}
         </th>
         <td nbTreeGridCell *nbTreeGridCellDef="let row">
-          <npg-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></npg-fs-icon>
+          <nb-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></nb-fs-icon>
           {{ row.data[customColumn] }}
         </td>
       </ng-container>

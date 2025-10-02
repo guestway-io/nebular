@@ -27,6 +27,7 @@ export const supportedFilesForUpload = [
     `,
   ],
   templateUrl: './chat-drop-with-button.component.html',
+  standalone: false,
 })
 export class ChatDropWithButtonComponent {
   mimeMap = new Map<string, { icon: string; pack: string }>([

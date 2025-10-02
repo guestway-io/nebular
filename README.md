@@ -69,3 +69,24 @@ Need a visual admin dashboard builder? Check out [UI Bakery](https://uibakery.io
 
 Made with :heart: by [Akveo team](https://www.akveo.com?utm_campaign=service%20-%20akveo%20website%20-%20nebular%20github%20readme%20-%20traffic&utm_source=nebular&utm_medium=referral&utm_content=github_readme). Follow us on [Twitter](https://twitter.com/akveo_inc) to get the latest news first!
 We're always happy to receive your feedback!
+
+
+To run tests locally, you need to have the following installed:
+
+- chromedriver
+
+```bash
+brew install chromedriver
+```
+
+next, you need to xattr the chromedriver binary to allow it to run:
+
+```bash
+sudo xattr -d com.apple.quarantine /opt/homebrew/bin/chromedriver
+```
+
+then you can run the tests:
+
+```bash
+npm run test
+```

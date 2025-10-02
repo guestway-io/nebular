@@ -20,6 +20,7 @@ import { NbPosition } from '../../../framework/theme/components/cdk/overlay/over
     </nb-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectOverlayPositionComponent {
   protected readonly NbPosition = NbPosition;
