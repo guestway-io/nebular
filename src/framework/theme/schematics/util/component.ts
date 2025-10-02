@@ -26,7 +26,7 @@ export class TemplateDescriptor {
 
 export function getComponentTemplateDescriptor(host: Tree, componentPath: string): TemplateDescriptor {
   const compSource: ts.SourceFile = parseSourceFile(host, componentPath);
-  const compMetadata: ts.Node = getDecoratorMetadata(compSource, 'Component', '@angular/core')[0];
+  const compMetadata: any = getDecoratorMetadata(compSource as any, 'Component', '@angular/core')[0];
   const templateProp = getMetadataProperty(compMetadata, 'template');
   const templateUrlProp = getMetadataProperty(compMetadata, 'templateUrl');
 

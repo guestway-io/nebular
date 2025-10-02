@@ -84,7 +84,7 @@ function shouldRegisterRouter(tree: Tree, project: ProjectDefinition): boolean {
   const appRoutingModuleAlreadyImported = isImportedInMainModule(tree, project, 'AppRoutingModule');
 
   const appModulePath = getAppModulePath(tree, getProjectMainFile(project));
-  const routerModuleAlreadyImported = !!getRouterModuleDeclaration(parseSourceFile(tree, appModulePath));
+  const routerModuleAlreadyImported = !!getRouterModuleDeclaration(parseSourceFile(tree, appModulePath) as any);
 
   return !(appRoutingModuleAlreadyImported || routerModuleAlreadyImported);
 }
