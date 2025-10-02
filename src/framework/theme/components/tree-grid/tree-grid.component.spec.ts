@@ -1,5 +1,7 @@
 import { Component, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { CdkTableModule } from '@angular/cdk/table';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { EMPTY } from 'rxjs';
 import { take } from 'rxjs/operators';
 import createSpy = jasmine.createSpy;
@@ -30,8 +32,8 @@ interface CustomStructure {
 }
 
 @Component({
-    template: '',
-    standalone: false
+  template: '',
+  standalone: false,
 })
 class BaseTreeGridTestComponent {
   columns: string[];
@@ -42,7 +44,7 @@ class BaseTreeGridTestComponent {
 }
 
 @Component({
-    template: `
+  template: `
     <table [nbTreeGrid]="dataSource">
       <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: columns"></tr>
 
@@ -52,12 +54,12 @@ class BaseTreeGridTestComponent {
       </ng-container>
     </table>
   `,
-    standalone: false
+  standalone: false,
 })
 export class TreeGridBasicTestComponent extends BaseTreeGridTestComponent {}
 
 @Component({
-    template: `
+  template: `
     <table [nbTreeGrid]="dataSource">
       <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="columns"></tr>
       <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: columns"></tr>
@@ -68,7 +70,7 @@ export class TreeGridBasicTestComponent extends BaseTreeGridTestComponent {}
       </ng-container>
     </table>
   `,
-    standalone: false
+  standalone: false,
 })
 export class TreeGridWithHeaderTestComponent extends BaseTreeGridTestComponent {}
 

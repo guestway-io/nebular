@@ -15,6 +15,9 @@
     "**/*.d.ts"
   ],
   "exclude": [
-    "**/schematics/**/*.spec.ts"
+    "**/schematics/**/*.spec.ts",
+    "src/framework/theme/schematics/**/*.spec.ts",
+    "framework/theme/schematics/**/*.spec.ts",
+    "src/framework/theme/schematics/ng-add/index.spec.ts"
   ]
 }

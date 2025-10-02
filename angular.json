@@ -131,15 +131,15 @@
       }
     },
     "playground-e2e": {
-      "root": "e2e",
-      "sourceRoot": "e2e",
+      "root": "cypress",
+      "sourceRoot": "cypress",
       "projectType": "application",
       "architect": {
         "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
+          "builder": "@cypress/schematic:cypress",
           "options": {
-            "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "playground:serve"
+            "devServerTarget": "playground:serve",
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
             "production-wp": {
@@ -151,8 +151,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "e2e/**/*.ts",
-              "e2e/**/*.html"
+              "cypress/**/*.ts",
+              "cypress/**/*.html"
             ]
           }
         }
@@ -205,7 +205,7 @@
                 "bundleName": "algolia",
                 "input": "node_modules/docsearch.js/dist/cdn/docsearch.min.css"
               },
-              "node_modules/highlight.js/styles/dracula.css",
+              "node_modules/highlight.js/styles/a11y-dark.css",
               "docs/app/@theme/styles/styles.scss"
             ],
             "scripts": [
@@ -299,7 +299,7 @@
               "docs/google46533d2e7a851062.html"
             ],
             "styles": [
-              "node_modules/highlight.js/styles/dracula.css",
+              "node_modules/highlight.js/styles/a11y-dark.css",
               "docs/app/@theme/styles/styles.scss"
             ],
             "scripts": []

@@ -31,12 +31,12 @@ import { ContextMenuRightClickComponent } from './context-menu-right-click.compo
     ContextMenuRightClickComponent,
   ],
   imports: [
+    NbMenuModule.forRoot(),
     NbContextMenuModule,
     NbLayoutModule,
     NbUserModule,
     NbCardModule,
     NbButtonModule,
-    NbMenuModule.forRoot(),
     ContextMenuRoutingModule,
   ],
 })
