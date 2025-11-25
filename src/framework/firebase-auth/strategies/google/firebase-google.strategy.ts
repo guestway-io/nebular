@@ -8,12 +8,10 @@ import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { NbAuthStrategyClass, NbAuthResult, NbAuthStrategyOptions } from '@nebular/auth';
+import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 
 import { NbFirebaseBaseStrategy } from '../base/firebase-base.strategy';
 import { NbFirebaseIdentityProviderStrategyOptions } from '../base/firebase-identity-provider-strategy.options';
-
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
 
 @Injectable()
 export class NbFirebaseGoogleStrategy extends NbFirebaseBaseStrategy {
@@ -25,12 +23,12 @@ export class NbFirebaseGoogleStrategy extends NbFirebaseBaseStrategy {
 
   authenticate(data?: any): Observable<NbAuthResult> {
     const module = 'authenticate';
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
     const scopes = this.getOption('scopes');
     scopes.forEach((scope) => provider.addScope(scope));
     provider.setCustomParameters(this.getOption('customParameters'));
 
-    return from(this.afAuth.signInWithPopup(provider)).pipe(
+    return from(signInWithPopup(this.afAuth, provider)).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );

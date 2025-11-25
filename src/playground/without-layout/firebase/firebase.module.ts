@@ -1,31 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { NbAuthModule } from '@nebular/auth';
 import { NbFirebaseAuthModule, NbFirebasePasswordStrategy, NbFirebaseGoogleStrategy } from '@nebular/firebase-auth';
 
-import { FirebaseAPIService } from './firebase-api.service';
 import { FirebasePlaygroundComponent } from './firebase-playground.component';
 import { FirebasePlaygroundRoutingModule } from './firebase-routing.module';
 import { IdentityProvidersAuthShowcaseComponent } from './identity-proders-auth-showcase/identity-providers-auth-showcase.component';
 import { PasswordAuthShowcaseComponent } from './password-auth-showcase/password-auth-showcase.component';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
 
 @NgModule({
   imports: [
     CommonModule,
-    AngularFireModule.initializeApp({
-      apiKey: 'AIzaSyBEvySH74-sISCTkCC6lXUd3zzYj26GjRk',
-      authDomain: 'auth-sample-f48f1.firebaseapp.com',
-      databaseURL: 'https://auth-sample-f48f1.firebaseio.com',
-      projectId: 'auth-sample-f48f1',
-      storageBucket: 'auth-sample-f48f1.appspot.com',
-      messagingSenderId: '246754092661',
-      appId: '1:246754092661:web:c2606b9ecdbed579673a3c',
-    }),
-    AngularFireAuthModule,
-    AngularFireDatabaseModule,
     FirebasePlaygroundRoutingModule,
     NbFirebaseAuthModule,
     NbAuthModule.forRoot({
@@ -103,6 +90,18 @@ import { PasswordAuthShowcaseComponent } from './password-auth-showcase/password
     }),
   ],
   declarations: [FirebasePlaygroundComponent, PasswordAuthShowcaseComponent, IdentityProvidersAuthShowcaseComponent],
-  providers: [FirebaseAPIService],
+  providers: [
+    provideFirebaseApp(() =>
+      initializeApp({
+        apiKey: 'AIzaSyDeiie7jrSPkG9G_MzCg_5gAoibzcR5vh8',
+        authDomain: 'guestway-io-development.firebaseapp.com',
+        projectId: 'guestway-io-development',
+        storageBucket: 'guestway-io-development.appspot.com',
+        messagingSenderId: '890374380412',
+        appId: '1:890374380412:web:f499389a33a992c47e62f9',
+      }),
+    ),
+    provideAuth(() => getAuth()),
+  ],
 })
 export class FirebasePlaygroundModule {}

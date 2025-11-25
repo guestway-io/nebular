@@ -5,10 +5,18 @@
  */
 
 import { Injectable } from '@angular/core';
-import firebase from 'firebase/compat/app';
 import { Observable, of as observableOf, from } from 'rxjs';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { NbAuthStrategyOptions, NbAuthStrategyClass, NbAuthResult } from '@nebular/auth';
+import {
+  Auth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
+  User,
+  updatePassword,
+} from '@angular/fire/auth';
 
 import { NbFirebaseBaseStrategy } from '../base/firebase-base.strategy';
 import {
@@ -26,7 +34,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   authenticate({ email, password }: any): Observable<NbAuthResult> {
     const module = 'login';
-    return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
+    return from(signInWithEmailAndPassword(this.afAuth, email, password)).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );
@@ -34,24 +42,22 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   refreshToken(data?: any): Observable<NbAuthResult> {
     const module = 'refreshToken';
-    return this.afAuth.authState.pipe(
-      take(1),
-      switchMap((user) => {
-        if (user == null) {
-          return observableOf(
-            new NbAuthResult(false, null, this.getOption(`${module}.redirect.failure`), [
-              "There is no logged in user so refresh of id token isn't possible",
-            ]),
-          );
-        }
-        return this.refreshIdToken(user, module);
-      }),
-    );
+    const user = this.afAuth.currentUser;
+
+    if (user == null) {
+      return observableOf(
+        new NbAuthResult(false, null, this.getOption(`${module}.redirect.failure`), [
+          "There is no logged in user so refresh of id token isn't possible",
+        ]),
+      );
+    }
+
+    return this.refreshIdToken(user, module);
   }
 
   register({ email, password }: any): Observable<NbAuthResult> {
     const module = 'register';
-    return from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
+    return from(createUserWithEmailAndPassword(this.afAuth, email, password)).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );
@@ -59,7 +65,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   requestPassword({ email }: any): Observable<NbAuthResult> {
     const module = 'requestPassword';
-    return from(this.afAuth.sendPasswordResetEmail(email)).pipe(
+    return from(sendPasswordResetEmail(this.afAuth, email)).pipe(
       map(() => {
         return new NbAuthResult(
           true,
@@ -75,7 +81,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   resetPassword({ code, password }): Observable<NbAuthResult> {
     const module = 'resetPassword';
-    return from(this.afAuth.confirmPasswordReset(code, password)).pipe(
+    return from(confirmPasswordReset(this.afAuth, code, password)).pipe(
       map(() => {
         return new NbAuthResult(
           true,
@@ -89,8 +95,8 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
     );
   }
 
-  protected updatePassword(user, password, module) {
-    return from(user.updatePassword(password)).pipe(
+  protected updatePassword(user: User, password: string, module: string) {
+    return from(updatePassword(user, password)).pipe(
       map((token) => {
         return new NbAuthResult(
           true,
@@ -105,7 +111,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
     );
   }
 
-  protected refreshIdToken(user: firebase.User, module): Observable<NbAuthResult> {
+  protected refreshIdToken(user: User, module: string): Observable<NbAuthResult> {
     return from(user.getIdToken(true)).pipe(
       map((token) => {
         return new NbAuthResult(
