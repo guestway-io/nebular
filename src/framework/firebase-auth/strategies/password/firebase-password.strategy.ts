@@ -4,7 +4,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
 
-import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, runInInjectionContext } from '@angular/core';
 import { Observable, of as observableOf, from } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { NbAuthStrategyOptions, NbAuthStrategyClass, NbAuthResult } from '@nebular/auth';
