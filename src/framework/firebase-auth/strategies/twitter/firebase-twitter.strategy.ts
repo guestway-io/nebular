@@ -26,7 +26,7 @@ export class NbFirebaseTwitteStrategy extends NbFirebaseBaseStrategy {
     const provider = new TwitterAuthProvider();
     provider.setCustomParameters(this.getOption('customParameters'));
 
-    return from(runInInjectionContext(this.injector, () => signInWithPopup(this.afAuth, provider))).pipe(
+    return from(runInInjectionContext(this.injector, () => signInWithPopup(this.auth, provider))).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );

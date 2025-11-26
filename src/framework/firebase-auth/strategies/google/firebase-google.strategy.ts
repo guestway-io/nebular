@@ -28,7 +28,7 @@ export class NbFirebaseGoogleStrategy extends NbFirebaseBaseStrategy {
     scopes.forEach((scope) => provider.addScope(scope));
     provider.setCustomParameters(this.getOption('customParameters'));
 
-    return from(runInInjectionContext(this.injector, () => signInWithPopup(this.afAuth, provider))).pipe(
+    return from(runInInjectionContext(this.injector, () => signInWithPopup(this.auth, provider))).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );

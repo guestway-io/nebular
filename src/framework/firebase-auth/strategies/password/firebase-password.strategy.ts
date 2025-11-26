@@ -34,7 +34,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
   authenticate({ email, password }: any): Observable<NbAuthResult> {
     const module = 'login';
     return from(
-      runInInjectionContext(this.injector, () => signInWithEmailAndPassword(this.afAuth, email, password)),
+      runInInjectionContext(this.injector, () => signInWithEmailAndPassword(this.auth, email, password)),
     ).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
@@ -43,7 +43,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   refreshToken(data?: any): Observable<NbAuthResult> {
     const module = 'refreshToken';
-    const user = this.afAuth.currentUser;
+    const user = this.auth.currentUser;
 
     if (user == null) {
       return observableOf(
@@ -59,7 +59,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
   register({ email, password }: any): Observable<NbAuthResult> {
     const module = 'register';
     return from(
-      runInInjectionContext(this.injector, () => createUserWithEmailAndPassword(this.afAuth, email, password)),
+      runInInjectionContext(this.injector, () => createUserWithEmailAndPassword(this.auth, email, password)),
     ).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
@@ -68,7 +68,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   requestPassword({ email }: any): Observable<NbAuthResult> {
     const module = 'requestPassword';
-    return from(runInInjectionContext(this.injector, () => sendPasswordResetEmail(this.afAuth, email))).pipe(
+    return from(runInInjectionContext(this.injector, () => sendPasswordResetEmail(this.auth, email))).pipe(
       map(() => {
         return new NbAuthResult(
           true,
@@ -84,7 +84,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   resetPassword({ code, password }): Observable<NbAuthResult> {
     const module = 'resetPassword';
-    return from(runInInjectionContext(this.injector, () => confirmPasswordReset(this.afAuth, code, password))).pipe(
+    return from(runInInjectionContext(this.injector, () => confirmPasswordReset(this.auth, code, password))).pipe(
       map(() => {
         return new NbAuthResult(
           true,

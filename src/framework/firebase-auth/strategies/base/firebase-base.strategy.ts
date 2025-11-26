@@ -12,13 +12,13 @@ import { Auth, signOut, UserCredential } from '@angular/fire/auth';
 
 @Injectable()
 export abstract class NbFirebaseBaseStrategy extends NbAuthStrategy {
-  constructor(protected afAuth: Auth, protected injector: Injector) {
+  constructor(protected auth: Auth, protected injector: Injector) {
     super();
   }
 
   logout(): Observable<NbAuthResult> {
     const module = 'logout';
-    return from(runInInjectionContext(this.injector, () => signOut(this.afAuth))).pipe(
+    return from(runInInjectionContext(this.injector, () => signOut(this.auth))).pipe(
       map(() => {
         return new NbAuthResult(
           true,

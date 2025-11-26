@@ -7,8 +7,18 @@ import { FirebasePlaygroundComponent } from './firebase-playground.component';
 import { FirebasePlaygroundRoutingModule } from './firebase-routing.module';
 import { IdentityProvidersAuthShowcaseComponent } from './identity-proders-auth-showcase/identity-providers-auth-showcase.component';
 import { PasswordAuthShowcaseComponent } from './password-auth-showcase/password-auth-showcase.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+
+// Firebase configuration - replace with your own values
+const firebaseConfig = {
+  apiKey: '',
+  authDomain: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
+};
 
 @NgModule({
   imports: [
@@ -90,18 +100,6 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
     }),
   ],
   declarations: [FirebasePlaygroundComponent, PasswordAuthShowcaseComponent, IdentityProvidersAuthShowcaseComponent],
-  providers: [
-    provideFirebaseApp(() =>
-      initializeApp({
-        apiKey: '',
-        authDomain: '',
-        projectId: '',
-        storageBucket: '',
-        messagingSenderId: '',
-        appId: '',
-      }),
-    ),
-    provideAuth(() => getAuth()),
-  ],
+  providers: [provideFirebaseApp(() => initializeApp(firebaseConfig)), provideAuth(() => getAuth())],
 })
 export class FirebasePlaygroundModule {}
