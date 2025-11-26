@@ -93,12 +93,12 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
   providers: [
     provideFirebaseApp(() =>
       initializeApp({
-        apiKey: 'AIzaSyDeiie7jrSPkG9G_MzCg_5gAoibzcR5vh8',
-        authDomain: 'guestway-io-development.firebaseapp.com',
-        projectId: 'guestway-io-development',
-        storageBucket: 'guestway-io-development.appspot.com',
-        messagingSenderId: '890374380412',
-        appId: '1:890374380412:web:f499389a33a992c47e62f9',
+        apiKey: '',
+        authDomain: '',
+        projectId: '',
+        storageBucket: '',
+        messagingSenderId: '',
+        appId: '',
       }),
     ),
     provideAuth(() => getAuth()),
