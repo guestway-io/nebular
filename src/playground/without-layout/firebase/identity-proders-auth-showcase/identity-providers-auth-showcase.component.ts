@@ -23,13 +23,13 @@ export class IdentityProvidersAuthShowcaseComponent {
     this.authService
       .logout('google')
       .pipe(take(1))
-      .subscribe((authResult: NbAuthResult) => {});
+      .subscribe((_authResult: NbAuthResult) => {});
   }
 
   loginWithGoogle() {
     this.authService
       .authenticate('google')
       .pipe(take(1))
-      .subscribe((authResult: NbAuthResult) => {});
+      .subscribe((_authResult: NbAuthResult) => {});
   }
 }

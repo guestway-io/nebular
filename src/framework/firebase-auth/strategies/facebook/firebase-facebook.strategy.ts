@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 import { NbAuthResult, NbAuthStrategyClass, NbAuthStrategyOptions } from '@nebular/auth';
 import { from, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { Auth, FacebookAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { FacebookAuthProvider, signInWithPopup } from '@angular/fire/auth';
 
 import { NbFirebaseBaseStrategy } from '../base/firebase-base.strategy';
 import { NbFirebaseIdentityProviderStrategyOptions } from '../base/firebase-identity-provider-strategy.options';

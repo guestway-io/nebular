@@ -6,10 +6,9 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, of as observableOf, from } from 'rxjs';
-import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { NbAuthStrategyOptions, NbAuthStrategyClass, NbAuthResult } from '@nebular/auth';
 import {
-  Auth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
