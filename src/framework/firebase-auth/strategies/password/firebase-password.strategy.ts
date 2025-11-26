@@ -4,7 +4,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Observable, of as observableOf, from } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { NbAuthStrategyOptions, NbAuthStrategyClass, NbAuthResult } from '@nebular/auth';
@@ -33,7 +33,9 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   authenticate({ email, password }: any): Observable<NbAuthResult> {
     const module = 'login';
-    return from(signInWithEmailAndPassword(this.afAuth, email, password)).pipe(
+    return from(
+      runInInjectionContext(this.injector, () => signInWithEmailAndPassword(this.afAuth, email, password)),
+    ).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );
@@ -56,7 +58,9 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   register({ email, password }: any): Observable<NbAuthResult> {
     const module = 'register';
-    return from(createUserWithEmailAndPassword(this.afAuth, email, password)).pipe(
+    return from(
+      runInInjectionContext(this.injector, () => createUserWithEmailAndPassword(this.afAuth, email, password)),
+    ).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );
@@ -64,7 +68,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   requestPassword({ email }: any): Observable<NbAuthResult> {
     const module = 'requestPassword';
-    return from(sendPasswordResetEmail(this.afAuth, email)).pipe(
+    return from(runInInjectionContext(this.injector, () => sendPasswordResetEmail(this.afAuth, email))).pipe(
       map(() => {
         return new NbAuthResult(
           true,
@@ -80,7 +84,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   resetPassword({ code, password }): Observable<NbAuthResult> {
     const module = 'resetPassword';
-    return from(confirmPasswordReset(this.afAuth, code, password)).pipe(
+    return from(runInInjectionContext(this.injector, () => confirmPasswordReset(this.afAuth, code, password))).pipe(
       map(() => {
         return new NbAuthResult(
           true,
@@ -95,7 +99,7 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
   }
 
   protected updatePassword(user: User, password: string, module: string) {
-    return from(updatePassword(user, password)).pipe(
+    return from(runInInjectionContext(this.injector, () => updatePassword(user, password))).pipe(
       map((token) => {
         return new NbAuthResult(
           true,

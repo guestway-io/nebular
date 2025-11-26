@@ -4,7 +4,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, runInInjectionContext } from '@angular/core';
 import { Observable, from } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { NbAuthStrategyClass, NbAuthResult, NbAuthStrategyOptions } from '@nebular/auth';
@@ -26,7 +26,7 @@ export class NbFirebaseTwitteStrategy extends NbFirebaseBaseStrategy {
     const provider = new TwitterAuthProvider();
     provider.setCustomParameters(this.getOption('customParameters'));
 
-    return from(signInWithPopup(this.afAuth, provider)).pipe(
+    return from(runInInjectionContext(this.injector, () => signInWithPopup(this.afAuth, provider))).pipe(
       switchMap((res) => this.processSuccess(res, module)),
       catchError((error) => this.processFailure(error, module)),
     );
