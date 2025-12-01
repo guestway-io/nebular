@@ -6,7 +6,7 @@
 
 import { Injectable, runInInjectionContext } from '@angular/core';
 import { Observable, of as observableOf, from } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, first, filter, timeout, take } from 'rxjs/operators';
 import { NbAuthStrategyOptions, NbAuthStrategyClass, NbAuthResult } from '@nebular/auth';
 import {
   signInWithEmailAndPassword,
@@ -15,6 +15,7 @@ import {
   confirmPasswordReset,
   User,
   updatePassword,
+  authState,
 } from '@angular/fire/auth';
 
 import { NbFirebaseBaseStrategy } from '../base/firebase-base.strategy';
@@ -43,17 +44,21 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
 
   refreshToken(data?: any): Observable<NbAuthResult> {
     const module = 'refreshToken';
-    const user = this.auth.currentUser;
 
-    if (user == null) {
-      return observableOf(
-        new NbAuthResult(false, null, this.getOption(`${module}.redirect.failure`), [
-          "There is no logged in user so refresh of id token isn't possible",
-        ]),
-      );
-    }
-
-    return this.refreshIdToken(user, module);
+    return runInInjectionContext(this.injector, () => authState(this.auth)).pipe(
+      filter((user): user is User => user !== null),
+      timeout(3000), // Wait up to 3 seconds for a non-null user
+      take(1),
+      switchMap((user) => this.refreshIdToken(user, module)),
+      catchError((error) => {
+        // If timeout or no user found, return failure result
+        return observableOf(
+          new NbAuthResult(false, error, this.getOption(`${module}.redirect.failure`), [
+            "There is no logged in user so refresh of id token isn't possible",
+          ]),
+        );
+      }),
+    );
   }
 
   register({ email, password }: any): Observable<NbAuthResult> {
