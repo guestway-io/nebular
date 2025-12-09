@@ -45,9 +45,16 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
   refreshToken(data?: any): Observable<NbAuthResult> {
     const module = 'refreshToken';
 
+    // First, try to get the current user synchronously - Firebase keeps this in memory
+    const currentUser = this.auth.currentUser;
+    if (currentUser) {
+      return this.refreshIdToken(currentUser, module);
+    }
+
+    // If no current user in memory, wait for auth state restoration (with timeout)
     return runInInjectionContext(this.injector, () => authState(this.auth)).pipe(
       filter((user): user is User => user !== null),
-      timeout(3000), // Wait up to 3 seconds for a non-null user
+      timeout(3000), // Wait up to 3 seconds for auth state restoration
       take(1),
       switchMap((user) => this.refreshIdToken(user, module)),
       catchError((error) => {
