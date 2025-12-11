@@ -6,7 +6,7 @@
 
 import { Injectable, runInInjectionContext } from '@angular/core';
 import { Observable, of as observableOf, from } from 'rxjs';
-import { catchError, map, switchMap, first, filter, timeout, take } from 'rxjs/operators';
+import { catchError, map, switchMap, timeout, take } from 'rxjs/operators';
 import { NbAuthStrategyOptions, NbAuthStrategyClass, NbAuthResult } from '@nebular/auth';
 import {
   signInWithEmailAndPassword,
@@ -15,7 +15,7 @@ import {
   confirmPasswordReset,
   User,
   updatePassword,
-  authState,
+  onAuthStateChanged,
 } from '@angular/fire/auth';
 
 import { NbFirebaseBaseStrategy } from '../base/firebase-base.strategy';
@@ -45,20 +45,33 @@ export class NbFirebasePasswordStrategy extends NbFirebaseBaseStrategy {
   refreshToken(data?: any): Observable<NbAuthResult> {
     const module = 'refreshToken';
 
-    // First, try to get the current user synchronously - Firebase keeps this in memory
-    const currentUser = this.auth.currentUser;
-    if (currentUser) {
-      return this.refreshIdToken(currentUser, module);
-    }
+    // Wait for Firebase to restore auth state from persistence
+    return new Observable<User>((subscriber) => {
+      const unsubscribe = runInInjectionContext(this.injector, () =>
+        onAuthStateChanged(
+          this.auth,
+          (user) => {
+            if (user) {
+              subscriber.next(user);
+              subscriber.complete();
+            } else {
+              subscriber.error(new Error('No authenticated user'));
+            }
+            unsubscribe();
+          },
+          (error) => {
+            subscriber.error(error);
+            unsubscribe();
+          },
+        ),
+      );
 
-    // If no current user in memory, wait for auth state restoration (with timeout)
-    return runInInjectionContext(this.injector, () => authState(this.auth)).pipe(
-      filter((user): user is User => user !== null),
-      timeout(3000), // Wait up to 3 seconds for auth state restoration
+      return () => unsubscribe();
+    }).pipe(
+      timeout(5000), // Wait up to 5 seconds for auth state restoration
       take(1),
       switchMap((user) => this.refreshIdToken(user, module)),
       catchError((error) => {
-        // If timeout or no user found, return failure result
         return observableOf(
           new NbAuthResult(false, error, this.getOption(`${module}.redirect.failure`), [
             "There is no logged in user so refresh of id token isn't possible",
