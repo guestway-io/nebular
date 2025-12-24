@@ -78,38 +78,50 @@ We're always happy to receive your feedback!
 
 Develop nebular **theme** components with hot reload while testing in angular-platform.
 
+**The original angular-platform folder is never modified** - everything runs in an isolated shadow project.
+
 ### Quick Start
 
 ```bash
 # Run with dev environment (most common)
 npm run platform:dev
 
-# Or use the script directly
-./dev-angular-platform.sh dev
+# First run takes ~2 min (installs dependencies)
+# Subsequent runs are fast
 ```
 
 ### Available Commands
 
-| Command                    | Environment | Description           |
-| -------------------------- | ----------- | --------------------- |
-| `npm run platform`         | local       | Local API             |
-| `npm run platform:dev`     | dev         | Dev API (most common) |
-| `npm run platform:staging` | staging     | Staging API           |
-| `npm run platform:prod`    | prod        | Production API        |
+| Command                           | Environment | Description                        |
+| --------------------------------- | ----------- | ---------------------------------- |
+| `npm run platform`                | local       | Local API                          |
+| `npm run platform:dev`            | dev         | Dev API (most common)              |
+| `npm run platform:staging`        | staging     | Staging API                        |
+| `npm run platform:prod`           | prod        | Production API                     |
+| `./dev-angular-platform.sh reset` | -           | Delete shadow project, start fresh |
 
 ### How It Works
 
-1. Builds all nebular packages to `dist/`
-2. Symlinks `dist/*` → `angular-platform/node_modules/@nebular/*`
-3. Starts a watcher for the **theme** package only (`ng build theme --watch`)
-4. Starts angular-platform with file polling for symlink detection
+1. Creates `.angular-platform-dev/` shadow project (first run only)
+2. Symlinks source files from angular-platform (no duplication)
+3. Has its own `node_modules/` with `@nebular/*` → `nebular/dist/*`
+4. Builds nebular packages and starts theme watcher
+5. Runs dev server with file polling
+
+```
+nebular/
+├── .angular-platform-dev/       # Shadow project (gitignored)
+│   ├── src → ../angular-platform/src
+│   ├── node_modules/@nebular/* → ../dist/*
+│   └── ...
+```
 
 ### Hot Reload (Theme Only)
 
 When you edit files in `nebular/src/framework/theme/*`:
 
 - Theme watcher rebuilds to `dist/theme` (~1-3 seconds)
-- Angular-platform detects the change (~3-10 seconds)
+- Angular detects the change (~3-10 seconds)
 - Browser auto-refreshes with your changes
 
 **Total cycle: ~5-15 seconds** from save to visible in browser.
@@ -124,11 +136,14 @@ To test changes in these packages, stop and restart the script:
 npm run platform:dev
 ```
 
-This rebuilds all packages with your changes before starting the dev server.
+### Troubleshooting
 
-### Cleanup
+If something goes wrong, reset and start fresh:
 
-On Ctrl+C, original `@nebular` packages are restored via `npm install`.
+```bash
+./dev-angular-platform.sh reset
+npm run platform:dev
+```
 
 ---
 

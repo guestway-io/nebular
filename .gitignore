@@ -54,3 +54,6 @@ local.log
 
 /tools/dev-schematics/dist
 /.npmrc
+
+# Local nebular development (shadow angular-platform)
+/.angular-platform-dev
