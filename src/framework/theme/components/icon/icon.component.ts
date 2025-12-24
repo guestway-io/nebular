@@ -108,14 +108,13 @@ export interface NbIconConfig {
  * icon-control-color:
  */
 @Component({
-    selector: 'nb-icon',
-    styleUrls: [`./icon.component.scss`],
-    template: '',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'nb-icon',
+  styleUrls: [`./icon.component.scss`],
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NbIconComponent implements NbIconConfig, OnChanges, OnInit {
-
   protected iconDef;
   protected prevClasses = [];
 
@@ -245,9 +244,7 @@ export class NbIconComponent implements NbIconConfig, OnChanges, OnInit {
     }
 
     const content = iconDefinition.icon.getContent(options);
-    if (content) {
-      this.html = this.sanitizer.bypassSecurityTrustHtml(content);
-    }
+    this.html = content ? this.sanitizer.bypassSecurityTrustHtml(content) : '';
 
     this.assignClasses(iconDefinition.icon.getClasses(options));
     return iconDefinition;
