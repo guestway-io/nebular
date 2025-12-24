@@ -70,22 +70,78 @@ Need a visual admin dashboard builder? Check out [UI Bakery](https://uibakery.io
 Made with :heart: by [Akveo team](https://www.akveo.com?utm_campaign=service%20-%20akveo%20website%20-%20nebular%20github%20readme%20-%20traffic&utm_source=nebular&utm_medium=referral&utm_content=github_readme). Follow us on [Twitter](https://twitter.com/akveo_inc) to get the latest news first!
 We're always happy to receive your feedback!
 
+---
 
-To run tests locally, you need to have the following installed:
+# Guestway Development
 
-- chromedriver
+## Running angular-platform with Local Nebular
+
+Develop nebular **theme** components with hot reload while testing in angular-platform.
+
+### Quick Start
+
+```bash
+# Run with dev environment (most common)
+npm run platform:dev
+
+# Or use the script directly
+./dev-angular-platform.sh dev
+```
+
+### Available Commands
+
+| Command                    | Environment | Description           |
+| -------------------------- | ----------- | --------------------- |
+| `npm run platform`         | local       | Local API             |
+| `npm run platform:dev`     | dev         | Dev API (most common) |
+| `npm run platform:staging` | staging     | Staging API           |
+| `npm run platform:prod`    | prod        | Production API        |
+
+### How It Works
+
+1. Builds all nebular packages to `dist/`
+2. Symlinks `dist/*` → `angular-platform/node_modules/@nebular/*`
+3. Starts a watcher for the **theme** package only (`ng build theme --watch`)
+4. Starts angular-platform with file polling for symlink detection
+
+### Hot Reload (Theme Only)
+
+When you edit files in `nebular/src/framework/theme/*`:
+
+- Theme watcher rebuilds to `dist/theme` (~1-3 seconds)
+- Angular-platform detects the change (~3-10 seconds)
+- Browser auto-refreshes with your changes
+
+**Total cycle: ~5-15 seconds** from save to visible in browser.
+
+### Other Packages (auth, security, etc.)
+
+Changes to `auth`, `security`, `eva-icons`, etc. are **not** hot-reloaded.  
+To test changes in these packages, stop and restart the script:
+
+```bash
+# Ctrl+C to stop, then re-run
+npm run platform:dev
+```
+
+This rebuilds all packages with your changes before starting the dev server.
+
+### Cleanup
+
+On Ctrl+C, original `@nebular` packages are restored via `npm install`.
+
+---
+
+## Running Tests
+
+### Prerequisites (macOS)
 
 ```bash
 brew install chromedriver
-```
-
-next, you need to xattr the chromedriver binary to allow it to run:
-
-```bash
 sudo xattr -d com.apple.quarantine /opt/homebrew/bin/chromedriver
 ```
 
-then you can run the tests:
+### Run Tests
 
 ```bash
 npm run test
