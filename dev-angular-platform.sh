@@ -108,6 +108,9 @@ setup_shadow_project() {
         fs.writeFileSync('angular.json', JSON.stringify(config, null, 2));
     "
     
+    # Store hash of source angular.json for change detection
+    md5sum "$PLATFORM_DIR/angular.json" | cut -d' ' -f1 > .angular-json-source-hash
+    
     echo -e "${GREEN}   ✅ Shadow project structure ready${NC}"
 }
 
@@ -157,15 +160,101 @@ link_nebular() {
 }
 
 # =============================================================================
+# Check for config file changes (when shadow project already exists)
+# =============================================================================
+check_config_changes() {
+    local needs_npm_install=false
+    local needs_rebuild=false
+    
+    echo -e "${CYAN}🔍 Checking for config changes...${NC}"
+    
+    # Check package.json
+    if ! diff -q "$PLATFORM_DIR/package.json" "$SHADOW_DIR/package.json" > /dev/null 2>&1; then
+        echo -e "${YELLOW}   📦 package.json changed → will run npm install${NC}"
+        cp "$PLATFORM_DIR/package.json" "$SHADOW_DIR/package.json"
+        cp "$PLATFORM_DIR/package-lock.json" "$SHADOW_DIR/package-lock.json" 2>/dev/null || true
+        needs_npm_install=true
+    fi
+    
+    # Check tsconfig.json
+    if ! diff -q "$PLATFORM_DIR/tsconfig.json" "$SHADOW_DIR/tsconfig.json" > /dev/null 2>&1; then
+        echo -e "${YELLOW}   📝 tsconfig.json changed → updating${NC}"
+        cp "$PLATFORM_DIR/tsconfig.json" "$SHADOW_DIR/tsconfig.json"
+        needs_rebuild=true
+    fi
+    
+    # Check tsconfig.app.json
+    if ! diff -q "$PLATFORM_DIR/tsconfig.app.json" "$SHADOW_DIR/tsconfig.app.json" > /dev/null 2>&1; then
+        echo -e "${YELLOW}   📝 tsconfig.app.json changed → updating${NC}"
+        cp "$PLATFORM_DIR/tsconfig.app.json" "$SHADOW_DIR/tsconfig.app.json"
+        needs_rebuild=true
+    fi
+    
+    # Check angular.json (compare source, then apply our modifications)
+    # We need to compare the source angular.json, not our modified shadow version
+    # Store a hash of the source in a marker file
+    local source_hash=$(md5sum "$PLATFORM_DIR/angular.json" | cut -d' ' -f1)
+    local stored_hash=""
+    if [ -f "$SHADOW_DIR/.angular-json-source-hash" ]; then
+        stored_hash=$(cat "$SHADOW_DIR/.angular-json-source-hash")
+    fi
+    
+    if [ "$source_hash" != "$stored_hash" ]; then
+        echo -e "${YELLOW}   📝 angular.json changed → updating with nebular config${NC}"
+        cp "$PLATFORM_DIR/angular.json" "$SHADOW_DIR/angular.json"
+        
+        # Re-apply our modifications
+        cd "$SHADOW_DIR"
+        node -e "
+            const fs = require('fs');
+            const config = JSON.parse(fs.readFileSync('angular.json', 'utf8'));
+            
+            if (config.projects?.guestway?.architect?.serve?.options) {
+                config.projects.guestway.architect.serve.options.prebundle = {
+                    exclude: [
+                        '@nebular/theme',
+                        '@nebular/auth',
+                        '@nebular/security',
+                        '@nebular/eva-icons',
+                        '@nebular/date-fns',
+                        '@nebular/firebase-auth',
+                        '@nebular/moment'
+                    ]
+                };
+            }
+            
+            fs.writeFileSync('angular.json', JSON.stringify(config, null, 2));
+        "
+        echo "$source_hash" > "$SHADOW_DIR/.angular-json-source-hash"
+        needs_rebuild=true
+    fi
+    
+    if [ "$needs_npm_install" = true ]; then
+        echo -e "${CYAN}📦 Running npm install due to package.json changes...${NC}"
+        cd "$SHADOW_DIR"
+        npm install
+        echo -e "${GREEN}   ✅ Dependencies updated${NC}"
+    elif [ "$needs_rebuild" = true ]; then
+        echo -e "${CYAN}   🔄 Config updated, will rebuild${NC}"
+        # Clear Angular cache to force rebuild
+        rm -rf "$SHADOW_DIR/.angular" 2>/dev/null || true
+    else
+        echo -e "${GREEN}   ✅ No config changes${NC}"
+    fi
+}
+
+# =============================================================================
 # Main
 # =============================================================================
 
 # Kill any existing process on the port
 lsof -ti:$PORT | xargs kill -9 2>/dev/null || true
 
-# Setup shadow project if needed
+# Setup shadow project if needed, or check for changes
 if [ ! -d "$SHADOW_DIR" ]; then
     setup_shadow_project
+else
+    check_config_changes
 fi
 
 # Install deps if needed
