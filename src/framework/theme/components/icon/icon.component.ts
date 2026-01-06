@@ -13,6 +13,7 @@ import {
   OnChanges,
   OnInit,
   Renderer2,
+  SimpleChanges,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -227,7 +228,33 @@ export class NbIconComponent implements NbIconConfig, OnChanges, OnInit {
     this.iconDef = this.renderIcon(this.icon, this.pack, this.options);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    const iconOrPackChanged = changes['icon'] || changes['pack'];
+    const configChanged = changes['config'];
+
+    // Status changes are handled by @HostBinding decorators - nothing to do here
+    if (!iconOrPackChanged && !configChanged) {
+      // Only options changed - update classes without clearing the icon
+      if (changes['options'] && this.icon) {
+        const iconDef = this.iconLibrary.getIcon(this.icon, this.pack);
+        if (iconDef) {
+          this.assignClasses(iconDef.icon.getClasses(this.options));
+        }
+      }
+      return;
+    }
+
+    // Icon cleared
+    if (!this.icon) {
+      this.clearIcon();
+      return;
+    }
+
+    // Icon or pack changed - clear previous icon first (handles FontAwesome SVG cleanup)
+    if (iconOrPackChanged && !changes['icon']?.firstChange && !changes['pack']?.firstChange) {
+      this.clearIcon();
+    }
+
     const iconDef = this.iconLibrary.getIcon(this.icon, this.pack);
     if (iconDef) {
       this.renderIcon(this.icon, this.pack, this.options);
@@ -252,6 +279,9 @@ export class NbIconComponent implements NbIconConfig, OnChanges, OnInit {
 
   protected clearIcon(): void {
     this.html = '';
+    // Use Renderer2 to explicitly clear innerHTML - this handles externally injected content
+    // (e.g., FontAwesome's SVG+JS injects SVGs that bypass Angular's innerHtml binding)
+    this.renderer.setProperty(this.el.nativeElement, 'innerHTML', '');
     this.assignClasses([]);
   }
 
