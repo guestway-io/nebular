@@ -60,9 +60,9 @@ export type NbSelectCompareFunction<T = any> = (v1: any, v2: any) => boolean;
 export type NbSelectAppearance = 'outline' | 'filled' | 'hero';
 
 @Component({
-    selector: 'nb-select-label',
-    template: '<ng-content></ng-content>',
-    standalone: false
+  selector: 'nb-select-label',
+  template: '<ng-content></ng-content>',
+  standalone: false,
 })
 export class NbSelectLabelComponent {}
 
@@ -504,21 +504,21 @@ export function nbSelectFormFieldControlConfigFactory() {
  * select-hero-control-disabled-text-color:
  * */
 @Component({
-    selector: 'nb-select',
-    templateUrl: './select.component.html',
-    styleUrls: ['./select.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NbSelectComponent),
-            multi: true,
-        },
-        { provide: NB_SELECT_INJECTION_TOKEN, useExisting: NbSelectComponent },
-        { provide: NbFormFieldControl, useExisting: NbSelectComponent },
-        { provide: NbFormFieldControlConfig, useFactory: nbSelectFormFieldControlConfigFactory },
-    ],
-    standalone: false
+  selector: 'nb-select',
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NbSelectComponent),
+      multi: true,
+    },
+    { provide: NB_SELECT_INJECTION_TOKEN, useExisting: NbSelectComponent },
+    { provide: NbFormFieldControl, useExisting: NbSelectComponent },
+    { provide: NbFormFieldControlConfig, useFactory: nbSelectFormFieldControlConfigFactory },
+  ],
+  standalone: false,
 })
 export class NbSelectComponent
   implements OnChanges, AfterViewInit, AfterContentInit, OnDestroy, ControlValueAccessor, NbFormFieldControl
@@ -880,7 +880,7 @@ export class NbSelectComponent
     this.options.changes
       .pipe(
         startWith(this.options),
-        filter(() => this.queue != null && this.canSelectValue()),
+        filter(() => this.canSelectValue()),
         // Call 'writeValue' when current change detection run is finished.
         // When writing is finished, change detection starts again, since
         // microtasks queue is empty.
@@ -888,7 +888,17 @@ export class NbSelectComponent
         switchMap((options: QueryList<NbOptionComponent>) => from(Promise.resolve(options))),
         takeUntil(this.destroy$),
       )
-      .subscribe(() => this.writeValue(this.queue));
+      .subscribe(() => {
+        if (this.queue != null) {
+          this.writeValue(this.queue);
+        } else if (this.selectionModel.length) {
+          // Re-sync selection model with new option components when options change.
+          // This handles the case where option components are replaced (e.g., via *ngFor)
+          // but the selected value should remain the same.
+          const currentValues = this.multiple ? this.selectionModel.map((o) => o.value) : this.selectionModel[0]?.value;
+          this.setSelection(currentValues);
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -961,6 +971,9 @@ export class NbSelectComponent
       this.setSelection(value);
       if (this.selectionModel.length) {
         this.queue = null;
+      } else if (value != null) {
+        // Value not found in current options, queue for retry when options change
+        this.queue = value;
       }
     } else {
       this.queue = value;
