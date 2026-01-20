@@ -15,7 +15,7 @@ interface FSEntry {
 }
 
 @Component({
-    template: `
+  template: `
     <nb-card>
       <nb-card-body>
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
@@ -52,8 +52,8 @@ interface FSEntry {
       </nb-card-body>
     </nb-card>
   `,
-    styleUrls: ['./tree-grid-shared.scss', './tree-grid-custom-icons.component.scss'],
-    standalone: false
+  styleUrls: ['./tree-grid-shared.scss', './tree-grid-custom-icons.component.scss'],
+  standalone: false,
 })
 export class TreeGridCustomIconsComponent {
   customColumn = 'name';

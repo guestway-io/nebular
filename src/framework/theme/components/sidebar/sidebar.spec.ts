@@ -23,13 +23,13 @@ import {
 } from '@nebular/theme';
 
 @Component({
-    template: `
+  template: `
     <nb-sidebar [responsive]="responsive" [state]="state">
       <button id="button-outside-menu"></button>
       <nb-menu [items]="menuItems"></nb-menu>
     </nb-sidebar>
   `,
-    standalone: false
+  standalone: false,
 })
 export class SidebarExpandTestComponent {
   menuItems: NbMenuItem[] = [
@@ -38,7 +38,7 @@ export class SidebarExpandTestComponent {
     },
     {
       title: 'parent',
-      children: [ { title: 'child' } ],
+      children: [{ title: 'child' }],
     },
     {
       title: 'group',
@@ -54,8 +54,7 @@ export class SidebarExpandTestComponent {
 export class MockThemeService {
   private breakpoint$ = new Subject<NbMediaBreakpoint>();
 
-  constructor(private breakpointsService: NbMediaBreakpointsService) {
-  }
+  constructor(private breakpointsService: NbMediaBreakpointsService) {}
 
   setBreakpointTo(breakpointName: string): void {
     this.breakpoint$.next(this.breakpointsService.getByName(breakpointName));
@@ -65,11 +64,7 @@ export class MockThemeService {
     const breakpoints = this.breakpointsService.getBreakpoints();
     const largestBreakpoint = breakpoints[breakpoints.length - 1];
 
-    return this.breakpoint$
-      .pipe(
-        startWith({ name: 'unknown', width: undefined }, largestBreakpoint),
-        pairwise(),
-      );
+    return this.breakpoint$.pipe(startWith({ name: 'unknown', width: undefined }, largestBreakpoint), pairwise());
   }
 }
 
@@ -83,11 +78,8 @@ describe('NbSidebarComponent', () => {
         NbSidebarModule.forRoot(),
         NbMenuModule.forRoot(),
       ],
-      providers: [
-        MockThemeService,
-        { provide: NbThemeService, useExisting: MockThemeService },
-      ],
-      declarations: [ SidebarExpandTestComponent ],
+      providers: [MockThemeService, { provide: NbThemeService, useExisting: MockThemeService }],
+      declarations: [SidebarExpandTestComponent],
     });
   });
 

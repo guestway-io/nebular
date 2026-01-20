@@ -12,8 +12,8 @@ import {
 } from '@nebular/theme';
 
 @Component({
-    template: '',
-    standalone: false
+  template: '',
+  standalone: false,
 })
 export class NbDynamicOverlayMockComponent implements NbRenderableContainer {
   @Input() content: any;
@@ -23,8 +23,8 @@ export class NbDynamicOverlayMockComponent implements NbRenderableContainer {
 }
 
 @Component({
-    template: '',
-    standalone: false
+  template: '',
+  standalone: false,
 })
 export class NbDynamicOverlayMock2Component extends NbDynamicOverlayMockComponent {}
 

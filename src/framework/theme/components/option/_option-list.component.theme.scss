@@ -122,4 +122,205 @@
       color: var(--option-disabled-text-color);
     }
   }
+
+  // Nested option styles
+  nb-option-nested {
+    display: block;
+
+    .option-nested-trigger {
+      background-color: var(--option-background-color);
+      color: var(--option-text-color);
+      font-family: var(--option-text-font-family);
+    }
+
+    .option-nested-chevron {
+      color: var(--option-text-color);
+    }
+
+    &:hover:not([disabled]) {
+      .option-nested-trigger {
+        background-color: var(--option-hover-background-color);
+        color: var(--option-hover-text-color);
+      }
+
+      .option-nested-chevron {
+        color: var(--option-hover-text-color);
+      }
+    }
+
+    &.active:not([disabled]),
+    &:focus:not([disabled]) {
+      .option-nested-trigger {
+        background-color: var(--option-active-background-color);
+        color: var(--option-active-text-color);
+      }
+
+      .option-nested-chevron {
+        color: var(--option-active-text-color);
+      }
+    }
+
+    &.submenu-open:not([disabled]) {
+      .option-nested-trigger {
+        background-color: var(--option-active-background-color);
+        color: var(--option-active-text-color);
+      }
+    }
+
+    &[disabled] {
+      .option-nested-trigger {
+        background-color: var(--option-disabled-background-color);
+        color: var(--option-disabled-text-color);
+      }
+
+      .option-nested-chevron {
+        color: var(--option-disabled-text-color);
+      }
+    }
+  }
+
+  @each $size in nb-get-sizes() {
+    nb-option-list.size-#{$size} nb-option-nested .option-nested-trigger {
+      font-size: var(--option-#{$size}-text-font-size);
+      font-weight: var(--option-#{$size}-text-font-weight);
+      line-height: var(--option-#{$size}-text-line-height);
+      padding: var(--option-#{$size}-padding);
+    }
+  }
+
+  // Replacement mode back header (styled like option-group title)
+  .nested-back-header {
+    background-color: var(--option-background-color);
+    color: var(--option-group-text-color);
+    font-family: var(--option-text-font-family);
+    border-bottom: 1px solid var(--option-list-border-color);
+
+    &:hover {
+      background-color: var(--option-hover-background-color);
+      color: var(--option-text-color);
+    }
+  }
+
+  @each $size in nb-get-sizes() {
+    nb-option-list.size-#{$size} .nested-back-header {
+      font-size: var(--option-#{$size}-text-font-size);
+      font-weight: var(--option-#{$size}-text-font-weight);
+      line-height: var(--option-#{$size}-text-line-height);
+      padding: var(--option-#{$size}-padding);
+    }
+  }
+
+  // Nested option submenu panel (overlay) - needs to be at root level
+  // because CDK overlays are rendered outside component hierarchy
+  .nb-option-nested-panel {
+    .nb-option-nested-pane {
+      display: block;
+      background-color: var(--option-list-background-color);
+      border-color: var(--option-list-border-color);
+      border-style: var(--option-list-border-style);
+      border-width: var(--option-list-border-width);
+      border-radius: var(--option-list-border-radius);
+      box-shadow: var(--option-list-shadow);
+      overflow: hidden;
+      min-width: 180px;
+
+      .option-list {
+        max-height: var(--option-list-max-height);
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+      }
+    }
+
+    nb-option {
+      display: flex;
+      background-color: var(--option-background-color);
+      color: var(--option-text-color);
+      font-family: var(--option-text-font-family);
+      cursor: pointer;
+
+      &:focus {
+        background-color: var(--option-focus-background-color);
+        color: var(--option-focus-text-color);
+        outline: none;
+      }
+
+      &.active {
+        background-color: var(--option-active-background-color);
+        color: var(--option-active-text-color);
+      }
+
+      &:hover {
+        background-color: var(--option-hover-background-color);
+        color: var(--option-hover-text-color);
+      }
+
+      &.selected {
+        background-color: var(--option-selected-background-color);
+        color: var(--option-selected-text-color);
+      }
+
+      // Multi-select: keep neutral background for selected options (checkbox shows selection)
+      &.multiple.selected {
+        background-color: var(--option-background-color);
+        color: var(--option-text-color);
+      }
+
+      &[disabled] {
+        background-color: var(--option-disabled-background-color);
+        color: var(--option-disabled-text-color);
+        cursor: default;
+      }
+    }
+
+    nb-option-nested {
+      display: block;
+
+      .option-nested-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--option-background-color);
+        color: var(--option-text-color);
+        font-family: var(--option-text-font-family);
+        cursor: pointer;
+      }
+
+      // Has selected child - highlight for selection path (same for single and multi-select)
+      &.has-selected-child:not([disabled]) .option-nested-trigger {
+        background-color: var(--color-primary-transparent-default);
+        color: var(--color-primary-default);
+      }
+
+      // Hover only when NOT on selection path
+      &:hover:not([disabled]):not(.has-selected-child) .option-nested-trigger {
+        background-color: var(--option-hover-background-color);
+        color: var(--option-hover-text-color);
+      }
+
+      &[disabled] .option-nested-trigger {
+        background-color: var(--option-disabled-background-color);
+        color: var(--option-disabled-text-color);
+        cursor: default;
+      }
+    }
+
+    @each $size in nb-get-sizes() {
+      nb-option-list.size-#{$size} {
+        nb-option {
+          font-size: var(--option-#{$size}-text-font-size);
+          font-weight: var(--option-#{$size}-text-font-weight);
+          line-height: var(--option-#{$size}-text-line-height);
+          padding: var(--option-#{$size}-padding);
+        }
+
+        nb-option-nested .option-nested-trigger {
+          font-size: var(--option-#{$size}-text-font-size);
+          font-weight: var(--option-#{$size}-text-font-weight);
+          line-height: var(--option-#{$size}-text-line-height);
+          padding: var(--option-#{$size}-padding);
+        }
+      }
+    }
+  }
 }

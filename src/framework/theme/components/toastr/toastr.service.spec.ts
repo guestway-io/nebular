@@ -16,15 +16,15 @@ import {
 } from '@nebular/theme';
 
 @Component({
-    selector: 'nb-toastr-test',
-    template: `
+  selector: 'nb-toastr-test',
+  template: `
     <nb-layout>
       <nb-layout-column>
         <div class="test-div"></div>
       </nb-layout-column>
     </nb-layout>
   `,
-    standalone: false
+  standalone: false,
 })
 export class NbToastrTestComponent {
   constructor(private toastrService: NbToastrService) {}
@@ -242,12 +242,7 @@ describe('toastr-container-registry', () => {
   });
 
   beforeEach(() => {
-    toastrContainerRegistry = new NbToastrContainerRegistry(
-      overlayStub,
-      positionBuilder,
-      positionHelper,
-      documentStub,
-    );
+    toastrContainerRegistry = new NbToastrContainerRegistry(overlayStub, positionBuilder, positionHelper, documentStub);
   });
 
   it('should create new container if not exists for requested position', () => {

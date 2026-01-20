@@ -1,0 +1,46 @@
+<nb-card size="medium">
+  <nb-card-header>Deep Nested Select (Multiple Levels)</nb-card-header>
+  <nb-card-body>
+    <nb-select placeholder="Select location" [(selected)]="selectedValue">
+      <nb-option-nested title="North America">
+        <nb-option-nested title="United States">
+          <nb-option-nested title="California">
+            <nb-option value="sf">San Francisco</nb-option>
+            <nb-option value="la">Los Angeles</nb-option>
+            <nb-option value="sd">San Diego</nb-option>
+          </nb-option-nested>
+          <nb-option-nested title="New York">
+            <nb-option value="nyc">New York City</nb-option>
+            <nb-option value="buffalo">Buffalo</nb-option>
+          </nb-option-nested>
+          <nb-option-nested title="Texas">
+            <nb-option value="austin">Austin</nb-option>
+            <nb-option value="houston">Houston</nb-option>
+            <nb-option value="dallas">Dallas</nb-option>
+          </nb-option-nested>
+        </nb-option-nested>
+        <nb-option-nested title="Canada">
+          <nb-option value="toronto">Toronto</nb-option>
+          <nb-option value="vancouver">Vancouver</nb-option>
+          <nb-option value="montreal">Montreal</nb-option>
+        </nb-option-nested>
+      </nb-option-nested>
+
+      <nb-option-nested title="Europe">
+        <nb-option-nested title="United Kingdom">
+          <nb-option value="london">London</nb-option>
+          <nb-option value="manchester">Manchester</nb-option>
+        </nb-option-nested>
+        <nb-option-nested title="Germany">
+          <nb-option value="berlin">Berlin</nb-option>
+          <nb-option value="munich">Munich</nb-option>
+        </nb-option-nested>
+        <nb-option value="paris">Paris, France</nb-option>
+      </nb-option-nested>
+
+      <nb-option value="other">Other Location</nb-option>
+    </nb-select>
+
+    <p *ngIf="selectedValue" class="selected-info">Selected: {{ selectedValue }}</p>
+  </nb-card-body>
+</nb-card>

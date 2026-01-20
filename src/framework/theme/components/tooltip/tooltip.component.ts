@@ -13,7 +13,6 @@ import { NbRenderableContainer } from '../cdk/overlay/overlay-container';
 import { NbPosition } from '../cdk/overlay/overlay-position';
 import { NbIconConfig } from '../icon/icon.component';
 
-
 /**
  * Tooltip container.
  * Renders provided tooltip inside.
@@ -58,31 +57,25 @@ import { NbIconConfig } from '../icon/icon.component';
  * tooltip-shadow:
  */
 @Component({
-    selector: 'nb-tooltip',
-    styleUrls: ['./tooltip.component.scss'],
-    template: `
+  selector: 'nb-tooltip',
+  styleUrls: ['./tooltip.component.scss'],
+  template: `
     <span class="arrow"></span>
     <div class="content">
       <nb-icon *ngIf="context?.icon" [config]="context.icon"></nb-icon>
       <span *ngIf="content">{{ content }}</span>
     </div>
   `,
-    animations: [
-        trigger('showTooltip', [
-            state('in', style({ opacity: 1 })),
-            transition('void => *', [
-                style({ opacity: 0 }),
-                animate(100),
-            ]),
-            transition('* => void', [
-                animate(100, style({ opacity: 0 })),
-            ]),
-        ]),
-    ],
-    standalone: false
+  animations: [
+    trigger('showTooltip', [
+      state('in', style({ opacity: 1 })),
+      transition('void => *', [style({ opacity: 0 }), animate(100)]),
+      transition('* => void', [animate(100, style({ opacity: 0 }))]),
+    ]),
+  ],
+  standalone: false,
 })
 export class NbTooltipComponent implements NbRenderableContainer {
-
   @Input()
   content: string;
 
@@ -103,7 +96,7 @@ export class NbTooltipComponent implements NbRenderableContainer {
   }
 
   @Input()
-  context: { icon?: string | NbIconConfig, status?: NbComponentOrCustomStatus } = {};
+  context: { icon?: string | NbIconConfig; status?: NbComponentOrCustomStatus } = {};
 
   get statusClass() {
     if (this.context.status) {
@@ -113,8 +106,7 @@ export class NbTooltipComponent implements NbRenderableContainer {
     return '';
   }
 
-  constructor(protected statusService: NbStatusService) {
-  }
+  constructor(protected statusService: NbStatusService) {}
 
   /**
    * The method is empty since we don't need to do anything additionally

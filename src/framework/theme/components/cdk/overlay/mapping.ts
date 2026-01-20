@@ -1,12 +1,5 @@
 import { Directive, Injectable, ModuleWithProviders, NgModule, TemplateRef, ViewContainerRef } from '@angular/core';
-import {
-  CdkPortal,
-  CdkPortalOutlet,
-  ComponentPortal,
-  Portal,
-  PortalModule,
-  TemplatePortal,
-} from '@angular/cdk/portal';
+import { CdkPortal, CdkPortalOutlet, ComponentPortal, Portal, PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import {
   ComponentType,
   ConnectedOverlayPositionChange,
@@ -25,14 +18,14 @@ import {
 import { NbScrollStrategyOptions } from '../adapter/block-scroll-strategy-adapter';
 
 @Directive({
-    selector: '[nbPortal]',
-    standalone: false
+  selector: '[nbPortal]',
+  standalone: false,
 })
 export class NbPortalDirective extends CdkPortal {}
 
 @Directive({
-    selector: '[nbPortalOutlet]',
-    standalone: false
+  selector: '[nbPortalOutlet]',
+  standalone: false,
 })
 export class NbPortalOutletDirective extends CdkPortalOutlet {}
 

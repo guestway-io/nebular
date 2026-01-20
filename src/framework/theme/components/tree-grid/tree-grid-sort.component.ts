@@ -40,18 +40,14 @@ export enum NbSortDirection {
   DESCENDING = 'desc',
   NONE = '',
 }
-const sortDirections: NbSortDirection[] = [
-  NbSortDirection.ASCENDING,
-  NbSortDirection.DESCENDING,
-  NbSortDirection.NONE,
-];
+const sortDirections: NbSortDirection[] = [NbSortDirection.ASCENDING, NbSortDirection.DESCENDING, NbSortDirection.NONE];
 
 /**
  * Directive triggers sort method of passed object when sort header changes direction
  */
 @Directive({
-    selector: '[nbSort]',
-    standalone: false
+  selector: '[nbSort]',
+  standalone: false,
 })
 export class NbSortDirective {
   @Input('nbSort') sortable: NbSortable;
@@ -80,20 +76,20 @@ export interface NbSortHeaderIconDirectiveContext {
  * `isDescending` and `isNone` properties.
  */
 @Directive({
-    selector: '[nbSortHeaderIcon]',
-    standalone: false
+  selector: '[nbSortHeaderIcon]',
+  standalone: false,
 })
 export class NbSortHeaderIconDirective {}
 
 @Component({
-    selector: 'nb-sort-icon',
-    template: `
+  selector: 'nb-sort-icon',
+  template: `
     <ng-container *ngIf="isDirectionSet()">
       <nb-icon *ngIf="isAscending()" icon="chevron-down-outline" pack="nebular-essentials" aria-hidden="true"></nb-icon>
       <nb-icon *ngIf="isDescending()" icon="chevron-up-outline" pack="nebular-essentials" aria-hidden="true"></nb-icon>
     </ng-container>
   `,
-    standalone: false
+  standalone: false,
 })
 export class NbSortIconComponent {
   @Input() direction: NbSortDirection = NbSortDirection.NONE;
@@ -115,22 +111,22 @@ export class NbSortIconComponent {
  * Marks header as sort header so it emitting sort event when clicked.
  */
 @Component({
-    selector: '[nbSortHeader]',
-    template: `
+  selector: '[nbSortHeader]',
+  template: `
     <button
       class="nb-tree-grid-header-change-sort-button"
       type="button"
       [attr.disabled]="getDisabledAttributeValue()"
-      (click)="sortData()">
+      (click)="sortData()"
+    >
       <ng-content></ng-content>
     </button>
     <nb-sort-icon *ngIf="!sortIcon; else customIcon" [direction]="direction"></nb-sort-icon>
     <ng-template #customIcon [ngTemplateOutlet]="sortIcon" [ngTemplateOutletContext]="getIconContext()"></ng-template>
   `,
-    standalone: false
+  standalone: false,
 })
 export class NbSortHeaderComponent {
-
   @ContentChild(NbSortHeaderIconDirective, { read: TemplateRef })
   sortIcon: TemplateRef<NbSortHeaderIconDirectiveContext>;
 

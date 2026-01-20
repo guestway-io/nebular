@@ -10,7 +10,7 @@ import { NbTagComponent } from '@nebular/theme';
 import { trees } from './trees-list';
 
 @Component({
-    template: `
+  template: `
     <nb-card>
       <nb-card-body>
         <nb-tag-list (tagRemove)="onTagRemove($event)">
@@ -19,8 +19,8 @@ import { trees } from './trees-list';
       </nb-card-body>
     </nb-card>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TagShowcaseComponent {
   trees = trees;

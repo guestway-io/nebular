@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    template: `
+  template: `
     <nb-card size="small">
       <nb-list>
         <nb-list-item *ngFor="let user of users">
@@ -10,8 +10,8 @@ import { Component } from '@angular/core';
       </nb-list>
     </nb-card>
   `,
-    styleUrls: ['./simple-list-showcase.component.scss'],
-    standalone: false
+  styleUrls: ['./simple-list-showcase.component.scss'],
+  standalone: false,
 })
 export class UsersListShowcaseComponent {
   users: { name: string; title: string }[] = [

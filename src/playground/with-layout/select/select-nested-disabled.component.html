@@ -1,0 +1,30 @@
+<nb-card size="medium">
+  <nb-card-header>Disabled Nested Options</nb-card-header>
+  <nb-card-body>
+    <div style="display: flex; flex-direction: column; margin-bottom: 1rem">
+      <nb-checkbox [(checked)]="nestedDisabled">Disable "Premium Features" nested option</nb-checkbox>
+      <nb-checkbox [(checked)]="selectDisabled">Disable entire select</nb-checkbox>
+    </div>
+
+    <nb-select placeholder="Select feature" [(selected)]="selectedValue" [disabled]="selectDisabled">
+      <nb-option value="basic-dashboard">Basic Dashboard</nb-option>
+      <nb-option value="reporting">Reporting</nb-option>
+
+      <nb-option-nested title="Premium Features" [disabled]="nestedDisabled">
+        <nb-option value="advanced-analytics">Advanced Analytics</nb-option>
+        <nb-option value="ai-insights">AI Insights</nb-option>
+        <nb-option value="custom-integrations">Custom Integrations</nb-option>
+      </nb-option-nested>
+
+      <nb-option-nested title="Standard Features">
+        <nb-option value="notifications">Notifications</nb-option>
+        <nb-option value="exports">Data Exports</nb-option>
+        <nb-option value="user-management" disabled>User Management (Disabled)</nb-option>
+      </nb-option-nested>
+
+      <nb-option value="settings">Settings</nb-option>
+    </nb-select>
+
+    <p *ngIf="selectedValue" class="selected-info">Selected: {{ selectedValue }}</p>
+  </nb-card-body>
+</nb-card>

@@ -4,8 +4,8 @@ import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { ComponentsListService } from './components-list.service';
 
 @Directive({
-    selector: '[npgComponentLink]',
-    standalone: false
+  selector: '[npgComponentLink]',
+  standalone: false,
 })
 export class ComponentLinkDirective implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

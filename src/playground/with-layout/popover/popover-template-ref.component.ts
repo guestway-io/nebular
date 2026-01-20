@@ -6,17 +6,17 @@
 
 import { Component } from '@angular/core';
 
-
 @Component({
-    selector: 'nb-popover-template-ref',
-    templateUrl: './popover-template-ref.component.html',
-    styles: [`
-    :host {
-      display: block;
-      margin-bottom: 5rem;
-    }
-  `],
-    standalone: false
+  selector: 'nb-popover-template-ref',
+  templateUrl: './popover-template-ref.component.html',
+  styles: [
+    `
+      :host {
+        display: block;
+        margin-bottom: 5rem;
+      }
+    `,
+  ],
+  standalone: false,
 })
-export class PopoverTemplateRefComponent {
-}
+export class PopoverTemplateRefComponent {}

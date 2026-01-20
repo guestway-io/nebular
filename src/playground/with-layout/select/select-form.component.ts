@@ -8,9 +8,9 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-    selector: 'nb-select-form',
-    templateUrl: './select-form.component.html',
-    standalone: false
+  selector: 'nb-select-form',
+  templateUrl: './select-form.component.html',
+  standalone: false,
 })
 export class SelectFormComponent {
   selectedItemNgModel;

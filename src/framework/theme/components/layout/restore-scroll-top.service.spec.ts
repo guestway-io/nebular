@@ -9,14 +9,14 @@ let router: Router;
 let fixture: ComponentFixture<TestBootstrapComponent>;
 
 @Component({
-    template: '<router-outlet></router-outlet>',
-    standalone: false
+  template: '<router-outlet></router-outlet>',
+  standalone: false,
 })
 class TestBootstrapComponent {}
 
 @Component({
-    template: '',
-    standalone: false
+  template: '',
+  standalone: false,
 })
 class TestComponent {}
 

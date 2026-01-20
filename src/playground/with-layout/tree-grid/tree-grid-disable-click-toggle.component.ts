@@ -14,7 +14,7 @@ interface FSEntry {
 }
 
 @Component({
-    template: `
+  template: `
     <nb-card>
       <nb-card-body>
         <table [nbTreeGrid]="data" equalColumnsWidth>
@@ -36,8 +36,8 @@ interface FSEntry {
       </nb-card-body>
     </nb-card>
   `,
-    styleUrls: ['./tree-grid-shared.scss'],
-    standalone: false
+  styleUrls: ['./tree-grid-shared.scss'],
+  standalone: false,
 })
 export class TreeGridDisableClickToggleComponent {
   customColumn = 'name';

@@ -48,16 +48,15 @@ import { NbComponentOrCustomStatus } from '../component-status';
  * spinner-height-giant:
  */
 @Component({
-    selector: 'nb-spinner',
-    template: `
+  selector: 'nb-spinner',
+  template: `
     <span class="spin-circle"></span>
     <span class="message" *ngIf="message">{{ message }}</span>
   `,
-    styleUrls: ['./spinner.component.scss'],
-    standalone: false
+  styleUrls: ['./spinner.component.scss'],
+  standalone: false,
 })
 export class NbSpinnerComponent {
-
   /**
    * Loading text that is shown near the icon
    * @type string
@@ -147,6 +146,5 @@ export class NbSpinnerComponent {
     return [];
   }
 
-  constructor(protected statusService: NbStatusService) {
-  }
+  constructor(protected statusService: NbStatusService) {}
 }

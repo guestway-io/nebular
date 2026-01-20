@@ -3,13 +3,21 @@ import { CommonModule } from '@angular/common';
 import { NbOptionComponent } from './option.component';
 import { NbOptionGroupComponent } from './option-group.component';
 import { NbOptionListComponent } from './option-list.component';
+import { NbOptionNestedComponent } from './option-nested.component';
 import { NbCheckboxModule } from '../checkbox/checkbox.module';
+import { NbIconModule } from '../icon/icon.module';
+import { NbOverlayModule } from '../cdk/overlay/overlay.module';
 
-const NB_OPTION_LIST_COMPONENTS = [NbOptionListComponent, NbOptionComponent, NbOptionGroupComponent];
+const NB_OPTION_LIST_COMPONENTS = [
+  NbOptionListComponent,
+  NbOptionComponent,
+  NbOptionGroupComponent,
+  NbOptionNestedComponent,
+];
 
 @NgModule({
   declarations: [...NB_OPTION_LIST_COMPONENTS],
-  imports: [CommonModule, NbCheckboxModule],
+  imports: [CommonModule, NbCheckboxModule, NbIconModule, NbOverlayModule],
   exports: [...NB_OPTION_LIST_COMPONENTS],
 })
 export class NbOptionModule {}

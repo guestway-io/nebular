@@ -1214,6 +1214,48 @@ export const PLAYGROUND_COMPONENTS: ComponentLink[] = [
         component: 'SelectOverlayPositionComponent',
         name: 'Select Overlay Position',
       },
+      {
+        path: 'select-nested-showcase.component',
+        link: '/select/select-nested-showcase.component',
+        component: 'SelectNestedShowcaseComponent',
+        name: 'Select Nested Showcase',
+      },
+      {
+        path: 'select-nested-deep.component',
+        link: '/select/select-nested-deep.component',
+        component: 'SelectNestedDeepComponent',
+        name: 'Select Nested Deep',
+      },
+      {
+        path: 'select-nested-disabled.component',
+        link: '/select/select-nested-disabled.component',
+        component: 'SelectNestedDisabledComponent',
+        name: 'Select Nested Disabled',
+      },
+      {
+        path: 'select-nested-mixed.component',
+        link: '/select/select-nested-mixed.component',
+        component: 'SelectNestedMixedComponent',
+        name: 'Select Nested Mixed',
+      },
+      {
+        path: 'select-nested-form.component',
+        link: '/select/select-nested-form.component',
+        component: 'SelectNestedFormComponent',
+        name: 'Select Nested Form',
+      },
+      {
+        path: 'select-nested-sizes.component',
+        link: '/select/select-nested-sizes.component',
+        component: 'SelectNestedSizesComponent',
+        name: 'Select Nested Sizes',
+      },
+      {
+        path: 'select-nested-multiple.component',
+        link: '/select/select-nested-multiple.component',
+        component: 'SelectNestedMultipleComponent',
+        name: 'Select Nested Multiple',
+      },
     ],
   },
   {

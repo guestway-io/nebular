@@ -56,3 +56,27 @@ nb-icon {
 :host(.open) nb-icon {
   transform: translateY(-50%) rotate(180deg);
 }
+
+// Nested option replacement mode back header
+::ng-deep .nested-back-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  color: var(--option-group-text-color);
+  gap: 0.5rem;
+
+  .nested-back-icon {
+    position: static;
+    transform: none;
+    font-size: 1.25em;
+  }
+
+  .nested-back-title {
+    font-weight: var(--option-text-font-weight, 600);
+  }
+
+  &:hover {
+    color: var(--option-text-color);
+  }
+}

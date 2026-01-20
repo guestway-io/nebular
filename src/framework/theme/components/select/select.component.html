@@ -36,5 +36,17 @@
   [style.width.px]="optionsWidth"
   [ngClass]="optionsListClass"
 >
-  <ng-content select="nb-option, nb-option-group"></ng-content>
+  <!-- Back header for replacement mode -->
+  <div *ngIf="activeNestedOption" class="nested-back-header" (click)="exitReplacementMode(); $event.stopPropagation()">
+    <nb-icon class="nested-back-icon" icon="chevron-left-outline" pack="nebular-essentials"></nb-icon>
+    <span class="nested-back-title">{{ activeNestedOption.title }}</span>
+  </div>
+
+  <!-- Main options or nested content -->
+  <ng-container *ngIf="!activeNestedOption">
+    <ng-content select="nb-option, nb-option-group, nb-option-nested"></ng-content>
+  </ng-container>
+  <ng-container *ngIf="activeNestedOption">
+    <ng-container *ngTemplateOutlet="activeNestedOption.childrenContentTemplate"></ng-container>
+  </ng-container>
 </nb-option-list>

@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NbButtonModule,
   NbCardModule,
+  NbCheckboxModule,
   NbFormFieldModule,
   NbIconModule,
   NbRadioModule,
@@ -36,6 +37,13 @@ import { SelectCompareWithComponent } from './select-compare-with.component';
 import { SelectIconComponent } from './select-icon.component';
 import { SelectAutocompleteShowcaseComponent } from './select-autocomplete-showcase.component';
 import { SelectOverlayPositionComponent } from './select-overlay-position.component';
+import { SelectNestedShowcaseComponent } from './select-nested-showcase.component';
+import { SelectNestedDeepComponent } from './select-nested-deep.component';
+import { SelectNestedDisabledComponent } from './select-nested-disabled.component';
+import { SelectNestedMixedComponent } from './select-nested-mixed.component';
+import { SelectNestedFormComponent } from './select-nested-form.component';
+import { SelectNestedSizesComponent } from './select-nested-sizes.component';
+import { SelectNestedMultipleComponent } from './select-nested-multiple.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +66,13 @@ import { SelectOverlayPositionComponent } from './select-overlay-position.compon
     SelectIconComponent,
     SelectAutocompleteShowcaseComponent,
     SelectOverlayPositionComponent,
+    SelectNestedShowcaseComponent,
+    SelectNestedDeepComponent,
+    SelectNestedDisabledComponent,
+    SelectNestedMixedComponent,
+    SelectNestedFormComponent,
+    SelectNestedSizesComponent,
+    SelectNestedMultipleComponent,
   ],
   imports: [
     FormsModule,
@@ -71,6 +86,7 @@ import { SelectOverlayPositionComponent } from './select-overlay-position.compon
     NbButtonModule,
     NbIconModule,
     NbFormFieldModule,
+    NbCheckboxModule,
   ],
 })
 export class SelectModule {}

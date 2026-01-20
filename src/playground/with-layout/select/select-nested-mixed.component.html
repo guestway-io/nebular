@@ -1,0 +1,38 @@
+<nb-card size="medium">
+  <nb-card-header>Mixed: Nested Options with Groups</nb-card-header>
+  <nb-card-body>
+    <nb-select placeholder="Select action" [(selected)]="selectedValue">
+      <nb-option-group title="Quick Actions">
+        <nb-option value="new-document">New Document</nb-option>
+        <nb-option value="upload">Upload File</nb-option>
+      </nb-option-group>
+
+      <nb-option-nested title="Create From Template">
+        <nb-option value="template-invoice">Invoice</nb-option>
+        <nb-option value="template-report">Report</nb-option>
+        <nb-option value="template-proposal">Proposal</nb-option>
+        <nb-option value="template-contract">Contract</nb-option>
+      </nb-option-nested>
+
+      <nb-option-group title="Recent">
+        <nb-option value="recent-1">Project_Plan_v2.docx</nb-option>
+        <nb-option value="recent-2">Budget_2024.xlsx</nb-option>
+      </nb-option-group>
+
+      <nb-option-nested title="Import From">
+        <nb-option value="import-gdrive">Google Drive</nb-option>
+        <nb-option value="import-dropbox">Dropbox</nb-option>
+        <nb-option value="import-onedrive">OneDrive</nb-option>
+        <nb-option-nested title="Cloud Storage">
+          <nb-option value="import-aws">AWS S3</nb-option>
+          <nb-option value="import-azure">Azure Blob</nb-option>
+          <nb-option value="import-gcs">Google Cloud Storage</nb-option>
+        </nb-option-nested>
+      </nb-option-nested>
+
+      <nb-option value="browse">Browse Local Files...</nb-option>
+    </nb-select>
+
+    <p *ngIf="selectedValue" class="selected-info">Selected: {{ selectedValue }}</p>
+  </nb-card-body>
+</nb-card>

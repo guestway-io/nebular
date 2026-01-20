@@ -10,8 +10,8 @@ import { Subject } from 'rxjs';
 import { NbMenuService, NbMenuItem } from '@nebular/theme';
 
 @Component({
-    selector: 'nb-menu-test',
-    template: `
+  selector: 'nb-menu-test',
+  template: `
     <nb-layout>
       <nb-sidebar state="compacted">
         <nb-menu id="menu-sidebar" tag="sidebarMenu" [items]="sidebarMenuItems"></nb-menu>
@@ -41,7 +41,7 @@ import { NbMenuService, NbMenuItem } from '@nebular/theme';
       </nb-layout-column>
     </nb-layout>
   `,
-    standalone: false
+  standalone: false,
 })
 export class MenuTestComponent implements OnInit, OnDestroy {
   sidebarMenuItems: NbMenuItem[] = [
@@ -164,7 +164,7 @@ export class MenuTestComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private menuService: NbMenuService) { }
+  constructor(private menuService: NbMenuService) {}
 
   ngOnInit() {
     this.menuService

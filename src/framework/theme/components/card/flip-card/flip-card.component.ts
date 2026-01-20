@@ -56,9 +56,9 @@ import { Component, Input, HostBinding } from '@angular/core';
  *
  */
 @Component({
-    selector: 'nb-flip-card',
-    styleUrls: ['./flip-card.component.scss'],
-    template: `
+  selector: 'nb-flip-card',
+  styleUrls: ['./flip-card.component.scss'],
+  template: `
     <div class="flipcard-body">
       <div class="front-container">
         <ng-content select="nb-card-front"></ng-content>
@@ -74,7 +74,7 @@ import { Component, Input, HostBinding } from '@angular/core';
       </div>
     </div>
   `,
-    standalone: false
+  standalone: false,
 })
 export class NbFlipCardComponent {
   /**

@@ -189,6 +189,7 @@ export * from './components/option/option-list.module';
 export * from './components/option/option.component';
 export * from './components/option/option-group.component';
 export * from './components/option/option-list.component';
+export * from './components/option/option-nested.component';
 export * from './components/select/select-injection-tokens';
 export * from './components/autocomplete/autocomplete.module';
 export * from './components/autocomplete/autocomplete.component';

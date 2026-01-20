@@ -14,7 +14,6 @@ import { NbPosition } from './overlay-position';
 import { NbComponentPortal, NbPortalOutletDirective, NbTemplatePortal } from './mapping';
 
 export interface NbRenderableContainer {
-
   /**
    * A renderContent method renders content with provided context.
    * Naturally, this job has to be done by ngOnChanges lifecycle hook, but
@@ -25,8 +24,8 @@ export interface NbRenderableContainer {
 }
 
 @Component({
-    template: '',
-    standalone: false
+  template: '',
+  standalone: false,
 })
 export class NbPositionedContainerComponent {
   @Input() position: NbPosition;
@@ -92,17 +91,15 @@ export class NbPositionedContainerComponent {
   }
 }
 
-
 @Component({
-    selector: 'nb-overlay-container',
-    template: `
+  selector: 'nb-overlay-container',
+  template: `
     <div *ngIf="isStringContent" class="primitive-overlay">{{ content }}</div>
     <ng-template nbPortalOutlet></ng-template>
   `,
-    standalone: false
+  standalone: false,
 })
 export class NbOverlayContainerComponent {
-
   // TODO static must be false as of Angular 9.0.0, issues/1514
   @ViewChild(NbPortalOutletDirective, { static: true }) portalOutlet: NbPortalOutletDirective;
 
@@ -110,9 +107,11 @@ export class NbOverlayContainerComponent {
 
   content: string;
 
-  constructor(protected vcr: ViewContainerRef,
-              protected injector: Injector, private changeDetectorRef: ChangeDetectorRef) {
-  }
+  constructor(
+    protected vcr: ViewContainerRef,
+    protected injector: Injector,
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {}
 
   get isStringContent(): boolean {
     return !!this.content;

@@ -52,8 +52,8 @@ export class NbScrollableContainerDimensions {
  *
  */
 @Directive({
-    selector: '[nbInfiniteList]',
-    standalone: false
+  selector: '[nbInfiniteList]',
+  standalone: false,
 })
 export class NbInfiniteListDirective implements AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();

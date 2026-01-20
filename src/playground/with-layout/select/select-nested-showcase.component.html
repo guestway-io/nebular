@@ -1,0 +1,20 @@
+<nb-card size="medium">
+  <nb-card-header>Basic Nested Select</nb-card-header>
+  <nb-card-body>
+    <nb-select placeholder="Select category" [(selected)]="selectedValue">
+      <nb-option value="automation">Automation Workflows</nb-option>
+
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+        <nb-option value="business-analytics">Business Analytics</nb-option>
+        <nb-option value="inbox">Inbox</nb-option>
+      </nb-option-nested>
+
+      <nb-option value="reviews">Reviews</nb-option>
+      <nb-option value="saved-replies">Saved Replies</nb-option>
+    </nb-select>
+
+    <p *ngIf="selectedValue" class="selected-info">Selected: {{ selectedValue }}</p>
+  </nb-card-body>
+</nb-card>

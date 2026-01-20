@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'nb-progress-bar-status',
-    templateUrl: './progress-bar-status.component.html',
-    styleUrls: ['./progress-bar-status.component.scss'],
-    standalone: false
+  selector: 'nb-progress-bar-status',
+  templateUrl: './progress-bar-status.component.html',
+  styleUrls: ['./progress-bar-status.component.scss'],
+  standalone: false,
 })
-
-export class ProgressBarStatusComponent {
-}
+export class ProgressBarStatusComponent {}

@@ -20,17 +20,19 @@ import { NbDateService } from '../calendar-kit/services/date.service';
 import { NbBaseCalendarRangeCell } from './base-calendar-range-cell';
 
 @Component({
-    selector: 'nb-calendar-range-year-cell',
-    template: `
+  selector: 'nb-calendar-range-year-cell',
+  template: `
     <div class="cell-content">
       {{ year }}
     </div>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class NbCalendarRangeYearCellComponent<D> extends NbBaseCalendarRangeCell<D>
-  implements NbCalendarCell<D, NbCalendarRange<D>> {
+export class NbCalendarRangeYearCellComponent<D>
+  extends NbBaseCalendarRangeCell<D>
+  implements NbCalendarCell<D, NbCalendarRange<D>>
+{
   @Input() date: D;
 
   @Input() min: D;

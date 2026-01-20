@@ -1,0 +1,38 @@
+<nb-card size="medium">
+  <nb-card-header>Nested Select with Reactive Forms</nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <nb-select placeholder="Select category *" formControlName="category">
+        <nb-option value="">-- Select a category --</nb-option>
+
+        <nb-option-nested title="Products">
+          <nb-option value="electronics">Electronics</nb-option>
+          <nb-option value="clothing">Clothing</nb-option>
+          <nb-option value="home-garden">Home & Garden</nb-option>
+          <nb-option-nested title="Sports">
+            <nb-option value="sports-outdoor">Outdoor Sports</nb-option>
+            <nb-option value="sports-indoor">Indoor Sports</nb-option>
+            <nb-option value="sports-fitness">Fitness Equipment</nb-option>
+          </nb-option-nested>
+        </nb-option-nested>
+
+        <nb-option-nested title="Services">
+          <nb-option value="consulting">Consulting</nb-option>
+          <nb-option value="development">Development</nb-option>
+          <nb-option value="design">Design</nb-option>
+          <nb-option value="marketing">Marketing</nb-option>
+        </nb-option-nested>
+
+        <nb-option value="other">Other</nb-option>
+      </nb-select>
+
+      <p class="form-status" *ngIf="form.get('category').touched && form.get('category').invalid">
+        Category is required
+      </p>
+
+      <button nbButton status="primary" type="submit" [disabled]="form.invalid">Submit</button>
+    </form>
+
+    <p class="form-value">Form value: {{ form.value | json }}</p>
+  </nb-card-body>
+</nb-card>

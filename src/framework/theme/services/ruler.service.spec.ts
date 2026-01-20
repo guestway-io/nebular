@@ -17,14 +17,14 @@ let componentInstance: RulerTestComponent;
 let rulerService: NbLayoutRulerService;
 
 @Component({
-    template: `
+  template: `
     <nb-layout [withScroll]="localScroll" #layout>
       <nb-layout-column>
         <div #resize></div>
       </nb-layout-column>
     </nb-layout>
   `,
-    standalone: false
+  standalone: false,
 })
 class RulerTestComponent {
   @ViewChild('resize', { read: ElementRef }) private resizeElement: ElementRef;
@@ -63,12 +63,14 @@ describe('NbLayoutRulerService', () => {
     fixture.detectChanges();
   });
 
-  beforeEach(waitForAsync(
-    inject([NbLayoutRulerService, NB_DOCUMENT], (_rulerService, _document) => {
-      rulerService = _rulerService;
-      currentDocument = _document;
-    }),
-  ));
+  beforeEach(
+    waitForAsync(
+      inject([NbLayoutRulerService, NB_DOCUMENT], (_rulerService, _document) => {
+        rulerService = _rulerService;
+        currentDocument = _document;
+      }),
+    ),
+  );
 
   afterEach(fakeAsync(() => {
     fixture.destroy();

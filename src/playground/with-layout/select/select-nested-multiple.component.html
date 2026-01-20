@@ -1,0 +1,43 @@
+<nb-card size="medium">
+  <nb-card-header>Multiple Selection with Nested Options</nb-card-header>
+  <nb-card-body>
+    <nb-select placeholder="Select skills" multiple [(selected)]="selectedValues">
+      <nb-option-nested title="Programming Languages">
+        <nb-option value="javascript">JavaScript</nb-option>
+        <nb-option value="typescript">TypeScript</nb-option>
+        <nb-option value="python">Python</nb-option>
+        <nb-option value="java">Java</nb-option>
+        <nb-option value="csharp">C#</nb-option>
+        <nb-option value="go">Go</nb-option>
+      </nb-option-nested>
+
+      <nb-option-nested title="Frameworks">
+        <nb-option-nested title="Frontend">
+          <nb-option value="angular">Angular</nb-option>
+          <nb-option value="react">React</nb-option>
+          <nb-option value="vue">Vue.js</nb-option>
+          <nb-option value="svelte">Svelte</nb-option>
+        </nb-option-nested>
+        <nb-option-nested title="Backend">
+          <nb-option value="nodejs">Node.js</nb-option>
+          <nb-option value="django">Django</nb-option>
+          <nb-option value="spring">Spring Boot</nb-option>
+          <nb-option value="dotnet">.NET Core</nb-option>
+        </nb-option-nested>
+      </nb-option-nested>
+
+      <nb-option-nested title="Databases">
+        <nb-option value="postgresql">PostgreSQL</nb-option>
+        <nb-option value="mysql">MySQL</nb-option>
+        <nb-option value="mongodb">MongoDB</nb-option>
+        <nb-option value="redis">Redis</nb-option>
+      </nb-option-nested>
+
+      <nb-option value="other">Other</nb-option>
+    </nb-select>
+
+    <p *ngIf="selectedValues.length" class="selected-info">
+      Selected ({{ selectedValues.length }}): {{ selectedValues.join(', ') }}
+    </p>
+  </nb-card-body>
+</nb-card>

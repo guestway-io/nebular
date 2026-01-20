@@ -43,13 +43,14 @@ import {
 import { NbOverlayRef, NbPortalDirective, NbScrollStrategy } from '../cdk/overlay/mapping';
 import { NbOverlayService } from '../cdk/overlay/overlay-service';
 import { NbTrigger, NbTriggerStrategy, NbTriggerStrategyBuilderService } from '../cdk/overlay/overlay-trigger';
-import { NbFocusKeyManager, NbFocusKeyManagerFactoryService } from '../cdk/a11y/focus-key-manager';
-import { ESCAPE } from '../cdk/keycodes/keycodes';
+import { NbFocusableOption, NbFocusKeyManager, NbFocusKeyManagerFactoryService } from '../cdk/a11y/focus-key-manager';
+import { ESCAPE, LEFT_ARROW } from '../cdk/keycodes/keycodes';
 import { NbComponentSize } from '../component-size';
 import { NbComponentShape } from '../component-shape';
 import { NbComponentOrCustomStatus } from '../component-status';
 import { NB_DOCUMENT } from '../../theme.options';
 import { NbOptionComponent } from '../option/option.component';
+import { NbOptionNestedComponent } from '../option/option-nested.component';
 import { convertToBoolProperty, NbBooleanInput } from '../helpers';
 import { NB_SELECT_INJECTION_TOKEN } from './select-injection-tokens';
 import { NbFormFieldControl, NbFormFieldControlConfig } from '../form-field/form-field-control';
@@ -726,6 +727,11 @@ export class NbSelectComponent
   @ContentChildren(NbOptionComponent, { descendants: true }) options: QueryList<NbOptionComponent>;
 
   /**
+   * List of `NbOptionNestedComponent`'s components passed as content.
+   * */
+  @ContentChildren(NbOptionNestedComponent) nestedOptions: QueryList<NbOptionNestedComponent>;
+
+  /**
    * Custom select label, will be rendered instead of default enumeration with coma.
    * */
   @ContentChild(NbSelectLabelComponent) customLabel;
@@ -766,7 +772,12 @@ export class NbSelectComponent
 
   protected destroy$ = new Subject<void>();
 
-  protected keyManager: NbFocusKeyManager<NbOptionComponent>;
+  /**
+   * Subject to unsubscribe from nested option events when exiting replacement mode
+   */
+  protected replacementModeDestroy$ = new Subject<void>();
+
+  protected keyManager: NbFocusKeyManager<NbFocusableOption>;
 
   /**
    * If a user assigns value before content nb-options's rendered the value will be putted in this variable.
@@ -806,6 +817,18 @@ export class NbSelectComponent
    **/
   fullWidth$ = new BehaviorSubject<boolean>(this.fullWidth);
 
+  /**
+   * Currently active nested option in replacement mode.
+   * When set, the main options are hidden and nested children are shown.
+   * */
+  activeNestedOption: NbOptionNestedComponent | null = null;
+
+  /**
+   * Stack of nested options for deep nesting navigation.
+   * Allows navigating back through multiple levels.
+   * */
+  protected nestedOptionStack: NbOptionNestedComponent[] = [];
+
   constructor(
     @Inject(NB_DOCUMENT) protected document,
     protected overlay: NbOverlayService,
@@ -813,7 +836,7 @@ export class NbSelectComponent
     protected positionBuilder: NbPositionBuilderService,
     protected triggerStrategyBuilder: NbTriggerStrategyBuilderService,
     protected cd: ChangeDetectorRef,
-    protected focusKeyManagerFactoryService: NbFocusKeyManagerFactoryService<NbOptionComponent>,
+    protected focusKeyManagerFactoryService: NbFocusKeyManagerFactoryService<NbFocusableOption>,
     protected focusMonitor: NbFocusMonitor,
     protected renderer: Renderer2,
     protected zone: NgZone,
@@ -907,6 +930,8 @@ export class NbSelectComponent
     this.subscribeOnButtonFocus();
     this.subscribeOnTriggers();
     this.subscribeOnOptionClick();
+    this.subscribeOnNestedOptionReplacementMode();
+    this.subscribeOnNestedOptionSubmenuShown();
 
     // TODO: #2254
     this.zone.runOutsideAngular(() =>
@@ -921,6 +946,8 @@ export class NbSelectComponent
 
     this.destroy$.next();
     this.destroy$.complete();
+    this.replacementModeDestroy$.next();
+    this.replacementModeDestroy$.complete();
 
     if (this.ref) {
       this.ref.dispose();
@@ -943,10 +970,213 @@ export class NbSelectComponent
   }
 
   hide() {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/914e01ee-fc27-4d4f-b44b-88d79a9d645f', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        location: 'select:hide',
+        message: 'hide() called',
+        data: { isOpen: this.isOpen, multiple: this.multiple, stack: new Error().stack?.split('\n').slice(1, 6) },
+        timestamp: Date.now(),
+        sessionId: 'debug-session',
+        hypothesisId: 'B',
+      }),
+    }).catch(() => {});
+    // #endregion
     if (this.isOpen) {
+      // Close all nested option submenus first
+      this.closeAllNestedSubmenus();
       this.ref.detach();
+      // Fully reset replacement mode state (not just one level)
+      this.resetReplacementMode();
       this.cd.markForCheck();
     }
+  }
+
+  /**
+   * Fully reset replacement mode state - clears all levels
+   */
+  protected resetReplacementMode(): void {
+    this.replacementModeDestroy$.next();
+    this.activeNestedOption = null;
+    this.nestedOptionStack = [];
+  }
+
+  /**
+   * Close all nested option overlay submenus
+   */
+  protected closeAllNestedSubmenus(): void {
+    this.nestedOptions?.forEach((nested) => {
+      if (nested.submenuOpen) {
+        nested.hideSubmenu();
+      }
+    });
+  }
+
+  /**
+   * Enter replacement mode for a nested option.
+   * Hides main options and shows the nested option's children.
+   * */
+  enterReplacementMode(nestedOption: NbOptionNestedComponent): void {
+    // Unsubscribe from previous replacement mode subscriptions
+    this.replacementModeDestroy$.next();
+
+    if (this.activeNestedOption) {
+      this.nestedOptionStack.push(this.activeNestedOption);
+    }
+    this.activeNestedOption = nestedOption;
+    this.cd.markForCheck();
+
+    // Update key manager to use the nested option's children
+    this.updateKeyManagerForReplacementMode(nestedOption);
+
+    // Subscribe to the nested children's replacement mode requests (for deeper nesting)
+    this.subscribeToNestedChildrenReplacementMode(nestedOption);
+
+    // Focus the first option in the replacement view after it renders
+    this.focusFirstReplacementOption();
+  }
+
+  /**
+   * Subscribe to nested children's replacement mode requests when in replacement mode.
+   * This enables keyboard navigation to deeper nesting levels.
+   */
+  protected subscribeToNestedChildrenReplacementMode(nestedOption: NbOptionNestedComponent): void {
+    const directNestedChildren = nestedOption.nestedChildren?.filter((nested) => nested !== nestedOption) ?? [];
+    if (directNestedChildren.length === 0) {
+      return;
+    }
+
+    merge(...directNestedChildren.map((nested) => nested.replacementModeRequested))
+      .pipe(takeUntil(this.replacementModeDestroy$), takeUntil(this.destroy$))
+      .subscribe((childNestedOption: NbOptionNestedComponent) => {
+        this.enterReplacementMode(childNestedOption);
+      });
+  }
+
+  /**
+   * Update the key manager to use the nested option's children for keyboard navigation
+   */
+  protected updateKeyManagerForReplacementMode(nestedOption: NbOptionNestedComponent): void {
+    const childItems: NbFocusableOption[] = [];
+
+    // Get direct nested option children (exclude self, filter to direct children only)
+    const directNestedChildren = nestedOption.nestedChildren?.filter((nested) => nested !== nestedOption) ?? [];
+
+    // Collect all options that belong to deeper nested levels (to exclude them)
+    const deeplyNestedOptions = new Set<NbOptionComponent>();
+    directNestedChildren.forEach((nested) => {
+      nested.options?.forEach((opt) => deeplyNestedOptions.add(opt));
+    });
+
+    // Add only direct child options (those not inside a nested child)
+    nestedOption.options?.forEach((option) => {
+      if (!deeplyNestedOptions.has(option)) {
+        childItems.push(option);
+      }
+    });
+
+    // Add direct nested option triggers
+    directNestedChildren.forEach((nested) => childItems.push(nested));
+
+    // Sort items by DOM order to ensure keyboard navigation matches visual order
+    // Only include items that are currently in the DOM
+    const itemsInDom = childItems.filter((item) => {
+      const el = (item as any).elementRef?.nativeElement;
+      return el && document.body.contains(el);
+    });
+
+    itemsInDom.sort((a, b) => {
+      const aEl = (a as any).elementRef?.nativeElement;
+      const bEl = (b as any).elementRef?.nativeElement;
+      if (!aEl || !bEl) return 0;
+      const position = aEl.compareDocumentPosition(bEl);
+      if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return 0;
+    });
+
+    // Use filtered and sorted items, or fall back to original if none are in DOM
+    const finalItems = itemsInDom.length > 0 ? itemsInDom : childItems;
+
+    // Recreate key manager with the sorted items
+    this.keyManager = this.focusKeyManagerFactoryService.create(finalItems).withTypeAhead(200);
+
+    // Set the first item as active so arrow navigation works immediately
+    if (finalItems.length > 0) {
+      this.keyManager.setFirstItemActive();
+    }
+  }
+
+  /**
+   * Focus the first option in the replacement mode view
+   */
+  protected focusFirstReplacementOption(): void {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (this.activeNestedOption && this.ref?.overlayElement) {
+          // Re-create key manager AFTER DOM is rendered to ensure items are correct
+          this.updateKeyManagerForReplacementMode(this.activeNestedOption);
+
+          // Query for options within the option-list, excluding the back header
+          const optionList = this.ref.overlayElement.querySelector('nb-option-list');
+          if (optionList) {
+            const firstOption = optionList.querySelector('nb-option, nb-option-nested') as HTMLElement;
+            if (firstOption) {
+              firstOption.focus();
+            }
+          }
+        }
+      });
+    });
+  }
+
+  /**
+   * Exit replacement mode, returning to the previous level or main options.
+   * */
+  exitReplacementMode(): void {
+    // Unsubscribe from current level's nested children events
+    this.replacementModeDestroy$.next();
+
+    if (this.nestedOptionStack.length > 0) {
+      this.activeNestedOption = this.nestedOptionStack.pop() || null;
+      if (this.activeNestedOption) {
+        // Re-subscribe to the previous level's nested children events
+        this.subscribeToNestedChildrenReplacementMode(this.activeNestedOption);
+      }
+    } else {
+      this.activeNestedOption = null;
+    }
+    this.cd.markForCheck();
+
+    // Update key manager AFTER DOM renders
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (this.activeNestedOption) {
+          this.updateKeyManagerForReplacementMode(this.activeNestedOption);
+        } else {
+          this.restoreTopLevelKeyManager();
+        }
+      });
+    });
+  }
+
+  /**
+   * Restore the key manager to use top-level focusable items
+   */
+  protected restoreTopLevelKeyManager(): void {
+    const focusableItems = this.getFocusableItems();
+    this.keyManager = this.focusKeyManagerFactoryService.create(focusableItems).withTypeAhead(200);
+  }
+
+  /**
+   * Fully exit replacement mode, returning to main options.
+   * */
+  exitAllReplacementModes(): void {
+    this.activeNestedOption = null;
+    this.nestedOptionStack = [];
+    this.cd.markForCheck();
   }
 
   registerOnChange(fn: any): void {
@@ -1062,10 +1292,14 @@ export class NbSelectComponent
 
   protected setActiveOption() {
     if (this.selectionModel.length) {
-      this.keyManager.setActiveItem(this.selectionModel[0]);
-    } else {
-      this.keyManager.setFirstItemActive();
+      const selectedOption = this.selectionModel[0];
+      // Only set active if the selected option is in the focusable items (top-level)
+      if (!this.isInsideNestedOption(selectedOption)) {
+        this.keyManager.setActiveItem(selectedOption);
+        return;
+      }
     }
+    this.keyManager.setFirstItemActive();
   }
 
   protected createOverlay() {
@@ -1079,7 +1313,50 @@ export class NbSelectComponent
   }
 
   protected createKeyManager(): void {
-    this.keyManager = this.focusKeyManagerFactoryService.create(this.options).withTypeAhead(200);
+    const focusableItems = this.getFocusableItems();
+    this.keyManager = this.focusKeyManagerFactoryService.create(focusableItems).withTypeAhead(200);
+  }
+
+  /**
+   * Get the list of focusable items for keyboard navigation.
+   * This includes top-level options (not inside nested options) and nested option triggers.
+   * Items are returned in DOM order.
+   */
+  protected getFocusableItems(): NbFocusableOption[] {
+    // Collect all options that belong to nested options
+    const nestedOptionChildren = new Set<NbOptionComponent>();
+    this.nestedOptions.forEach((nested) => {
+      nested.options?.forEach((opt) => nestedOptionChildren.add(opt));
+    });
+
+    // Filter to only top-level options (not inside any nested option)
+    const topLevelOptions = this.options.filter((option) => !nestedOptionChildren.has(option));
+    const nestedOptionTriggers = this.nestedOptions.toArray();
+
+    // Combine and sort by DOM order
+    const allItems: NbFocusableOption[] = [...topLevelOptions, ...nestedOptionTriggers];
+
+    // Sort by DOM position to maintain visual order
+    allItems.sort((a, b) => {
+      const aEl = (a as any).elementRef?.nativeElement;
+      const bEl = (b as any).elementRef?.nativeElement;
+      if (!aEl || !bEl) return 0;
+
+      const position = aEl.compareDocumentPosition(bEl);
+      if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return 0;
+    });
+
+    return allItems;
+  }
+
+  /**
+   * Check if an option is inside a nested option component.
+   */
+  protected isInsideNestedOption(option: NbOptionComponent): boolean {
+    // Check if this option belongs to any nested option's children
+    return this.nestedOptions?.some((nested) => nested.options?.some((opt) => opt === option)) ?? false;
   }
 
   protected createPositionStrategy(): NbAdjustableConnectedPositionStrategy {
@@ -1107,11 +1384,22 @@ export class NbSelectComponent
   protected subscribeOnTriggers() {
     this.triggerStrategy.show$.subscribe(() => this.show());
     this.triggerStrategy.hide$.pipe(filter(() => this.isOpen)).subscribe(($event: Event) => {
+      // Don't hide if click was inside a nested option's overlay panel
+      // The nested overlay is separate from the main container, so the trigger strategy
+      // sees it as an "outside" click, but we want to keep the select open for multi-select
+      if (this.isClickedInsideNestedPanel($event)) {
+        return;
+      }
       this.hide();
       if (!this.isClickedWithinComponent($event)) {
         this.onTouched();
       }
     });
+  }
+
+  protected isClickedInsideNestedPanel($event: Event): boolean {
+    const target = $event.target as Element;
+    return !!target?.closest('.nb-option-nested-panel');
   }
 
   protected subscribeOnPositionChange() {
@@ -1147,8 +1435,17 @@ export class NbSelectComponent
       )
       .subscribe((event: KeyboardEvent) => {
         if (event.keyCode === ESCAPE) {
-          this.button.nativeElement.focus();
-          this.hide();
+          // If in replacement mode, exit that first before closing the select
+          if (this.activeNestedOption) {
+            this.exitReplacementMode();
+          } else {
+            this.button.nativeElement.focus();
+            this.hide();
+          }
+        } else if (event.keyCode === LEFT_ARROW && this.activeNestedOption) {
+          // Arrow left exits replacement mode (go back)
+          event.preventDefault();
+          this.exitReplacementMode();
         } else {
           this.keyManager.onKeydown(event);
         }
@@ -1169,6 +1466,48 @@ export class NbSelectComponent
         takeUntil(this.destroy$),
       )
       .subscribe(this.focused$);
+  }
+
+  protected subscribeOnNestedOptionReplacementMode() {
+    /**
+     * Subscribe to nested options' replacement mode requests.
+     * When a nested option doesn't have enough space for a submenu overlay,
+     * it requests replacement mode where its children replace the main options.
+     * */
+    this.nestedOptions.changes
+      .pipe(
+        startWith(this.nestedOptions),
+        switchMap((nestedOptions: QueryList<NbOptionNestedComponent>) => {
+          return merge(...nestedOptions.map((nested) => nested.replacementModeRequested));
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((nestedOption: NbOptionNestedComponent) => this.enterReplacementMode(nestedOption));
+  }
+
+  protected subscribeOnNestedOptionSubmenuShown() {
+    /**
+     * Subscribe to nested options' submenu shown events.
+     * When a nested option shows its submenu, close all sibling nested options' submenus.
+     * This handles the case where user moves from one branch to another without
+     * triggering mouse leave on the parent.
+     * */
+    this.nestedOptions.changes
+      .pipe(
+        startWith(this.nestedOptions),
+        switchMap((nestedOptions: QueryList<NbOptionNestedComponent>) => {
+          return merge(...nestedOptions.map((nested) => nested.submenuShown));
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((shownNestedOption: NbOptionNestedComponent) => {
+        // Close all other top-level nested options' submenus
+        this.nestedOptions?.forEach((nested) => {
+          if (nested !== shownNestedOption && nested.submenuOpen) {
+            nested.hideSubmenu();
+          }
+        });
+      });
   }
 
   protected getContainer() {

@@ -3,17 +3,16 @@ import { NbDialogService } from '@nebular/theme';
 import { AutoFocusDialogComponent } from './components/auto-focus-dialog.component';
 
 @Component({
-    selector: 'nb-dialog-auto-focus',
-    template: `
+  selector: 'nb-dialog-auto-focus',
+  template: `
     <button nbButton (click)="openWithAutoFocus()">With auto focus</button>
     <button nbButton (click)="openWithoutAutoFocus()">Without auto focus</button>
   `,
-    styleUrls: ['./dialog-common.scss'],
-    standalone: false
+  styleUrls: ['./dialog-common.scss'],
+  standalone: false,
 })
 export class DialogAutoFocusComponent {
-  constructor(private dialogService: NbDialogService) {
-  }
+  constructor(private dialogService: NbDialogService) {}
 
   openWithAutoFocus() {
     this.open(true);

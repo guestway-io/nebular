@@ -1,0 +1,105 @@
+/*!
+ * @license
+ * Copyright Akveo. All Rights Reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ */
+
+@use '../../styles/theming' as *;
+
+:host {
+  display: block;
+
+  &:focus {
+    outline: none;
+  }
+
+  &[disabled] {
+    pointer-events: none;
+
+    .option-nested-trigger {
+      cursor: default;
+    }
+  }
+
+  // Hover state
+  &:hover:not([disabled]) {
+    .option-nested-chevron {
+      color: var(--option-hover-text-color);
+    }
+  }
+
+  // Has selected child - highlight to show selection path (same for single and multi-select)
+  &.has-selected-child:not([disabled]) {
+    .option-nested-trigger {
+      background-color: var(--color-primary-transparent-default);
+      color: var(--color-primary-default);
+    }
+
+    .option-nested-chevron {
+      color: var(--color-primary-default);
+    }
+  }
+
+  // Active state (keyboard navigation) - only when NOT on selection path
+  &.active:not([disabled]):not(.has-selected-child),
+  &:focus:not([disabled]):not(.has-selected-child) {
+    .option-nested-trigger {
+      background-color: var(--option-active-background-color);
+      color: var(--option-active-text-color);
+    }
+
+    .option-nested-chevron {
+      color: var(--option-active-text-color);
+    }
+  }
+}
+
+.option-nested-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--option-background-color);
+  color: var(--option-text-color);
+  font-family: var(--option-text-font-family);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Hover state - moved outside .option-nested-trigger to properly handle has-selected-child
+:host:not(.has-selected-child):not([disabled]):hover {
+  .option-nested-trigger {
+    background-color: var(--option-hover-background-color);
+    color: var(--option-hover-text-color);
+  }
+}
+
+.option-nested-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.option-nested-chevron {
+  flex-shrink: 0;
+  color: var(--option-text-color);
+  @include nb-ltr(margin-left, 0.5rem);
+  @include nb-rtl(margin-right, 0.5rem);
+}
+
+:host(.nb-transition) {
+  .option-nested-trigger {
+    @include nb-component-animation(background-color, color);
+  }
+}
+
+// RTL support - flip chevron direction
+:host-context([dir='rtl']) {
+  .option-nested-chevron {
+    transform: rotate(180deg);
+  }
+}

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    template: `
+  template: `
     <nb-card size="small">
       <nb-card-body>
         <nb-form-field>
@@ -11,6 +11,6 @@ import { Component } from '@angular/core';
       </nb-card-body>
     </nb-card>
   `,
-    standalone: false
+  standalone: false,
 })
 export class FormFieldInputComponent {}

@@ -70,21 +70,19 @@ import { NbRadioComponent } from './radio.component';
  *
  * */
 @Component({
-    selector: 'nb-radio-group',
-    template: `
-    <ng-content select="nb-radio"></ng-content>`,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NbRadioGroupComponent),
-            multi: true,
-        },
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'nb-radio-group',
+  template: ` <ng-content select="nb-radio"></ng-content>`,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NbRadioGroupComponent),
+      multi: true,
+    },
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NbRadioGroupComponent implements AfterContentInit, OnDestroy, ControlValueAccessor {
-
   protected destroy$ = new Subject<void>();
   protected onChange = (value: any) => {};
   protected onTouched = () => {};
@@ -205,12 +203,12 @@ export class NbRadioGroupComponent implements AfterContentInit, OnDestroy, Contr
   }
 
   protected updateValues() {
-    this.updateAndMarkForCheckRadios((radio: NbRadioComponent) => radio.checked = radio.value === this.value);
+    this.updateAndMarkForCheckRadios((radio: NbRadioComponent) => (radio.checked = radio.value === this.value));
   }
 
   protected updateDisabled() {
     if (typeof this.disabled !== 'undefined') {
-      this.updateAndMarkForCheckRadios((radio: NbRadioComponent) => radio.disabled = this.disabled);
+      this.updateAndMarkForCheckRadios((radio: NbRadioComponent) => (radio.disabled = this.disabled));
     }
   }
 
@@ -220,14 +218,7 @@ export class NbRadioGroupComponent implements AfterContentInit, OnDestroy, Contr
     }
 
     merge(...this.radios.map((radio: NbRadioComponent) => radio.valueChange))
-      .pipe(
-        takeUntil(
-          merge(
-            this.radios.changes,
-            this.destroy$,
-          ),
-        ),
-      )
+      .pipe(takeUntil(merge(this.radios.changes, this.destroy$)))
       .subscribe((value: any) => {
         this.writeValue(value);
         this.propagateValue(value);
@@ -248,24 +239,16 @@ export class NbRadioGroupComponent implements AfterContentInit, OnDestroy, Contr
     const hostElement = this.hostElement.nativeElement;
     fromEvent<Event>(hostElement, 'focusin')
       .pipe(
-        filter(event => hostElement.contains(event.target as Node)),
-        switchMap(() => merge(
-          fromEvent<Event>(this.document, 'focusin'),
-          fromEvent<Event>(this.document, 'click'),
-        )),
-        filter(event => !hostElement.contains(event.target as Node)),
-        takeUntil(
-          merge(
-            this.radios.changes,
-            this.destroy$,
-          ),
-        ),
+        filter((event) => hostElement.contains(event.target as Node)),
+        switchMap(() => merge(fromEvent<Event>(this.document, 'focusin'), fromEvent<Event>(this.document, 'click'))),
+        filter((event) => !hostElement.contains(event.target as Node)),
+        takeUntil(merge(this.radios.changes, this.destroy$)),
       )
       .subscribe(() => this.onTouched());
   }
 
   protected updateStatus() {
-    this.updateAndMarkForCheckRadios((radio: NbRadioComponent) => radio.status = this.status);
+    this.updateAndMarkForCheckRadios((radio: NbRadioComponent) => (radio.status = this.status));
   }
 
   protected updateAndMarkForCheckRadios(updateFn: (NbRadioComponent) => void) {

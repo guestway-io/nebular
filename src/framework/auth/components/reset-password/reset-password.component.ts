@@ -12,14 +12,13 @@ import { NbAuthService } from '../../services/auth.service';
 import { NbAuthResult } from '../../services/auth-result';
 
 @Component({
-    selector: 'nb-reset-password-page',
-    styleUrls: ['./reset-password.component.scss'],
-    templateUrl: './reset-password.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'nb-reset-password-page',
+  styleUrls: ['./reset-password.component.scss'],
+  templateUrl: './reset-password.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NbResetPasswordComponent {
-
   redirectDelay: number = 0;
   showMessages: any = {};
   strategy: string = '';
@@ -29,11 +28,12 @@ export class NbResetPasswordComponent {
   messages: string[] = [];
   user: any = {};
 
-  constructor(protected service: NbAuthService,
-              @Inject(NB_AUTH_OPTIONS) protected options = {},
-              protected cd: ChangeDetectorRef,
-              protected router: Router) {
-
+  constructor(
+    protected service: NbAuthService,
+    @Inject(NB_AUTH_OPTIONS) protected options = {},
+    protected cd: ChangeDetectorRef,
+    protected router: Router,
+  ) {
     this.redirectDelay = this.getConfigValue('forms.resetPassword.redirectDelay');
     this.showMessages = this.getConfigValue('forms.resetPassword.showMessages');
     this.strategy = this.getConfigValue('forms.resetPassword.strategy');

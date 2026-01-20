@@ -8,14 +8,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NbMenuItem } from '@nebular/theme';
 
 @Component({
-    selector: 'nb-menu-badge',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './menu-badge.component.html',
-    styleUrls: ['./menu-badge.component.scss'],
-    standalone: false
+  selector: 'nb-menu-badge',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './menu-badge.component.html',
+  styleUrls: ['./menu-badge.component.scss'],
+  standalone: false,
 })
 export class MenuBadgeComponent {
-
   items: NbMenuItem[] = [
     {
       title: 'Profile',

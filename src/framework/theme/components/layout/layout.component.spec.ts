@@ -12,25 +12,24 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({
-    template: `
+  template: `
     <nb-layout withScroll>
       <nb-layout-column>
         <div [style.height]="contentHeight" style="background: lightcoral;"></div>
       </nb-layout-column>
     </nb-layout>
   `,
-    standalone: false
+  standalone: false,
 })
 export class LayoutWithScrollModeComponent {
   contentHeight: string = '200vh';
 }
 
 describe('NbLayoutComponent', () => {
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ RouterTestingModule.withRoutes([]), NbThemeModule.forRoot(), NbLayoutModule ],
-      declarations: [ LayoutWithScrollModeComponent ],
+      imports: [RouterTestingModule.withRoutes([]), NbThemeModule.forRoot(), NbLayoutModule],
+      declarations: [LayoutWithScrollModeComponent],
     });
   });
 
@@ -40,7 +39,7 @@ describe('NbLayoutComponent', () => {
     let scrollService: NbLayoutScrollService;
 
     beforeEach(() => {
-      fixture  = TestBed.createComponent(LayoutWithScrollModeComponent);
+      fixture = TestBed.createComponent(LayoutWithScrollModeComponent);
       fixture.detectChanges();
 
       layoutComponent = fixture.debugElement.query(By.directive(NbLayoutComponent)).componentInstance;

@@ -1,11 +1,4 @@
-import {
-  ComponentRef,
-  Inject,
-  Injectable,
-  Injector,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ComponentRef, Inject, Injectable, Injector, TemplateRef, ViewContainerRef } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { NbComponentPortal, NbComponentType, NbOverlayPositionBuilder, NbOverlayRef } from '../cdk/overlay/mapping';
 import { NbOverlayService } from '../cdk/overlay/overlay-service';

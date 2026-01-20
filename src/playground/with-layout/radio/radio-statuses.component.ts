@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NbComponentStatus } from '../../../framework/theme/components/component-status';
 
 @Component({
-    template: `
+  template: `
     <nb-card>
       <nb-card-body class="example-items-rows">
         <nb-radio-group
@@ -23,8 +23,8 @@ import { NbComponentStatus } from '../../../framework/theme/components/component
       </nb-card-body>
     </nb-card>
   `,
-    styleUrls: ['./radio-statuses-group.component.scss'],
-    standalone: false
+  styleUrls: ['./radio-statuses-group.component.scss'],
+  standalone: false,
 })
 export class RadioStatusesComponent {
   options = [

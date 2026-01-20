@@ -10,19 +10,18 @@ import { NbDateService } from '../../services/date.service';
 import { NbCalendarSize, NbCalendarSizeValues } from '../../model';
 
 @Component({
-    selector: 'nb-calendar-week-numbers',
-    template: `
+  selector: 'nb-calendar-week-numbers',
+  template: `
     <div class="sign-container">
       <div class="sign">{{ weekNumberSymbol }}</div>
     </div>
     <div class="week-number" *ngFor="let weekNumber of weekNumbers">{{ weekNumber }}</div>
   `,
-    styleUrls: ['./calendar-week-number.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  styleUrls: ['./calendar-week-number.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NbCalendarWeekNumberComponent<D> implements OnChanges {
-
   weekNumbers: number[];
 
   @Input()
@@ -54,7 +53,7 @@ export class NbCalendarWeekNumberComponent<D> implements OnChanges {
     return this.weeks.map((week: D[]) => {
       // Find last defined day as week could contain null days in case
       // boundingMonth set to false
-      const lastDay = [ ...week ].reverse().find((day: D) => !!day);
+      const lastDay = [...week].reverse().find((day: D) => !!day);
       // Use last day of the week to determine week number.
       // This way weeks which span between sibling years is marked first
       return this.dateService.getWeekNumber(lastDay);

@@ -7,15 +7,14 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'nb-toggle-showcase',
-    template: `
+  selector: 'nb-toggle-showcase',
+  template: `
     <nb-card>
       <nb-card-body>
         <nb-toggle></nb-toggle>
       </nb-card-body>
     </nb-card>
   `,
-    standalone: false
+  standalone: false,
 })
-export class ToggleShowcaseComponent {
-}
+export class ToggleShowcaseComponent {}

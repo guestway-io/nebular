@@ -25,6 +25,13 @@ import { SelectCompareWithComponent } from './select-compare-with.component';
 import { SelectIconComponent } from './select-icon.component';
 import { SelectAutocompleteShowcaseComponent } from './select-autocomplete-showcase.component';
 import { SelectOverlayPositionComponent } from './select-overlay-position.component';
+import { SelectNestedShowcaseComponent } from './select-nested-showcase.component';
+import { SelectNestedDeepComponent } from './select-nested-deep.component';
+import { SelectNestedDisabledComponent } from './select-nested-disabled.component';
+import { SelectNestedMixedComponent } from './select-nested-mixed.component';
+import { SelectNestedFormComponent } from './select-nested-form.component';
+import { SelectNestedSizesComponent } from './select-nested-sizes.component';
+import { SelectNestedMultipleComponent } from './select-nested-multiple.component';
 
 const routes: Route[] = [
   {
@@ -102,6 +109,34 @@ const routes: Route[] = [
   {
     path: 'select-overlay-position.component',
     component: SelectOverlayPositionComponent,
+  },
+  {
+    path: 'select-nested-showcase.component',
+    component: SelectNestedShowcaseComponent,
+  },
+  {
+    path: 'select-nested-deep.component',
+    component: SelectNestedDeepComponent,
+  },
+  {
+    path: 'select-nested-disabled.component',
+    component: SelectNestedDisabledComponent,
+  },
+  {
+    path: 'select-nested-mixed.component',
+    component: SelectNestedMixedComponent,
+  },
+  {
+    path: 'select-nested-form.component',
+    component: SelectNestedFormComponent,
+  },
+  {
+    path: 'select-nested-sizes.component',
+    component: SelectNestedSizesComponent,
+  },
+  {
+    path: 'select-nested-multiple.component',
+    component: SelectNestedMultipleComponent,
   },
 ];
 

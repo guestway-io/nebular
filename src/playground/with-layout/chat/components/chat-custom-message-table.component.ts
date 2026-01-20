@@ -1,8 +1,8 @@
 import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
-    selector: 'nb-custom-message-table',
-    template: `
+  selector: 'nb-custom-message-table',
+  template: `
     <table>
       <thead>
         <tr>
@@ -19,11 +19,10 @@ import { Component, HostBinding, Input } from '@angular/core';
       </tbody>
     </table>
   `,
-    styleUrls: ['./chat-custom-message-table.component.scss'],
-    standalone: false
+  styleUrls: ['./chat-custom-message-table.component.scss'],
+  standalone: false,
 })
 export class ChatCustomMessageTableComponent {
-
   @Input() columns = [];
 
   @Input() rows = [];
