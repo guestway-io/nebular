@@ -23,6 +23,7 @@
 
   // Hover state
   &:hover:not([disabled]) {
+    .option-nested-custom-icon,
     .option-nested-chevron {
       color: var(--option-hover-text-color);
     }
@@ -35,6 +36,7 @@
       color: var(--color-primary-default);
     }
 
+    .option-nested-custom-icon,
     .option-nested-chevron {
       color: var(--color-primary-default);
     }
@@ -48,6 +50,7 @@
       color: var(--option-active-text-color);
     }
 
+    .option-nested-custom-icon,
     .option-nested-chevron {
       color: var(--option-active-text-color);
     }
@@ -74,6 +77,20 @@
   .option-nested-trigger {
     background-color: var(--option-hover-background-color);
     color: var(--option-hover-text-color);
+  }
+}
+
+.option-nested-custom-icon {
+  flex-shrink: 0;
+  font-size: 1.25em;
+  color: var(--option-text-color);
+  margin-right: 0.5rem;
+}
+
+:host-context([dir='rtl']) {
+  .option-nested-custom-icon {
+    margin-right: 0;
+    margin-left: 0.5rem;
   }
 }
 

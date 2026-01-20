@@ -38,7 +38,7 @@ import { NbOptionComponent } from './option.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <span class="option-group-title">{{ title }}</span>
-    <ng-content select="nb-option, ng-container"></ng-content>
+    <ng-content select="nb-option, ng-container, nb-option-nested"></ng-content>
   `,
   standalone: false,
 })

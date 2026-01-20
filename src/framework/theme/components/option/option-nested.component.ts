@@ -82,6 +82,7 @@ import { ESCAPE, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE } f
       (mouseleave)="onMouseLeave()"
       (click)="onClick($event)"
     >
+      <nb-icon *ngIf="icon" class="option-nested-custom-icon" [icon]="icon" [pack]="pack"></nb-icon>
       <span class="option-nested-title">{{ title }}</span>
       <nb-icon class="option-nested-chevron" icon="chevron-right-outline" pack="nebular-essentials"></nb-icon>
     </div>
@@ -105,6 +106,16 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
    * Title displayed in the trigger row
    */
   @Input() title: string;
+
+  /**
+   * Custom icon for the nested option trigger
+   */
+  @Input() icon: string | undefined;
+
+  /**
+   * Icon pack for the custom icon
+   */
+  @Input() pack: string | undefined;
 
   /**
    * Disables the nested option
