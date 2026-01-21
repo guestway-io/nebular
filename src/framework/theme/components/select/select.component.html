@@ -41,8 +41,11 @@
   <div *ngIf="searchable && !activeNestedOption" class="select-search-header">
     <input
       #searchInput
+      nbInput
+      fullWidth
       type="text"
       class="select-search-input"
+      [fieldSize]="size"
       [placeholder]="searchPlaceholder"
       (input)="onSearchInput($event)"
       (keydown)="onSearchKeydown($event)"
@@ -60,8 +63,11 @@
     <div *ngIf="searchable" class="select-search-header nested-search-header">
       <input
         #nestedSearchInput
+        nbInput
+        fullWidth
         type="text"
         class="select-search-input"
+        [fieldSize]="size"
         [placeholder]="activeNestedOption?.title || searchPlaceholder"
         (input)="onNestedSearchInput($event)"
         (keydown)="onNestedSearchKeydown($event)"

@@ -105,38 +105,19 @@ nb-icon {
   border-bottom: 1px solid var(--option-list-border-color, var(--border-basic-color-3));
 }
 
-::ng-deep .select-search-input {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--input-basic-border-color, var(--border-basic-color-4));
-  border-radius: var(--input-rectangle-border-radius, 0.25rem);
-  background-color: var(--input-basic-background-color, var(--background-basic-color-1));
-  color: var(--input-basic-text-color, var(--text-basic-color));
-  font-family: var(--option-text-font-family);
-  font-size: var(--option-medium-text-font-size, 0.9375rem);
-  line-height: 1.5;
-
-  &::placeholder {
-    color: var(--input-basic-placeholder-text-color, var(--text-hint-color));
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--input-basic-focus-border-color, var(--color-primary-default));
-  }
-}
-
+// Search result items - base styles
 ::ng-deep .search-result-item {
   display: flex;
   align-items: center;
-  padding: var(--option-medium-padding, 0.6875rem 1rem);
   cursor: pointer;
   background-color: var(--option-background-color);
   color: var(--option-text-color);
   font-family: var(--option-text-font-family);
+  // Default to medium size
   font-size: var(--option-medium-text-font-size, 0.9375rem);
   font-weight: var(--option-medium-text-font-weight, 400);
   line-height: var(--option-medium-text-line-height, 1.5rem);
+  padding: var(--option-medium-padding, 0.6875rem 1rem);
 
   &:hover,
   &:focus {
@@ -149,6 +130,42 @@ nb-icon {
     background-color: var(--option-focus-background-color, var(--option-hover-background-color));
     color: var(--option-focus-text-color, var(--option-hover-text-color));
   }
+}
+
+// Size-specific styles for search results
+::ng-deep nb-option-list.size-tiny .search-result-item {
+  font-size: var(--option-tiny-text-font-size);
+  font-weight: var(--option-tiny-text-font-weight);
+  line-height: var(--option-tiny-text-line-height);
+  padding: var(--option-tiny-padding);
+}
+
+::ng-deep nb-option-list.size-small .search-result-item {
+  font-size: var(--option-small-text-font-size);
+  font-weight: var(--option-small-text-font-weight);
+  line-height: var(--option-small-text-line-height);
+  padding: var(--option-small-padding);
+}
+
+::ng-deep nb-option-list.size-medium .search-result-item {
+  font-size: var(--option-medium-text-font-size);
+  font-weight: var(--option-medium-text-font-weight);
+  line-height: var(--option-medium-text-line-height);
+  padding: var(--option-medium-padding);
+}
+
+::ng-deep nb-option-list.size-large .search-result-item {
+  font-size: var(--option-large-text-font-size);
+  font-weight: var(--option-large-text-font-weight);
+  line-height: var(--option-large-text-line-height);
+  padding: var(--option-large-padding);
+}
+
+::ng-deep nb-option-list.size-giant .search-result-item {
+  font-size: var(--option-giant-text-font-size);
+  font-weight: var(--option-giant-text-font-weight);
+  line-height: var(--option-giant-text-line-height);
+  padding: var(--option-giant-padding);
 }
 
 ::ng-deep .search-result-path {
@@ -168,10 +185,37 @@ nb-icon {
   white-space: nowrap;
 }
 
+// Search empty message - base and size-specific
 ::ng-deep .search-empty-message {
-  padding: var(--option-medium-padding, 0.6875rem 1rem);
   color: var(--text-hint-color);
   text-align: center;
   font-family: var(--option-text-font-family);
+  // Default to medium size
+  padding: var(--option-medium-padding, 0.6875rem 1rem);
   font-size: var(--option-medium-text-font-size, 0.9375rem);
+}
+
+::ng-deep nb-option-list.size-tiny .search-empty-message {
+  font-size: var(--option-tiny-text-font-size);
+  padding: var(--option-tiny-padding);
+}
+
+::ng-deep nb-option-list.size-small .search-empty-message {
+  font-size: var(--option-small-text-font-size);
+  padding: var(--option-small-padding);
+}
+
+::ng-deep nb-option-list.size-medium .search-empty-message {
+  font-size: var(--option-medium-text-font-size);
+  padding: var(--option-medium-padding);
+}
+
+::ng-deep nb-option-list.size-large .search-empty-message {
+  font-size: var(--option-large-text-font-size);
+  padding: var(--option-large-padding);
+}
+
+::ng-deep nb-option-list.size-giant .search-empty-message {
+  font-size: var(--option-giant-text-font-size);
+  padding: var(--option-giant-padding);
 }

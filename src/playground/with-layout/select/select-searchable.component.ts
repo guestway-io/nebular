@@ -12,5 +12,16 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class SelectSearchableComponent {
+  // Size examples
+  selectedTiny: string | undefined;
+  selectedSmall: string | undefined;
+  selectedMedium: string | undefined;
+  selectedLarge: string | undefined;
+  selectedGiant: string | undefined;
+
+  // Deep nesting example
   selectedValue: string | undefined;
+
+  // Multi-select example
+  selectedMultiple: string[] = [];
 }

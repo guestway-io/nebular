@@ -1,5 +1,65 @@
+<nb-card size="large">
+  <nb-card-header>Searchable Select - All Sizes</nb-card-header>
+  <nb-card-body class="example-items-row">
+    <!-- Tiny -->
+    <nb-select placeholder="Tiny" size="tiny" [(selected)]="selectedTiny" searchable>
+      <nb-option value="automation">Automation</nb-option>
+      <nb-option value="website">Website</nb-option>
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+      </nb-option-nested>
+      <nb-option value="reviews">Reviews</nb-option>
+    </nb-select>
+
+    <!-- Small -->
+    <nb-select placeholder="Small" size="small" [(selected)]="selectedSmall" searchable>
+      <nb-option value="automation">Automation</nb-option>
+      <nb-option value="website">Website</nb-option>
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+      </nb-option-nested>
+      <nb-option value="reviews">Reviews</nb-option>
+    </nb-select>
+
+    <!-- Medium (default) -->
+    <nb-select placeholder="Medium" size="medium" [(selected)]="selectedMedium" searchable>
+      <nb-option value="automation">Automation</nb-option>
+      <nb-option value="website">Website</nb-option>
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+      </nb-option-nested>
+      <nb-option value="reviews">Reviews</nb-option>
+    </nb-select>
+
+    <!-- Large -->
+    <nb-select placeholder="Large" size="large" [(selected)]="selectedLarge" searchable>
+      <nb-option value="automation">Automation</nb-option>
+      <nb-option value="website">Website</nb-option>
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+      </nb-option-nested>
+      <nb-option value="reviews">Reviews</nb-option>
+    </nb-select>
+
+    <!-- Giant -->
+    <nb-select placeholder="Giant" size="giant" [(selected)]="selectedGiant" searchable>
+      <nb-option value="automation">Automation</nb-option>
+      <nb-option value="website">Website</nb-option>
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+      </nb-option-nested>
+      <nb-option value="reviews">Reviews</nb-option>
+    </nb-select>
+  </nb-card-body>
+</nb-card>
+
 <nb-card size="medium">
-  <nb-card-header>Searchable Select with Nested Options</nb-card-header>
+  <nb-card-header>Searchable Select with Deep Nesting</nb-card-header>
   <nb-card-body>
     <nb-select placeholder="Select category" [(selected)]="selectedValue" searchable>
       <nb-option value="automation">Automation Workflows</nb-option>
@@ -21,7 +81,7 @@
       <nb-option-nested title="Infrastructure">
         <nb-option-nested title="Cloud">
           <nb-option value="aws">AWS</nb-option>
-          <nb-option value="gcp">Google Cloud Google Cloud Google Cloud</nb-option>
+          <nb-option value="gcp">Google Cloud</nb-option>
           <nb-option value="azure">Azure</nb-option>
         </nb-option-nested>
         <nb-option-nested title="On-Premise">
@@ -35,5 +95,31 @@
     </nb-select>
 
     <p *ngIf="selectedValue" class="selected-info">Selected: {{ selectedValue }}</p>
+  </nb-card-body>
+</nb-card>
+
+<nb-card size="medium">
+  <nb-card-header>Searchable Multi-Select</nb-card-header>
+  <nb-card-body>
+    <nb-select placeholder="Select multiple" [(selected)]="selectedMultiple" searchable multiple>
+      <nb-option value="automation">Automation Workflows</nb-option>
+      <nb-option value="website">Website</nb-option>
+
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+        <nb-option value="business-analytics">Business Analytics</nb-option>
+      </nb-option-nested>
+
+      <nb-option-nested title="Side">
+        <nb-option value="web">Web</nb-option>
+        <nb-option value="mobile">Mobile</nb-option>
+        <nb-option value="desktop">Desktop</nb-option>
+      </nb-option-nested>
+
+      <nb-option value="reviews">Reviews</nb-option>
+    </nb-select>
+
+    <p *ngIf="selectedMultiple?.length" class="selected-info">Selected: {{ selectedMultiple.join(', ') }}</p>
   </nb-card-body>
 </nb-card>

@@ -99,8 +99,11 @@ import { ESCAPE, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE } f
         <div *ngIf="searchable" class="select-search-header">
           <input
             #overlaySearchInput
+            nbInput
+            fullWidth
             type="text"
             class="select-search-input"
+            [fieldSize]="size"
             [placeholder]="searchPlaceholder"
             (input)="onOverlaySearchInput($event)"
             (keydown)="onOverlaySearchKeydown($event)"
