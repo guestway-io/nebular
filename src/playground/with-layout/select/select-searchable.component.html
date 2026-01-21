@@ -1,0 +1,39 @@
+<nb-card size="medium">
+  <nb-card-header>Searchable Select with Nested Options</nb-card-header>
+  <nb-card-body>
+    <nb-select placeholder="Select category" [(selected)]="selectedValue" searchable>
+      <nb-option value="automation">Automation Workflows</nb-option>
+      <nb-option value="website">Website</nb-option>
+
+      <nb-option-nested title="Category">
+        <nb-option value="cleaning">Cleaning</nb-option>
+        <nb-option value="branding">Branding</nb-option>
+        <nb-option value="business-analytics">Business Analytics</nb-option>
+        <nb-option value="inbox">Inbox</nb-option>
+      </nb-option-nested>
+
+      <nb-option-nested title="Side">
+        <nb-option value="web">Web</nb-option>
+        <nb-option value="mobile">Mobile</nb-option>
+        <nb-option value="desktop">Desktop</nb-option>
+      </nb-option-nested>
+
+      <nb-option-nested title="Infrastructure">
+        <nb-option-nested title="Cloud">
+          <nb-option value="aws">AWS</nb-option>
+          <nb-option value="gcp">Google Cloud Google Cloud Google Cloud</nb-option>
+          <nb-option value="azure">Azure</nb-option>
+        </nb-option-nested>
+        <nb-option-nested title="On-Premise">
+          <nb-option value="kubernetes">Kubernetes</nb-option>
+          <nb-option value="docker">Docker</nb-option>
+        </nb-option-nested>
+      </nb-option-nested>
+
+      <nb-option value="reviews">Reviews</nb-option>
+      <nb-option value="saved-replies">Saved Replies</nb-option>
+    </nb-select>
+
+    <p *ngIf="selectedValue" class="selected-info">Selected: {{ selectedValue }}</p>
+  </nb-card-body>
+</nb-card>

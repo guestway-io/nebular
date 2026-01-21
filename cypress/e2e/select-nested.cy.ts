@@ -225,4 +225,145 @@ describe('nb-select with nested options', () => {
       cy.get('.form-value').should('contain.text', 'category');
     });
   });
+
+  describe('Search functionality', () => {
+    beforeEach(() => {
+      cy.visit('#/select/select-searchable.component');
+      cy.viewport(1280, 720);
+    });
+
+    it('should show search input when searchable is enabled', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').should('be.visible');
+    });
+
+    it('should focus search input on dropdown open', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').should('be.focused');
+    });
+
+    it('should filter options when typing in search input', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').type('web');
+
+      // Should show search results
+      cy.get('.search-result-item').should('have.length.at.least', 1);
+      cy.get('.search-result-item').first().should('contain.text', 'Web');
+    });
+
+    it('should show breadcrumb path for nested options in search results', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').type('clean');
+
+      // Should show path in search results
+      cy.get('.search-result-path').should('exist');
+    });
+
+    it('should show empty message when no results match', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').type('xyznonexistent');
+
+      cy.get('.search-empty-message').should('be.visible');
+    });
+
+    it('should select option from search results', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').type('web');
+
+      cy.get('.search-result-item').first().click();
+
+      // Dropdown should close and value should be selected
+      cy.get('nb-option-list').should('not.exist');
+    });
+
+    it('should navigate search results with arrow keys', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').type('cat');
+
+      // Arrow down should highlight first result
+      cy.get('.select-search-input').trigger('keydown', { keyCode: 40, key: 'ArrowDown' });
+      cy.get('.search-result-item.active').should('exist');
+    });
+
+    it('should clear search on escape', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').type('web');
+      cy.get('.search-result-item').should('exist');
+
+      cy.get('.select-search-input').trigger('keydown', { keyCode: 27, key: 'Escape' });
+
+      // Search should be cleared, showing original options
+      cy.get('.search-result-item').should('not.exist');
+    });
+
+    it('should clear search when dropdown closes', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').type('web');
+
+      // Close dropdown by clicking outside
+      cy.get('body').click(0, 0);
+
+      // Reopen dropdown
+      cy.get('nb-select').click();
+
+      // Search should be cleared
+      cy.get('.select-search-input').should('have.value', '');
+    });
+  });
+
+  describe('Search in replacement mode', () => {
+    beforeEach(() => {
+      cy.visit('#/select/select-searchable.component');
+      cy.viewport(400, 720);
+    });
+
+    it('should show search input in replacement mode', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().click();
+
+      cy.get('.nested-back-header').should('be.visible');
+      cy.get('.nested-search-header .select-search-input').should('be.visible');
+    });
+
+    it('should filter nested options in replacement mode', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().click();
+
+      cy.get('.nested-search-header .select-search-input').type('brand');
+
+      cy.get('.nested-search-result-item').should('have.length.at.least', 1);
+    });
+
+    it('should go back when pressing left arrow in nested search', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().click();
+
+      cy.get('.nested-search-header .select-search-input').trigger('keydown', { keyCode: 37, key: 'ArrowLeft' });
+
+      cy.get('.nested-back-header').should('not.exist');
+    });
+  });
+
+  describe('Search in overlay submenu', () => {
+    beforeEach(() => {
+      cy.visit('#/select/select-searchable.component');
+      cy.viewport(1280, 720);
+    });
+
+    it('should show search input in overlay submenu when hovering nested option', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().trigger('mouseenter');
+
+      cy.get('.nb-option-nested-panel .select-search-input').should('be.visible');
+    });
+
+    it('should filter options in overlay submenu', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().trigger('mouseenter');
+
+      cy.get('.nb-option-nested-panel .select-search-input').type('clean');
+
+      cy.get('.nb-option-nested-panel .overlay-search-result-item').should('have.length.at.least', 1);
+    });
+  });
 });

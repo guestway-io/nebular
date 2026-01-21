@@ -35,7 +35,7 @@ import { NbOptionComponent } from './option.component';
 import { NbFocusableOption, NbFocusKeyManager, NbFocusKeyManagerFactoryService } from '../cdk/a11y/focus-key-manager';
 import { NbHighlightableOption } from '../cdk/a11y/descendant-key-manager';
 import { NB_SELECT_INJECTION_TOKEN } from '../select/select-injection-tokens';
-import { NbSelectComponent } from '../select/select.component';
+import { NbSelectComponent, NbSearchableOption } from '../select/select.component';
 import { NbPositionBuilderService, NbAdjustment, NbPosition } from '../cdk/overlay/overlay-position';
 import { NbOverlayService } from '../cdk/overlay/overlay-service';
 import { NB_DOCUMENT } from '../../theme.options';
@@ -94,8 +94,45 @@ import { ESCAPE, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE } f
 
     <!-- Template for overlay submenu (includes nb-option-list wrapper) -->
     <ng-template #childrenTemplate>
-      <nb-option-list [size]="size" class="nb-option-nested-pane">
-        <ng-container *ngTemplateOutlet="childrenContentTemplate"></ng-container>
+      <nb-option-list [size]="size" class="nb-option-nested-pane" (mouseenter)="onOverlayMouseEnter()">
+        <!-- Sticky search header for overlay submenu -->
+        <div *ngIf="searchable" class="select-search-header">
+          <input
+            #overlaySearchInput
+            type="text"
+            class="select-search-input"
+            [placeholder]="searchPlaceholder"
+            (input)="onOverlaySearchInput($event)"
+            (keydown)="onOverlaySearchKeydown($event)"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Search results mode (overlay) -->
+        <ng-container *ngIf="isOverlaySearching">
+          <ng-container *ngIf="overlaySearchResults.length; else overlayEmptyResults">
+            <div
+              *ngFor="let result of overlaySearchResults; let i = index"
+              class="search-result-item overlay-search-result-item"
+              [class.active]="overlaySearchResultActiveIndex === i"
+              tabindex="-1"
+              (click)="selectOverlaySearchResult(result)"
+              (keydown)="onOverlaySearchResultKeydown($event, i)"
+              (mouseenter)="onOverlaySearchResultMouseEnter(i)"
+            >
+              <span *ngIf="result.path.length" class="search-result-path"> {{ result.path.join(' > ') }} &gt; </span>
+              <span class="search-result-label">{{ result.label }}</span>
+            </div>
+          </ng-container>
+          <ng-template #overlayEmptyResults>
+            <div class="search-empty-message">{{ searchEmptyMessage }}</div>
+          </ng-template>
+        </ng-container>
+
+        <!-- Regular content when not searching -->
+        <ng-container *ngIf="!isOverlaySearching">
+          <ng-container *ngTemplateOutlet="childrenContentTemplate"></ng-container>
+        </ng-container>
       </nb-option-list>
     </ng-template>
 
@@ -164,6 +201,59 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
    * Nested option children (for deep nesting)
    */
   @ContentChildren(NbOptionNestedComponent) nestedChildren: QueryList<NbOptionNestedComponent>;
+
+  /**
+   * Reference to the overlay search input element.
+   */
+  @ViewChild('overlaySearchInput') overlaySearchInput: ElementRef<HTMLInputElement>;
+
+  /**
+   * Current search term for overlay submenu.
+   */
+  overlaySearchTerm: string = '';
+
+  /**
+   * Filtered search results for overlay submenu.
+   */
+  overlaySearchResults: NbSearchableOption[] = [];
+
+  /**
+   * Index of currently active search result in overlay.
+   */
+  overlaySearchResultActiveIndex: number = -1;
+
+  /**
+   * Searchable index for overlay submenu.
+   */
+  protected overlaySearchableIndex: NbSearchableOption[] = [];
+
+  /**
+   * Whether overlay search mode is currently active.
+   */
+  get isOverlaySearching(): boolean {
+    return this.searchable && this.overlaySearchTerm.length > 0;
+  }
+
+  /**
+   * Whether search is enabled (from parent select).
+   */
+  get searchable(): boolean {
+    return this.parent?.searchable ?? false;
+  }
+
+  /**
+   * Search placeholder text - uses the nested option's title.
+   */
+  get searchPlaceholder(): string {
+    return this.title;
+  }
+
+  /**
+   * Empty search message (from parent select).
+   */
+  get searchEmptyMessage(): string {
+    return this.parent?.searchEmptyMessage ?? 'No matching options';
+  }
 
   protected parent: NbSelectComponent;
   protected destroy$ = new Subject<void>();
@@ -319,8 +409,12 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
 
     if (this.hasSpaceForSubmenu()) {
       this.showSubmenu();
-      // Focus first option in submenu
-      this.focusFirstChildOption();
+      // Focus search input or first option in submenu (keyboard navigation)
+      if (this.searchable) {
+        this.focusOverlaySearchInput();
+      } else {
+        this.focusFirstChildOption();
+      }
     } else {
       this.replacementModeRequested.emit(this);
     }
@@ -359,7 +453,12 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
         this.hideSubmenu();
       } else {
         this.showSubmenu();
-        this.focusFirstChildOption();
+        // Focus search input or first option (keyboard navigation)
+        if (this.searchable) {
+          this.focusOverlaySearchInput();
+        } else {
+          this.focusFirstChildOption();
+        }
       }
     } else {
       this.replacementModeRequested.emit(this);
@@ -371,6 +470,15 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
    */
   focus(): void {
     this.elementRef.nativeElement.focus();
+  }
+
+  /**
+   * Focus this element and sync with the parent's key manager.
+   * Use this when returning focus from a submenu to ensure keyboard navigation works.
+   */
+  protected focusAndSyncKeyManager(): void {
+    this.focus();
+    this.parent?.setKeyManagerActiveItem(this);
   }
 
   /**
@@ -397,6 +505,279 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
   }
 
   /**
+   * Handle search input changes in overlay submenu.
+   */
+  onOverlaySearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.overlaySearchTerm = input.value;
+
+    // Close any open child submenus when searching
+    this.closeChildSubmenus();
+
+    // Reset active index when search results change
+    this.overlaySearchResultActiveIndex = -1;
+
+    if (this.overlaySearchTerm) {
+      if (this.overlaySearchableIndex.length === 0) {
+        this.overlaySearchableIndex = this.buildOverlaySearchableIndex();
+      }
+      this.overlaySearchResults = this.filterOverlayOptions(this.overlaySearchTerm);
+    } else {
+      this.overlaySearchResults = [];
+    }
+
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Close all child nested option submenus.
+   */
+  protected closeChildSubmenus(): void {
+    this.nestedChildren?.forEach((nested) => {
+      if (nested !== this && nested.submenuOpen) {
+        nested.hideSubmenu();
+      }
+    });
+  }
+
+  /**
+   * Build searchable index for overlay submenu children.
+   */
+  protected buildOverlaySearchableIndex(): NbSearchableOption[] {
+    const index: NbSearchableOption[] = [];
+
+    // Get direct nested children (to exclude their options)
+    const directNestedChildren = this.nestedChildren?.filter((n) => n !== this) ?? [];
+    const deeplyNestedOptions = new Set<NbOptionComponent>();
+    directNestedChildren.forEach((child) => {
+      child.options?.forEach((opt) => deeplyNestedOptions.add(opt));
+    });
+
+    // Add direct child options
+    this.options?.forEach((opt) => {
+      if (!deeplyNestedOptions.has(opt)) {
+        index.push({
+          option: opt,
+          label: opt.content,
+          path: [],
+          pathDisplay: opt.content,
+          searchText: opt.content.toLowerCase().trim(),
+        });
+      }
+    });
+
+    // Recurse into nested children
+    directNestedChildren.forEach((child) => {
+      this.indexNestedOptionsForOverlay(child, [], index);
+    });
+
+    return index;
+  }
+
+  /**
+   * Recursively index nested options for overlay search.
+   */
+  protected indexNestedOptionsForOverlay(
+    nested: NbOptionNestedComponent,
+    parentPath: string[],
+    index: NbSearchableOption[],
+  ): void {
+    const currentPath = [...parentPath, nested.title];
+
+    const directNestedChildren = nested.nestedChildren?.filter((n) => n !== nested) ?? [];
+    const deeplyNestedOptions = new Set<NbOptionComponent>();
+    directNestedChildren.forEach((child) => {
+      child.options?.forEach((opt) => deeplyNestedOptions.add(opt));
+    });
+
+    nested.options?.forEach((opt) => {
+      if (!deeplyNestedOptions.has(opt)) {
+        index.push({
+          option: opt,
+          label: opt.content,
+          path: currentPath,
+          pathDisplay: [...currentPath, opt.content].join(' > '),
+          searchText: [...currentPath, opt.content].join(' ').toLowerCase(),
+        });
+      }
+    });
+
+    directNestedChildren.forEach((child) => {
+      this.indexNestedOptionsForOverlay(child, currentPath, index);
+    });
+  }
+
+  /**
+   * Filter overlay options by search term.
+   */
+  protected filterOverlayOptions(term: string): NbSearchableOption[] {
+    const searchTerm = term.toLowerCase().trim();
+    if (!searchTerm) {
+      return [];
+    }
+    return this.overlaySearchableIndex.filter((item) => item.searchText.includes(searchTerm));
+  }
+
+  /**
+   * Select an option from overlay search results.
+   */
+  selectOverlaySearchResult(result: NbSearchableOption): void {
+    // Trigger the click on the option
+    result.option.onClick({ preventDefault: () => {} } as Event);
+    // For single select, hide the submenu
+    if (!this.parent?.multiple) {
+      this.hideSubmenu();
+    }
+  }
+
+  /**
+   * Clear overlay search state.
+   */
+  protected clearOverlaySearch(): void {
+    this.overlaySearchTerm = '';
+    this.overlaySearchResults = [];
+    this.overlaySearchResultActiveIndex = -1;
+    if (this.overlaySearchInput?.nativeElement) {
+      this.overlaySearchInput.nativeElement.value = '';
+    }
+  }
+
+  /**
+   * Handle keyboard events in overlay search input.
+   */
+  onOverlaySearchKeydown(event: KeyboardEvent): void {
+    const keyCode = event.keyCode;
+
+    // Stop propagation for ALL keys to prevent parent key manager's typeahead from intercepting
+    event.stopPropagation();
+
+    if (keyCode === DOWN_ARROW) {
+      event.preventDefault();
+      if (this.overlaySearchResults.length > 0) {
+        // Navigate search results
+        if (this.overlaySearchResultActiveIndex < this.overlaySearchResults.length - 1) {
+          this.overlaySearchResultActiveIndex++;
+        }
+        this.focusOverlaySearchResult(this.overlaySearchResultActiveIndex);
+        this.cd.markForCheck();
+      } else if (!this.overlaySearchTerm && this.submenuKeyManager) {
+        // No search term - navigate to first child option
+        this.submenuKeyManager.setFirstItemActive();
+      }
+    } else if (keyCode === UP_ARROW) {
+      event.preventDefault();
+      if (this.overlaySearchResultActiveIndex > 0) {
+        this.overlaySearchResultActiveIndex--;
+        this.focusOverlaySearchResult(this.overlaySearchResultActiveIndex);
+        this.cd.markForCheck();
+      } else if (this.overlaySearchResultActiveIndex === 0) {
+        this.overlaySearchResultActiveIndex = -1;
+        this.overlaySearchInput?.nativeElement?.focus();
+        this.cd.markForCheck();
+      }
+    } else if (keyCode === ENTER) {
+      event.preventDefault();
+      if (
+        this.overlaySearchResultActiveIndex >= 0 &&
+        this.overlaySearchResultActiveIndex < this.overlaySearchResults.length
+      ) {
+        this.selectOverlaySearchResult(this.overlaySearchResults[this.overlaySearchResultActiveIndex]);
+      }
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      if (this.overlaySearchTerm) {
+        this.clearOverlaySearch();
+        this.cd.markForCheck();
+      } else {
+        this.hideSubmenu();
+        this.focusAndSyncKeyManager();
+      }
+    } else if (
+      (keyCode === LEFT_ARROW && this.submenuOpenedRight) ||
+      (keyCode === RIGHT_ARROW && !this.submenuOpenedRight)
+    ) {
+      event.preventDefault();
+      this.hideSubmenu();
+      this.focusAndSyncKeyManager();
+    }
+  }
+
+  /**
+   * Handle keyboard events on overlay search result items.
+   */
+  onOverlaySearchResultKeydown(event: KeyboardEvent, index: number): void {
+    const keyCode = event.keyCode;
+
+    // Stop propagation for ALL keys to prevent parent key manager's typeahead from intercepting
+    event.stopPropagation();
+
+    if (keyCode === DOWN_ARROW) {
+      event.preventDefault();
+      if (index < this.overlaySearchResults.length - 1) {
+        this.overlaySearchResultActiveIndex = index + 1;
+        this.focusOverlaySearchResult(this.overlaySearchResultActiveIndex);
+      }
+    } else if (keyCode === UP_ARROW) {
+      event.preventDefault();
+      if (index > 0) {
+        this.overlaySearchResultActiveIndex = index - 1;
+        this.focusOverlaySearchResult(this.overlaySearchResultActiveIndex);
+      } else {
+        this.overlaySearchResultActiveIndex = -1;
+        this.overlaySearchInput?.nativeElement?.focus();
+      }
+    } else if (keyCode === ENTER || keyCode === SPACE) {
+      event.preventDefault();
+      this.selectOverlaySearchResult(this.overlaySearchResults[index]);
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      this.clearOverlaySearch();
+      this.overlaySearchInput?.nativeElement?.focus();
+      this.cd.markForCheck();
+    } else if (
+      (keyCode === LEFT_ARROW && this.submenuOpenedRight) ||
+      (keyCode === RIGHT_ARROW && !this.submenuOpenedRight)
+    ) {
+      event.preventDefault();
+      this.hideSubmenu();
+      this.focusAndSyncKeyManager();
+    }
+  }
+
+  /**
+   * Focus an overlay search result by index.
+   */
+  protected focusOverlaySearchResult(index: number): void {
+    if (this.overlayRef?.overlayElement) {
+      const results = this.overlayRef.overlayElement.querySelectorAll('.overlay-search-result-item');
+      if (results[index]) {
+        (results[index] as HTMLElement).focus();
+      }
+    }
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Handle mouse enter on overlay search result.
+   */
+  onOverlaySearchResultMouseEnter(index: number): void {
+    this.overlaySearchResultActiveIndex = index;
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Handle mouse enter on overlay option list (the submenu panel itself).
+   * Focus the search input when the user moves their mouse INTO the submenu.
+   * Note: This is different from hovering over the parent option - that triggers showSubmenu()
+   * which does NOT auto-focus. Only entering the actual submenu panel focuses the search.
+   */
+  onOverlayMouseEnter(): void {
+    if (this.searchable && this.overlaySearchInput?.nativeElement) {
+      this.overlaySearchInput.nativeElement.focus();
+    }
+  }
+
+  /**
    * Check if there's enough viewport space to show the submenu to the side
    */
   protected hasSpaceForSubmenu(): boolean {
@@ -418,10 +799,50 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
       return;
     }
 
+    // Build search index if searchable
+    if (this.searchable) {
+      this.overlaySearchableIndex = this.buildOverlaySearchableIndex();
+    }
+
     this.createOverlay();
     this.submenuVisible = true;
     this.submenuShown.emit(this);
     this.cd.markForCheck();
+
+    // Note: We don't auto-focus search input here.
+    // Focus should only happen when entering via keyboard navigation (arrow right or enter/space).
+  }
+
+  /**
+   * Focus the overlay search input element and set up the submenu key manager.
+   */
+  protected focusOverlaySearchInput(): void {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!this.overlayRef?.overlayElement) {
+          return;
+        }
+
+        // Focus the search input
+        if (this.overlaySearchInput?.nativeElement) {
+          this.overlaySearchInput.nativeElement.focus();
+        }
+
+        // Also set up the submenu key manager for navigating child options
+        const focusableItems = this.getFocusableChildren();
+        if (focusableItems.length > 0) {
+          this.submenuKeyManager = this.focusKeyManagerFactory.create(focusableItems);
+
+          // Set up keyboard listener on the overlay for non-search navigation
+          if (!this.keydownListener) {
+            this.keydownListener = (event: KeyboardEvent) => {
+              this.handleSubmenuKeydown(event);
+            };
+            this.overlayRef.overlayElement.addEventListener('keydown', this.keydownListener);
+          }
+        }
+      });
+    });
   }
 
   /**
@@ -438,6 +859,10 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
         nested.hideSubmenu();
       }
     });
+
+    // Clear search state
+    this.clearOverlaySearch();
+    this.overlaySearchableIndex = [];
 
     // Clean up keyboard listener
     if (this.keydownListener && this.overlayRef?.overlayElement) {
@@ -666,7 +1091,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
       event.preventDefault();
       event.stopPropagation();
       this.hideSubmenu();
-      this.focus(); // Return focus to the trigger
+      this.focusAndSyncKeyManager(); // Return focus to the trigger and sync key manager
       return;
     }
 
@@ -676,11 +1101,27 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
       event.preventDefault();
       event.stopPropagation();
       this.hideSubmenu();
-      this.focus(); // Return focus to the trigger
+      this.focusAndSyncKeyManager(); // Return focus to the trigger and sync key manager
       return;
     }
 
-    if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
+    if (keyCode === UP_ARROW) {
+      event.preventDefault();
+      event.stopPropagation();
+      // If searchable and at first item (or no active item), return to search input
+      if (this.searchable && this.overlaySearchInput?.nativeElement) {
+        const activeIndex = this.submenuKeyManager?.activeItemIndex ?? -1;
+        if (activeIndex <= 0) {
+          this.submenuKeyManager?.setActiveItem(-1);
+          this.overlaySearchInput.nativeElement.focus();
+          return;
+        }
+      }
+      this.submenuKeyManager?.onKeydown(event);
+      return;
+    }
+
+    if (keyCode === DOWN_ARROW) {
       event.preventDefault();
       event.stopPropagation();
       this.submenuKeyManager?.onKeydown(event);

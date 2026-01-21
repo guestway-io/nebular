@@ -1256,6 +1256,12 @@ export const PLAYGROUND_COMPONENTS: ComponentLink[] = [
         component: 'SelectNestedMultipleComponent',
         name: 'Select Nested Multiple',
       },
+      {
+        path: 'select-searchable.component',
+        link: '/select/select-searchable.component',
+        component: 'SelectSearchableComponent',
+        name: 'Select Searchable',
+      },
     ],
   },
   {

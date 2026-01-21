@@ -44,6 +44,7 @@ import { SelectNestedMixedComponent } from './select-nested-mixed.component';
 import { SelectNestedFormComponent } from './select-nested-form.component';
 import { SelectNestedSizesComponent } from './select-nested-sizes.component';
 import { SelectNestedMultipleComponent } from './select-nested-multiple.component';
+import { SelectSearchableComponent } from './select-searchable.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { SelectNestedMultipleComponent } from './select-nested-multiple.componen
     SelectNestedFormComponent,
     SelectNestedSizesComponent,
     SelectNestedMultipleComponent,
+    SelectSearchableComponent,
   ],
   imports: [
     FormsModule,

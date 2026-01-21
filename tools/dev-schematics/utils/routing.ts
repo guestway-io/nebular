@@ -34,12 +34,7 @@ function parseSourceFile(tree: Tree, path: Path): ts.SourceFile {
   if (!content) {
     throw new Error(`File ${path} not found`);
   }
-  return ts.createSourceFile(
-    path,
-    content.toString(),
-    ts.ScriptTarget.Latest,
-    true
-  );
+  return ts.createSourceFile(path, content.toString(), ts.ScriptTarget.Latest, true);
 }
 
 export function findRoutesArray(tree: Tree, modulePath: Path): ts.ArrayLiteralExpression {
@@ -133,7 +128,7 @@ export type RoutePredicate = (route: ts.ObjectLiteralExpression) => boolean;
 
 export function generateLazyModuleImport(from: Path, to: Path, moduleClassName: string): string {
   const path = normalize(importPath(from, to));
-  return `() => import('./${dirname(path)}/${basename(path)}').then(m => m.${moduleClassName})`;
+  return `() => import('./${dirname(path)}/${basename(path)}').then((m) => m.${moduleClassName})`;
 }
 
 /**

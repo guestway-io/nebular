@@ -32,6 +32,7 @@ import { SelectNestedMixedComponent } from './select-nested-mixed.component';
 import { SelectNestedFormComponent } from './select-nested-form.component';
 import { SelectNestedSizesComponent } from './select-nested-sizes.component';
 import { SelectNestedMultipleComponent } from './select-nested-multiple.component';
+import { SelectSearchableComponent } from './select-searchable.component';
 
 const routes: Route[] = [
   {
@@ -137,6 +138,10 @@ const routes: Route[] = [
   {
     path: 'select-nested-multiple.component',
     component: SelectNestedMultipleComponent,
+  },
+  {
+    path: 'select-searchable.component',
+    component: SelectSearchableComponent,
   },
 ];
 

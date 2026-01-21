@@ -44,7 +44,7 @@ import { NbOverlayRef, NbPortalDirective, NbScrollStrategy } from '../cdk/overla
 import { NbOverlayService } from '../cdk/overlay/overlay-service';
 import { NbTrigger, NbTriggerStrategy, NbTriggerStrategyBuilderService } from '../cdk/overlay/overlay-trigger';
 import { NbFocusableOption, NbFocusKeyManager, NbFocusKeyManagerFactoryService } from '../cdk/a11y/focus-key-manager';
-import { ESCAPE, LEFT_ARROW } from '../cdk/keycodes/keycodes';
+import { ESCAPE, LEFT_ARROW, DOWN_ARROW, UP_ARROW, ENTER, SPACE } from '../cdk/keycodes/keycodes';
 import { NbComponentSize } from '../component-size';
 import { NbComponentShape } from '../component-shape';
 import { NbComponentOrCustomStatus } from '../component-status';
@@ -59,6 +59,23 @@ import { NbScrollStrategies } from '../cdk/adapter/block-scroll-strategy-adapter
 
 export type NbSelectCompareFunction<T = any> = (v1: any, v2: any) => boolean;
 export type NbSelectAppearance = 'outline' | 'filled' | 'hero';
+
+/**
+ * Interface for searchable option indexing.
+ * Used to build a flat list of all options with their paths for search functionality.
+ */
+export interface NbSearchableOption {
+  /** Reference to the option component */
+  option: NbOptionComponent;
+  /** The option's display label */
+  label: string;
+  /** Path segments from root to this option (parent titles) */
+  path: string[];
+  /** Full path display string including the option label */
+  pathDisplay: string;
+  /** Lowercase search text for matching (includes path and label) */
+  searchText: string;
+}
 
 @Component({
   selector: 'nb-select-label',
@@ -707,6 +724,30 @@ export class NbSelectComponent
    **/
   @Input() scrollStrategy: NbScrollStrategies = 'block';
 
+  /**
+   * Enables search input in the dropdown header.
+   * When enabled, users can filter options by typing.
+   */
+  @Input()
+  get searchable(): boolean {
+    return this._searchable;
+  }
+  set searchable(value: boolean) {
+    this._searchable = convertToBoolProperty(value);
+  }
+  protected _searchable: boolean = false;
+  static ngAcceptInputType_searchable: NbBooleanInput;
+
+  /**
+   * Placeholder text for the search input.
+   */
+  @Input() searchPlaceholder: string = 'Search...';
+
+  /**
+   * Empty state message shown when search has no results.
+   */
+  @Input() searchEmptyMessage: string = 'No matching options';
+
   @HostBinding('class')
   get additionalClasses(): string[] {
     if (this.statusService.isCustomStatus(this.status)) {
@@ -744,6 +785,11 @@ export class NbSelectComponent
   @ViewChild('selectButton', { read: ElementRef }) button: ElementRef<HTMLButtonElement>;
 
   /**
+   * Reference to the search input element.
+   */
+  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+
+  /**
    * Determines is select opened.
    * */
   @HostBinding('class.open')
@@ -755,6 +801,65 @@ export class NbSelectComponent
    * List of selected options.
    * */
   selectionModel: NbOptionComponent[] = [];
+
+  /**
+   * Current search term entered by user.
+   */
+  searchTerm: string = '';
+
+  /**
+   * Filtered search results based on current search term.
+   */
+  searchResults: NbSearchableOption[] = [];
+
+  /**
+   * Flat index of all searchable options with their paths.
+   */
+  protected searchableIndex: NbSearchableOption[] = [];
+
+  /**
+   * Whether search mode is currently active (has search term).
+   */
+  get isSearching(): boolean {
+    return this.searchable && this.searchTerm.length > 0;
+  }
+
+  /**
+   * Index of the currently active/highlighted search result.
+   */
+  searchResultActiveIndex: number = -1;
+
+  /**
+   * Current search term for replacement mode (nested level).
+   */
+  nestedSearchTerm: string = '';
+
+  /**
+   * Filtered search results for replacement mode.
+   */
+  nestedSearchResults: NbSearchableOption[] = [];
+
+  /**
+   * Index of currently active search result in replacement mode.
+   */
+  nestedSearchResultActiveIndex: number = -1;
+
+  /**
+   * Searchable index for replacement mode (built from active nested option's children).
+   */
+  protected nestedSearchableIndex: NbSearchableOption[] = [];
+
+  /**
+   * Reference to the nested search input element.
+   */
+  @ViewChild('nestedSearchInput') nestedSearchInput: ElementRef<HTMLInputElement>;
+
+  /**
+   * Whether nested search mode is currently active (has search term in replacement mode).
+   */
+  get isNestedSearching(): boolean {
+    return this.searchable && this.activeNestedOption !== null && this.nestedSearchTerm.length > 0;
+  }
 
   positionStrategy: NbAdjustableConnectedPositionStrategy;
 
@@ -961,8 +1066,18 @@ export class NbSelectComponent
     if (this.shouldShow()) {
       this.attachToOverlay();
 
+      // Build search index when opening if searchable
+      if (this.searchable) {
+        this.searchableIndex = this.buildSearchableOptionsIndex();
+      }
+
       this.positionStrategy.positionChange.pipe(take(1), takeUntil(this.destroy$)).subscribe(() => {
-        this.setActiveOption();
+        if (this.searchable) {
+          // Focus search input after overlay is positioned
+          this.focusSearchInput();
+        } else {
+          this.setActiveOption();
+        }
       });
 
       this.cd.markForCheck();
@@ -976,8 +1091,21 @@ export class NbSelectComponent
       this.ref.detach();
       // Fully reset replacement mode state (not just one level)
       this.resetReplacementMode();
+      // Clear search state on close
+      this.clearSearch();
       this.cd.markForCheck();
     }
+  }
+
+  /**
+   * Focus the search input element.
+   */
+  protected focusSearchInput(): void {
+    requestAnimationFrame(() => {
+      if (this.searchInput?.nativeElement) {
+        this.searchInput.nativeElement.focus();
+      }
+    });
   }
 
   /**
@@ -1008,11 +1136,19 @@ export class NbSelectComponent
     // Unsubscribe from previous replacement mode subscriptions
     this.replacementModeDestroy$.next();
 
+    // Clear any existing nested search state
+    this.clearNestedSearch();
+
     if (this.activeNestedOption) {
       this.nestedOptionStack.push(this.activeNestedOption);
     }
     this.activeNestedOption = nestedOption;
     this.cd.markForCheck();
+
+    // Build nested search index if searchable
+    if (this.searchable) {
+      this.nestedSearchableIndex = this.buildNestedSearchableIndex(nestedOption);
+    }
 
     // Update key manager to use the nested option's children
     this.updateKeyManagerForReplacementMode(nestedOption);
@@ -1020,8 +1156,25 @@ export class NbSelectComponent
     // Subscribe to the nested children's replacement mode requests (for deeper nesting)
     this.subscribeToNestedChildrenReplacementMode(nestedOption);
 
-    // Focus the first option in the replacement view after it renders
-    this.focusFirstReplacementOption();
+    // Focus the search input or first option in the replacement view after it renders
+    if (this.searchable) {
+      this.focusNestedSearchInput();
+    } else {
+      this.focusFirstReplacementOption();
+    }
+  }
+
+  /**
+   * Focus the nested search input element.
+   */
+  protected focusNestedSearchInput(): void {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (this.nestedSearchInput?.nativeElement) {
+          this.nestedSearchInput.nativeElement.focus();
+        }
+      });
+    });
   }
 
   /**
@@ -1125,24 +1278,37 @@ export class NbSelectComponent
     // Unsubscribe from current level's nested children events
     this.replacementModeDestroy$.next();
 
+    // Clear nested search state
+    this.clearNestedSearch();
+
     if (this.nestedOptionStack.length > 0) {
       this.activeNestedOption = this.nestedOptionStack.pop() || null;
       if (this.activeNestedOption) {
         // Re-subscribe to the previous level's nested children events
         this.subscribeToNestedChildrenReplacementMode(this.activeNestedOption);
+        // Rebuild search index for the previous level
+        if (this.searchable) {
+          this.nestedSearchableIndex = this.buildNestedSearchableIndex(this.activeNestedOption);
+        }
       }
     } else {
       this.activeNestedOption = null;
     }
     this.cd.markForCheck();
 
-    // Update key manager AFTER DOM renders
+    // Update key manager AFTER DOM renders and focus appropriate element
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         if (this.activeNestedOption) {
           this.updateKeyManagerForReplacementMode(this.activeNestedOption);
+          if (this.searchable) {
+            this.focusNestedSearchInput();
+          }
         } else {
           this.restoreTopLevelKeyManager();
+          if (this.searchable) {
+            this.focusSearchInput();
+          }
         }
       });
     });
@@ -1304,6 +1470,15 @@ export class NbSelectComponent
   }
 
   /**
+   * Set the active item in the key manager.
+   * Called by nested options when returning focus from a submenu to sync the key manager state.
+   * @param item The focusable item to set as active
+   */
+  setKeyManagerActiveItem(item: NbFocusableOption): void {
+    this.keyManager?.setActiveItem(item);
+  }
+
+  /**
    * Get the list of focusable items for keyboard navigation.
    * This includes top-level options (not inside nested options) and nested option triggers.
    * Items are returned in DOM order.
@@ -1343,6 +1518,481 @@ export class NbSelectComponent
   protected isInsideNestedOption(option: NbOptionComponent): boolean {
     // Check if this option belongs to any nested option's children
     return this.nestedOptions?.some((nested) => nested.options?.some((opt) => opt === option)) ?? false;
+  }
+
+  /**
+   * Build a flat index of all searchable options with their paths.
+   * This traverses all options including nested options to create a searchable list.
+   */
+  protected buildSearchableOptionsIndex(): NbSearchableOption[] {
+    const index: NbSearchableOption[] = [];
+
+    // Process top-level options (not inside nested options)
+    this.options.forEach((opt) => {
+      if (!this.isInsideNestedOption(opt)) {
+        index.push({
+          option: opt,
+          label: opt.content,
+          path: [],
+          pathDisplay: opt.content,
+          searchText: opt.content.toLowerCase().trim(),
+        });
+      }
+    });
+
+    // Process nested options recursively
+    this.nestedOptions.forEach((nested) => {
+      this.indexNestedOptions(nested, [], index);
+    });
+
+    return index;
+  }
+
+  /**
+   * Recursively index nested options and their children.
+   * @param nested The nested option component to index
+   * @param parentPath Path segments leading to this nested option
+   * @param index The index array to add items to
+   */
+  protected indexNestedOptions(
+    nested: NbOptionNestedComponent,
+    parentPath: string[],
+    index: NbSearchableOption[],
+  ): void {
+    const currentPath = [...parentPath, nested.title];
+
+    // Get direct nested children (to exclude their options from this level)
+    const directNestedChildren = nested.nestedChildren?.filter((n) => n !== nested) ?? [];
+    const deeplyNestedOptions = new Set<NbOptionComponent>();
+    directNestedChildren.forEach((child) => {
+      child.options?.forEach((opt) => deeplyNestedOptions.add(opt));
+    });
+
+    // Add leaf options (not inside deeper nested children)
+    nested.options?.forEach((opt) => {
+      if (!deeplyNestedOptions.has(opt)) {
+        index.push({
+          option: opt,
+          label: opt.content,
+          path: currentPath,
+          pathDisplay: [...currentPath, opt.content].join(' > '),
+          searchText: [...currentPath, opt.content].join(' ').toLowerCase(),
+        });
+      }
+    });
+
+    // Recurse into nested children
+    directNestedChildren.forEach((child) => {
+      this.indexNestedOptions(child, currentPath, index);
+    });
+  }
+
+  /**
+   * Check if an option belongs to a deeply nested child.
+   */
+  protected isOptionInDeeperNested(option: NbOptionComponent, nested: NbOptionNestedComponent): boolean {
+    const directNestedChildren = nested.nestedChildren?.filter((n) => n !== nested) ?? [];
+    return directNestedChildren.some((child) => child.options?.some((opt) => opt === option));
+  }
+
+  /**
+   * Filter the searchable index by the given search term.
+   * @param term The search term to filter by
+   * @returns Filtered list of searchable options
+   */
+  protected filterOptions(term: string): NbSearchableOption[] {
+    const searchTerm = term.toLowerCase().trim();
+    if (!searchTerm) {
+      return [];
+    }
+
+    return this.searchableIndex.filter((item) => item.searchText.includes(searchTerm));
+  }
+
+  /**
+   * Handle search input changes.
+   * @param event The input event
+   */
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm = input.value;
+
+    // Close any open nested option submenus when searching in the parent
+    this.closeAllNestedSubmenus();
+
+    // Reset active index when search results change
+    this.searchResultActiveIndex = -1;
+
+    if (this.searchTerm) {
+      // Rebuild index if needed and filter
+      if (this.searchableIndex.length === 0) {
+        this.searchableIndex = this.buildSearchableOptionsIndex();
+      }
+      this.searchResults = this.filterOptions(this.searchTerm);
+    } else {
+      this.searchResults = [];
+    }
+
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Select an option from search results.
+   * @param result The search result to select
+   */
+  selectSearchResult(result: NbSearchableOption): void {
+    this.handleOptionClick(result.option);
+  }
+
+  /**
+   * Clear search state.
+   */
+  protected clearSearch(): void {
+    this.searchTerm = '';
+    this.searchResults = [];
+    this.searchResultActiveIndex = -1;
+    if (this.searchInput?.nativeElement) {
+      this.searchInput.nativeElement.value = '';
+    }
+  }
+
+  /**
+   * Handle keyboard events in the search input.
+   * @param event The keyboard event
+   */
+  onSearchKeydown(event: KeyboardEvent): void {
+    const keyCode = event.keyCode;
+
+    // Stop propagation for ALL keys to prevent key manager's typeahead from intercepting
+    event.stopPropagation();
+
+    if (keyCode === DOWN_ARROW) {
+      event.preventDefault();
+      if (this.searchResults.length > 0) {
+        // Navigate search results
+        if (this.searchResultActiveIndex < this.searchResults.length - 1) {
+          this.searchResultActiveIndex++;
+        }
+        this.focusSearchResult(this.searchResultActiveIndex);
+        this.cd.markForCheck();
+      } else if (!this.searchTerm) {
+        // No search term - navigate to first option using key manager
+        this.keyManager?.setFirstItemActive();
+      }
+    } else if (keyCode === UP_ARROW) {
+      event.preventDefault();
+      if (this.searchResultActiveIndex > 0) {
+        this.searchResultActiveIndex--;
+        this.focusSearchResult(this.searchResultActiveIndex);
+        this.cd.markForCheck();
+      } else if (this.searchResultActiveIndex === 0) {
+        // Return to search input
+        this.searchResultActiveIndex = -1;
+        this.searchInput?.nativeElement?.focus();
+        this.cd.markForCheck();
+      }
+    } else if (keyCode === ENTER) {
+      event.preventDefault();
+      if (this.searchResultActiveIndex >= 0 && this.searchResultActiveIndex < this.searchResults.length) {
+        this.selectSearchResult(this.searchResults[this.searchResultActiveIndex]);
+      }
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      if (this.searchTerm) {
+        // First escape clears search
+        this.clearSearch();
+        this.cd.markForCheck();
+      } else {
+        // Second escape closes dropdown
+        this.hide();
+        this.button.nativeElement.focus();
+      }
+    }
+  }
+
+  /**
+   * Handle keyboard events on search result items.
+   * @param event The keyboard event
+   * @param index The index of the result item
+   */
+  onSearchResultKeydown(event: KeyboardEvent, index: number): void {
+    const keyCode = event.keyCode;
+
+    // Stop propagation for ALL keys to prevent key manager's typeahead from intercepting
+    event.stopPropagation();
+
+    if (keyCode === DOWN_ARROW) {
+      event.preventDefault();
+      if (index < this.searchResults.length - 1) {
+        this.searchResultActiveIndex = index + 1;
+        this.focusSearchResult(this.searchResultActiveIndex);
+      }
+    } else if (keyCode === UP_ARROW) {
+      event.preventDefault();
+      if (index > 0) {
+        this.searchResultActiveIndex = index - 1;
+        this.focusSearchResult(this.searchResultActiveIndex);
+      } else {
+        // Return to search input
+        this.searchResultActiveIndex = -1;
+        this.searchInput?.nativeElement?.focus();
+      }
+    } else if (keyCode === ENTER || keyCode === SPACE) {
+      event.preventDefault();
+      this.selectSearchResult(this.searchResults[index]);
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      this.clearSearch();
+      this.searchInput?.nativeElement?.focus();
+      this.cd.markForCheck();
+    }
+  }
+
+  /**
+   * Focus a search result by index.
+   * @param index The index of the result to focus
+   */
+  protected focusSearchResult(index: number): void {
+    if (this.ref?.overlayElement) {
+      const results = this.ref.overlayElement.querySelectorAll('.search-result-item');
+      if (results[index]) {
+        (results[index] as HTMLElement).focus();
+      }
+    }
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Handle mouse enter on search result.
+   * @param index The index of the result
+   */
+  onSearchResultMouseEnter(index: number): void {
+    this.searchResultActiveIndex = index;
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Handle mouse enter on option list (to focus search input).
+   */
+  onOptionListMouseEnter(): void {
+    if (this.searchable) {
+      if (this.activeNestedOption && this.nestedSearchInput?.nativeElement) {
+        this.nestedSearchInput.nativeElement.focus();
+      } else if (this.searchInput?.nativeElement) {
+        this.searchInput.nativeElement.focus();
+      }
+    }
+  }
+
+  /**
+   * Build searchable index for the active nested option's children.
+   * @param nestedOption The nested option to build index for
+   */
+  protected buildNestedSearchableIndex(nestedOption: NbOptionNestedComponent): NbSearchableOption[] {
+    const index: NbSearchableOption[] = [];
+
+    // Get direct nested children (to exclude their options)
+    const directNestedChildren = nestedOption.nestedChildren?.filter((n) => n !== nestedOption) ?? [];
+    const deeplyNestedOptions = new Set<NbOptionComponent>();
+    directNestedChildren.forEach((child) => {
+      child.options?.forEach((opt) => deeplyNestedOptions.add(opt));
+    });
+
+    // Add direct child options
+    nestedOption.options?.forEach((opt) => {
+      if (!deeplyNestedOptions.has(opt)) {
+        index.push({
+          option: opt,
+          label: opt.content,
+          path: [],
+          pathDisplay: opt.content,
+          searchText: opt.content.toLowerCase().trim(),
+        });
+      }
+    });
+
+    // Recurse into nested children
+    directNestedChildren.forEach((child) => {
+      this.indexNestedOptions(child, [], index);
+    });
+
+    return index;
+  }
+
+  /**
+   * Handle search input changes in replacement mode.
+   * @param event The input event
+   */
+  onNestedSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.nestedSearchTerm = input.value;
+
+    // Reset active index when search results change
+    this.nestedSearchResultActiveIndex = -1;
+
+    if (this.nestedSearchTerm && this.activeNestedOption) {
+      // Build index if needed
+      if (this.nestedSearchableIndex.length === 0) {
+        this.nestedSearchableIndex = this.buildNestedSearchableIndex(this.activeNestedOption);
+      }
+      this.nestedSearchResults = this.filterNestedOptions(this.nestedSearchTerm);
+    } else {
+      this.nestedSearchResults = [];
+    }
+
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Filter nested searchable options by the given term.
+   * @param term The search term
+   */
+  protected filterNestedOptions(term: string): NbSearchableOption[] {
+    const searchTerm = term.toLowerCase().trim();
+    if (!searchTerm) {
+      return [];
+    }
+
+    return this.nestedSearchableIndex.filter((item) => item.searchText.includes(searchTerm));
+  }
+
+  /**
+   * Select an option from nested search results.
+   * @param result The search result to select
+   */
+  selectNestedSearchResult(result: NbSearchableOption): void {
+    this.handleOptionClick(result.option);
+  }
+
+  /**
+   * Clear nested search state.
+   */
+  protected clearNestedSearch(): void {
+    this.nestedSearchTerm = '';
+    this.nestedSearchResults = [];
+    this.nestedSearchResultActiveIndex = -1;
+    this.nestedSearchableIndex = [];
+    if (this.nestedSearchInput?.nativeElement) {
+      this.nestedSearchInput.nativeElement.value = '';
+    }
+  }
+
+  /**
+   * Handle keyboard events in the nested search input.
+   * @param event The keyboard event
+   */
+  onNestedSearchKeydown(event: KeyboardEvent): void {
+    const keyCode = event.keyCode;
+
+    // Stop propagation for ALL keys to prevent key manager's typeahead from intercepting
+    event.stopPropagation();
+
+    if (keyCode === DOWN_ARROW) {
+      event.preventDefault();
+      if (this.nestedSearchResults.length > 0) {
+        if (this.nestedSearchResultActiveIndex < this.nestedSearchResults.length - 1) {
+          this.nestedSearchResultActiveIndex++;
+        }
+        this.focusNestedSearchResult(this.nestedSearchResultActiveIndex);
+        this.cd.markForCheck();
+      }
+    } else if (keyCode === UP_ARROW) {
+      event.preventDefault();
+      if (this.nestedSearchResultActiveIndex > 0) {
+        this.nestedSearchResultActiveIndex--;
+        this.focusNestedSearchResult(this.nestedSearchResultActiveIndex);
+        this.cd.markForCheck();
+      } else if (this.nestedSearchResultActiveIndex === 0) {
+        this.nestedSearchResultActiveIndex = -1;
+        this.nestedSearchInput?.nativeElement?.focus();
+        this.cd.markForCheck();
+      }
+    } else if (keyCode === ENTER) {
+      event.preventDefault();
+      if (
+        this.nestedSearchResultActiveIndex >= 0 &&
+        this.nestedSearchResultActiveIndex < this.nestedSearchResults.length
+      ) {
+        this.selectNestedSearchResult(this.nestedSearchResults[this.nestedSearchResultActiveIndex]);
+      }
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      if (this.nestedSearchTerm) {
+        this.clearNestedSearch();
+        this.cd.markForCheck();
+      } else {
+        this.exitReplacementMode();
+      }
+    } else if (keyCode === LEFT_ARROW) {
+      // Arrow left goes back to previous level
+      event.preventDefault();
+      this.clearNestedSearch();
+      this.exitReplacementMode();
+    }
+  }
+
+  /**
+   * Handle keyboard events on nested search result items.
+   * @param event The keyboard event
+   * @param index The index of the result item
+   */
+  onNestedSearchResultKeydown(event: KeyboardEvent, index: number): void {
+    const keyCode = event.keyCode;
+
+    // Stop propagation for ALL keys to prevent key manager's typeahead from intercepting
+    event.stopPropagation();
+
+    if (keyCode === DOWN_ARROW) {
+      event.preventDefault();
+      if (index < this.nestedSearchResults.length - 1) {
+        this.nestedSearchResultActiveIndex = index + 1;
+        this.focusNestedSearchResult(this.nestedSearchResultActiveIndex);
+      }
+    } else if (keyCode === UP_ARROW) {
+      event.preventDefault();
+      if (index > 0) {
+        this.nestedSearchResultActiveIndex = index - 1;
+        this.focusNestedSearchResult(this.nestedSearchResultActiveIndex);
+      } else {
+        this.nestedSearchResultActiveIndex = -1;
+        this.nestedSearchInput?.nativeElement?.focus();
+      }
+    } else if (keyCode === ENTER || keyCode === SPACE) {
+      event.preventDefault();
+      this.selectNestedSearchResult(this.nestedSearchResults[index]);
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      this.clearNestedSearch();
+      this.nestedSearchInput?.nativeElement?.focus();
+      this.cd.markForCheck();
+    } else if (keyCode === LEFT_ARROW) {
+      event.preventDefault();
+      this.clearNestedSearch();
+      this.exitReplacementMode();
+    }
+  }
+
+  /**
+   * Focus a nested search result by index.
+   * @param index The index of the result to focus
+   */
+  protected focusNestedSearchResult(index: number): void {
+    if (this.ref?.overlayElement) {
+      const results = this.ref.overlayElement.querySelectorAll('.nested-search-result-item');
+      if (results[index]) {
+        (results[index] as HTMLElement).focus();
+      }
+    }
+    this.cd.markForCheck();
+  }
+
+  /**
+   * Handle mouse enter on nested search result.
+   * @param index The index of the result
+   */
+  onNestedSearchResultMouseEnter(index: number): void {
+    this.nestedSearchResultActiveIndex = index;
+    this.cd.markForCheck();
   }
 
   protected createPositionStrategy(): NbAdjustableConnectedPositionStrategy {
@@ -1432,6 +2082,16 @@ export class NbSelectComponent
           // Arrow left exits replacement mode (go back)
           event.preventDefault();
           this.exitReplacementMode();
+        } else if (event.keyCode === UP_ARROW && this.searchable && !this.activeNestedOption) {
+          // If searchable and at first option (or no active), return to search input
+          const activeIndex = this.keyManager?.activeItemIndex ?? -1;
+          if (activeIndex <= 0) {
+            event.preventDefault();
+            this.keyManager?.setActiveItem(-1);
+            this.searchInput?.nativeElement?.focus();
+          } else {
+            this.keyManager.onKeydown(event);
+          }
         } else {
           this.keyManager.onKeydown(event);
         }

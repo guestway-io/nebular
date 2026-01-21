@@ -57,6 +57,14 @@ nb-icon {
   transform: translateY(-50%) rotate(180deg);
 }
 
+// Nested option replacement mode header container
+::ng-deep .nested-replacement-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--option-list-background-color);
+}
+
 // Nested option replacement mode back header
 ::ng-deep .nested-back-header {
   display: flex;
@@ -65,6 +73,7 @@ nb-icon {
   user-select: none;
   color: var(--option-group-text-color);
   gap: 0.5rem;
+  padding: 0.5rem;
 
   .nested-back-icon {
     position: static;
@@ -79,4 +88,90 @@ nb-icon {
   &:hover {
     color: var(--option-text-color);
   }
+}
+
+// Nested search header (in replacement mode)
+::ng-deep .nested-search-header {
+  border-top: 1px solid var(--option-list-border-color, var(--border-basic-color-3));
+}
+
+// Search header and results
+::ng-deep .select-search-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--option-list-background-color);
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--option-list-border-color, var(--border-basic-color-3));
+}
+
+::ng-deep .select-search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--input-basic-border-color, var(--border-basic-color-4));
+  border-radius: var(--input-rectangle-border-radius, 0.25rem);
+  background-color: var(--input-basic-background-color, var(--background-basic-color-1));
+  color: var(--input-basic-text-color, var(--text-basic-color));
+  font-family: var(--option-text-font-family);
+  font-size: var(--option-medium-text-font-size, 0.9375rem);
+  line-height: 1.5;
+
+  &::placeholder {
+    color: var(--input-basic-placeholder-text-color, var(--text-hint-color));
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--input-basic-focus-border-color, var(--color-primary-default));
+  }
+}
+
+::ng-deep .search-result-item {
+  display: flex;
+  align-items: center;
+  padding: var(--option-medium-padding, 0.6875rem 1rem);
+  cursor: pointer;
+  background-color: var(--option-background-color);
+  color: var(--option-text-color);
+  font-family: var(--option-text-font-family);
+  font-size: var(--option-medium-text-font-size, 0.9375rem);
+  font-weight: var(--option-medium-text-font-weight, 400);
+  line-height: var(--option-medium-text-line-height, 1.5rem);
+
+  &:hover,
+  &:focus {
+    background-color: var(--option-hover-background-color);
+    color: var(--option-hover-text-color);
+    outline: none;
+  }
+
+  &.active {
+    background-color: var(--option-focus-background-color, var(--option-hover-background-color));
+    color: var(--option-focus-text-color, var(--option-hover-text-color));
+  }
+}
+
+::ng-deep .search-result-path {
+  color: var(--text-hint-color);
+  margin-right: 0.25rem;
+  min-width: 2rem;
+  max-width: 70%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+::ng-deep .search-result-label {
+  color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+::ng-deep .search-empty-message {
+  padding: var(--option-medium-padding, 0.6875rem 1rem);
+  color: var(--text-hint-color);
+  text-align: center;
+  font-family: var(--option-text-font-family);
+  font-size: var(--option-medium-text-font-size, 0.9375rem);
 }

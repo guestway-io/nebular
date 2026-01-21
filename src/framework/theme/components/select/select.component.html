@@ -35,18 +35,97 @@
   [position]="overlayPosition"
   [style.width.px]="optionsWidth"
   [ngClass]="optionsListClass"
+  (mouseenter)="onOptionListMouseEnter()"
 >
-  <!-- Back header for replacement mode -->
-  <div *ngIf="activeNestedOption" class="nested-back-header" (click)="exitReplacementMode(); $event.stopPropagation()">
-    <nb-icon class="nested-back-icon" icon="chevron-left-outline" pack="nebular-essentials"></nb-icon>
-    <span class="nested-back-title">{{ activeNestedOption.title }}</span>
+  <!-- Sticky search header (main level) -->
+  <div *ngIf="searchable && !activeNestedOption" class="select-search-header">
+    <input
+      #searchInput
+      type="text"
+      class="select-search-input"
+      [placeholder]="searchPlaceholder"
+      (input)="onSearchInput($event)"
+      (keydown)="onSearchKeydown($event)"
+      autocomplete="off"
+    />
   </div>
 
-  <!-- Main options or nested content -->
-  <ng-container *ngIf="!activeNestedOption">
+  <!-- Back header for replacement mode (with search input if searchable) -->
+  <div *ngIf="activeNestedOption" class="nested-replacement-header">
+    <div class="nested-back-header" (click)="exitReplacementMode(); $event.stopPropagation()">
+      <nb-icon class="nested-back-icon" icon="chevron-left-outline" pack="nebular-essentials"></nb-icon>
+      <span class="nested-back-title">{{ activeNestedOption.title }}</span>
+    </div>
+    <!-- Nested search input -->
+    <div *ngIf="searchable" class="select-search-header nested-search-header">
+      <input
+        #nestedSearchInput
+        type="text"
+        class="select-search-input"
+        [placeholder]="searchPlaceholder"
+        (input)="onNestedSearchInput($event)"
+        (keydown)="onNestedSearchKeydown($event)"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- Search results mode (main level - when searching and not in replacement mode) -->
+  <ng-container *ngIf="isSearching && !activeNestedOption">
+    <ng-container *ngIf="searchResults.length; else emptyResults">
+      <div
+        *ngFor="let result of searchResults; let i = index"
+        class="search-result-item"
+        [class.active]="searchResultActiveIndex === i"
+        tabindex="-1"
+        (click)="selectSearchResult(result)"
+        (keydown)="onSearchResultKeydown($event, i)"
+        (keydown.enter)="selectSearchResult(result); $event.preventDefault()"
+        (keydown.space)="selectSearchResult(result); $event.preventDefault()"
+        (mouseenter)="onSearchResultMouseEnter(i)"
+      >
+        <span *ngIf="result.path.length" class="search-result-path"> {{ result.path.join(' > ') }} &gt; </span>
+        <span class="search-result-label">{{ result.label }}</span>
+      </div>
+    </ng-container>
+    <ng-template #emptyResults>
+      <div class="search-empty-message">{{ searchEmptyMessage }}</div>
+    </ng-template>
+  </ng-container>
+
+  <!-- Main options (when not searching and not in replacement mode) -->
+  <ng-container *ngIf="!isSearching && !activeNestedOption">
     <ng-content select="nb-option, nb-option-group, nb-option-nested"></ng-content>
   </ng-container>
+
+  <!-- Replacement mode content -->
   <ng-container *ngIf="activeNestedOption">
-    <ng-container *ngTemplateOutlet="activeNestedOption.childrenContentTemplate"></ng-container>
+    <!-- Nested search results (when searching in replacement mode) -->
+    <ng-container *ngIf="isNestedSearching">
+      <ng-container *ngIf="nestedSearchResults.length; else nestedEmptyResults">
+        <div
+          *ngFor="let result of nestedSearchResults; let i = index"
+          class="search-result-item nested-search-result-item"
+          [class.active]="nestedSearchResultActiveIndex === i"
+          tabindex="-1"
+          (click)="selectNestedSearchResult(result)"
+          (keydown)="onNestedSearchResultKeydown($event, i)"
+          (keydown.enter)="selectNestedSearchResult(result); $event.preventDefault()"
+          (keydown.space)="selectNestedSearchResult(result); $event.preventDefault()"
+          (mouseenter)="onNestedSearchResultMouseEnter(i)"
+        >
+          <span *ngIf="result.path.length" class="search-result-path"> {{ result.path.join(' > ') }} &gt; </span>
+          <span class="search-result-label">{{ result.label }}</span>
+        </div>
+      </ng-container>
+      <ng-template #nestedEmptyResults>
+        <div class="search-empty-message">{{ searchEmptyMessage }}</div>
+      </ng-template>
+    </ng-container>
+
+    <!-- Regular nested content (when not searching in replacement mode) -->
+    <ng-container *ngIf="!isNestedSearching">
+      <ng-container *ngTemplateOutlet="activeNestedOption.childrenContentTemplate"></ng-container>
+    </ng-container>
   </ng-container>
 </nb-option-list>
