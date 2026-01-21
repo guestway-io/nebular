@@ -84,7 +84,12 @@ import { ESCAPE, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE } f
     >
       <nb-icon *ngIf="icon" class="option-nested-custom-icon" [icon]="icon" [pack]="pack"></nb-icon>
       <span class="option-nested-title">{{ title }}</span>
-      <nb-icon class="option-nested-chevron" icon="chevron-right-outline" pack="nebular-essentials"></nb-icon>
+      <nb-icon
+        class="option-nested-chevron"
+        status="basic"
+        icon="chevron-right-outline"
+        pack="nebular-essentials"
+      ></nb-icon>
     </div>
 
     <!-- Template for overlay submenu (includes nb-option-list wrapper) -->
@@ -423,24 +428,6 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
    * Hide the submenu overlay
    */
   hideSubmenu(): void {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/914e01ee-fc27-4d4f-b44b-88d79a9d645f', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        location: 'option-nested:hideSubmenu',
-        message: 'hideSubmenu called',
-        data: {
-          title: this.title,
-          submenuVisible: this.submenuVisible,
-          stack: new Error().stack?.split('\n').slice(1, 5),
-        },
-        timestamp: Date.now(),
-        sessionId: 'debug-session',
-        hypothesisId: 'B',
-      }),
-    }).catch(() => {});
-    // #endregion
     if (!this.submenuVisible) {
       return;
     }
@@ -537,25 +524,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
         }),
         takeUntil(this.destroy$),
       )
-      .subscribe((clickedOption: NbOptionComponent) => {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/914e01ee-fc27-4d4f-b44b-88d79a9d645f', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            location: 'option-nested:subscribeToChildOptionClicks',
-            message: 'Child option clicked',
-            data: {
-              parentExists: !!this.parent,
-              parentMultiple: this.parent?.multiple,
-              clickedValue: clickedOption?.value,
-            },
-            timestamp: Date.now(),
-            sessionId: 'debug-session',
-            hypothesisId: 'A',
-          }),
-        }).catch(() => {});
-        // #endregion
+      .subscribe(() => {
         // Only hide submenu for single-select mode
         // For multi-select, keep the submenu open to allow multiple selections
         if (!this.parent?.multiple) {

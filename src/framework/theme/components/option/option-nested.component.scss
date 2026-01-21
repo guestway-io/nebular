@@ -103,7 +103,6 @@
 
 .option-nested-chevron {
   flex-shrink: 0;
-  color: var(--option-text-color);
   @include nb-ltr(margin-left, 0.5rem);
   @include nb-rtl(margin-right, 0.5rem);
 }

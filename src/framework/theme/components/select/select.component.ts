@@ -970,20 +970,6 @@ export class NbSelectComponent
   }
 
   hide() {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/914e01ee-fc27-4d4f-b44b-88d79a9d645f', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        location: 'select:hide',
-        message: 'hide() called',
-        data: { isOpen: this.isOpen, multiple: this.multiple, stack: new Error().stack?.split('\n').slice(1, 6) },
-        timestamp: Date.now(),
-        sessionId: 'debug-session',
-        hypothesisId: 'B',
-      }),
-    }).catch(() => {});
-    // #endregion
     if (this.isOpen) {
       // Close all nested option submenus first
       this.closeAllNestedSubmenus();
@@ -1296,10 +1282,10 @@ export class NbSelectComponent
       // Only set active if the selected option is in the focusable items (top-level)
       if (!this.isInsideNestedOption(selectedOption)) {
         this.keyManager.setActiveItem(selectedOption);
-        return;
       }
     }
-    this.keyManager.setFirstItemActive();
+    // Don't set first item active by default - let keyboard navigation handle it naturally
+    // This provides better UX as the highlight only appears when user starts navigating
   }
 
   protected createOverlay() {
