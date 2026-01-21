@@ -1678,6 +1678,7 @@ export class NbSelectComponent
       } else if (!this.searchTerm) {
         // No search term - navigate to first option using key manager
         this.keyManager?.setFirstItemActive();
+        this.cd.markForCheck();
       }
     } else if (keyCode === UP_ARROW) {
       event.preventDefault();
@@ -1890,10 +1891,15 @@ export class NbSelectComponent
     if (keyCode === DOWN_ARROW) {
       event.preventDefault();
       if (this.nestedSearchResults.length > 0) {
+        // Navigate search results
         if (this.nestedSearchResultActiveIndex < this.nestedSearchResults.length - 1) {
           this.nestedSearchResultActiveIndex++;
         }
         this.focusNestedSearchResult(this.nestedSearchResultActiveIndex);
+        this.cd.markForCheck();
+      } else if (!this.nestedSearchTerm) {
+        // No search term - navigate to first option using key manager
+        this.keyManager?.setFirstItemActive();
         this.cd.markForCheck();
       }
     } else if (keyCode === UP_ARROW) {
@@ -2082,13 +2088,18 @@ export class NbSelectComponent
           // Arrow left exits replacement mode (go back)
           event.preventDefault();
           this.exitReplacementMode();
-        } else if (event.keyCode === UP_ARROW && this.searchable && !this.activeNestedOption) {
-          // If searchable and at first option (or no active), return to search input
+        } else if (event.keyCode === UP_ARROW && this.searchable) {
+          // If searchable and at first option (or no active), return to appropriate search input
           const activeIndex = this.keyManager?.activeItemIndex ?? -1;
           if (activeIndex <= 0) {
             event.preventDefault();
             this.keyManager?.setActiveItem(-1);
-            this.searchInput?.nativeElement?.focus();
+            // Focus nested search input if in replacement mode, otherwise main search input
+            if (this.activeNestedOption) {
+              this.nestedSearchInput?.nativeElement?.focus();
+            } else {
+              this.searchInput?.nativeElement?.focus();
+            }
           } else {
             this.keyManager.onKeydown(event);
           }

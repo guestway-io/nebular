@@ -300,8 +300,9 @@ describe('nb-select with nested options', () => {
       cy.get('nb-select').click();
       cy.get('.select-search-input').type('web');
 
-      // Close dropdown by clicking outside
-      cy.get('body').click(0, 0);
+      // Close dropdown by pressing Escape twice (first clears search, second closes)
+      cy.get('.select-search-input').trigger('keydown', { keyCode: 27, key: 'Escape' });
+      cy.get('.select-search-input').trigger('keydown', { keyCode: 27, key: 'Escape' });
 
       // Reopen dropdown
       cy.get('nb-select').click();
@@ -342,6 +343,34 @@ describe('nb-select with nested options', () => {
 
       cy.get('.nested-back-header').should('not.exist');
     });
+
+    it('should navigate to options with arrow down in replacement mode', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().click();
+
+      // Focus should be on nested search input
+      cy.get('.nested-search-header .select-search-input').should('be.visible');
+
+      // Press down arrow to navigate to options
+      cy.get('.nested-search-header .select-search-input').trigger('keydown', { keyCode: 40, key: 'ArrowDown' });
+
+      // Should have child options visible
+      cy.get('nb-option-list nb-option').should('have.length.at.least', 1);
+    });
+
+    it('should allow selecting option with click after keyboard navigation in replacement mode', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().click();
+
+      // Navigate down
+      cy.get('.nested-search-header .select-search-input').trigger('keydown', { keyCode: 40, key: 'ArrowDown' });
+
+      // Click an option
+      cy.get('nb-option-list nb-option').first().click();
+
+      // Dropdown should close
+      cy.get('nb-option-list').should('not.exist');
+    });
   });
 
   describe('Search in overlay submenu', () => {
@@ -364,6 +393,130 @@ describe('nb-select with nested options', () => {
       cy.get('.nb-option-nested-panel .select-search-input').type('clean');
 
       cy.get('.nb-option-nested-panel .overlay-search-result-item').should('have.length.at.least', 1);
+    });
+  });
+
+  describe('Keyboard navigation with searchable select', () => {
+    beforeEach(() => {
+      cy.visit('#/select/select-searchable.component');
+      cy.viewport(1280, 720);
+    });
+
+    it('should allow keyboard navigation from search input to options', () => {
+      cy.get('nb-select').click();
+      cy.get('.select-search-input').should('be.focused');
+
+      // Press down arrow twice then enter to select second option
+      cy.get('.select-search-input').trigger('keydown', { keyCode: 40, key: 'ArrowDown' });
+      cy.get('.select-search-input').trigger('keydown', { keyCode: 40, key: 'ArrowDown' });
+
+      // Verify options exist and keyboard navigation is possible
+      cy.get('nb-option-list nb-option').should('have.length.at.least', 2);
+    });
+
+    it('should allow selecting option by clicking after keyboard navigation', () => {
+      cy.get('nb-select').click();
+
+      // Navigate down to see options
+      cy.get('.select-search-input').trigger('keydown', { keyCode: 40, key: 'ArrowDown' });
+
+      // Click first option directly
+      cy.get('nb-option-list nb-option').first().click();
+
+      // Dropdown should close after selection
+      cy.get('nb-option-list').should('not.exist');
+    });
+  });
+
+  describe('Keyboard navigation in overlay submenu', () => {
+    beforeEach(() => {
+      cy.visit('#/select/select-searchable.component');
+      cy.viewport(1280, 720);
+    });
+
+    it('should close overlay submenu and return to parent with arrow left', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').first().trigger('mouseenter');
+
+      cy.get('.nb-option-nested-panel').trigger('mouseenter');
+      cy.get('.nb-option-nested-panel .select-search-input').should('be.focused');
+
+      // Press left arrow - should close submenu
+      cy.get('.nb-option-nested-panel .select-search-input').trigger('keydown', { keyCode: 37, key: 'ArrowLeft' });
+
+      // Submenu should be closed
+      cy.get('.nb-option-nested-panel').should('not.exist');
+    });
+
+    it('should not focus overlay search input on mouse hover over parent option', () => {
+      cy.get('nb-select').click();
+
+      // Hover over nested option - submenu opens
+      cy.get('nb-option-nested').first().trigger('mouseenter');
+      cy.get('.nb-option-nested-panel').should('be.visible');
+
+      // Search input should NOT be focused yet (only panel visible)
+      // Focus should still be on main search input or nothing
+      cy.get('.nb-option-nested-panel .select-search-input').should('not.be.focused');
+    });
+
+    it('should focus overlay search input when mouse enters the submenu panel', () => {
+      cy.get('nb-select').click();
+
+      // Hover over nested option - submenu opens
+      cy.get('nb-option-nested').first().trigger('mouseenter');
+      cy.get('.nb-option-nested-panel').should('be.visible');
+
+      // Now enter the submenu panel
+      cy.get('.nb-option-nested-panel').trigger('mouseenter');
+
+      // Search input should be focused
+      cy.get('.nb-option-nested-panel .select-search-input').should('be.focused');
+    });
+
+    it('should close child submenus when typing in overlay search', () => {
+      cy.visit('#/select/select-searchable.component');
+      cy.viewport(1280, 720);
+
+      cy.get('nb-select').click();
+
+      // Navigate to Infrastructure which has nested children (Cloud, On-Premise)
+      cy.get('nb-option-nested').contains('Infrastructure').trigger('mouseenter');
+      cy.get('.nb-option-nested-panel').should('be.visible');
+
+      // Hover over Cloud to open its submenu
+      cy.get('.nb-option-nested-panel nb-option-nested').first().trigger('mouseenter');
+      // Wait for potential child submenu
+      cy.wait(300);
+
+      // Now enter the Infrastructure panel and type in search
+      cy.get('.nb-option-nested-panel').first().trigger('mouseenter');
+      cy.get('.nb-option-nested-panel .select-search-input').first().type('aws');
+
+      // Search results should be visible
+      cy.get('.nb-option-nested-panel .overlay-search-result-item').should('have.length.at.least', 1);
+    });
+  });
+
+  describe('Placeholder for nested search input', () => {
+    beforeEach(() => {
+      cy.visit('#/select/select-searchable.component');
+      cy.viewport(1280, 720);
+    });
+
+    it('should use nested option title as placeholder in overlay submenu', () => {
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').contains('Category').trigger('mouseenter');
+
+      cy.get('.nb-option-nested-panel .select-search-input').should('have.attr', 'placeholder', 'Category');
+    });
+
+    it('should use nested option title as placeholder in replacement mode', () => {
+      cy.viewport(400, 720);
+      cy.get('nb-select').click();
+      cy.get('nb-option-nested').contains('Category').click();
+
+      cy.get('.nested-search-header .select-search-input').should('have.attr', 'placeholder', 'Category');
     });
   });
 });

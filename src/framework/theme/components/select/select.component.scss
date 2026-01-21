@@ -92,7 +92,7 @@ nb-icon {
 
 // Nested search header (in replacement mode)
 ::ng-deep .nested-search-header {
-  border-top: 1px solid var(--option-list-border-color, var(--border-basic-color-3));
+  // border-top: 1px solid var(--option-list-border-color, var(--border-basic-color-3));
 }
 
 // Search header and results

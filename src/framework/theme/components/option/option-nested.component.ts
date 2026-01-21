@@ -663,6 +663,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
       } else if (!this.overlaySearchTerm && this.submenuKeyManager) {
         // No search term - navigate to first child option
         this.submenuKeyManager.setFirstItemActive();
+        this.cd.markForCheck();
       }
     } else if (keyCode === UP_ARROW) {
       event.preventDefault();

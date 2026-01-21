@@ -62,7 +62,7 @@
         #nestedSearchInput
         type="text"
         class="select-search-input"
-        [placeholder]="searchPlaceholder"
+        [placeholder]="activeNestedOption?.title || searchPlaceholder"
         (input)="onNestedSearchInput($event)"
         (keydown)="onNestedSearchKeydown($event)"
         autocomplete="off"
