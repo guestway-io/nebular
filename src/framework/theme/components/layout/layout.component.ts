@@ -410,14 +410,14 @@ export class NbLayoutComponent implements AfterViewInit, OnDestroy {
 
     const x =
       -documentRect.left ||
-      this.document.body.scrollLeft ||
+      this.document.body?.scrollLeft ||
       this.window.scrollX ||
       this.document.documentElement.scrollLeft ||
       0;
 
     const y =
       -documentRect.top ||
-      this.document.body.scrollTop ||
+      this.document.body?.scrollTop ||
       this.window.scrollY ||
       this.document.documentElement.scrollTop ||
       0;
