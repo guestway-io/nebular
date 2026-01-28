@@ -217,6 +217,18 @@
   // Nested option submenu panel (overlay) - needs to be at root level
   // because CDK overlays are rendered outside component hierarchy
   .nb-option-nested-panel {
+    // Submenu enter animation
+    @keyframes nb-submenu-enter {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     .nb-option-nested-pane {
       display: block;
       background-color: var(--option-list-background-color);
@@ -227,6 +239,12 @@
       box-shadow: var(--option-list-shadow);
       overflow: hidden;
       min-width: 180px;
+
+      // Smooth enter animation
+      // transform-origin is set dynamically via JS based on actual position,
+      // but we provide a default fallback
+      animation: nb-submenu-enter 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: top left;
 
       .option-list {
         max-height: var(--option-list-max-height);

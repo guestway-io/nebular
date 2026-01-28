@@ -141,7 +141,7 @@ import { ESCAPE, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE } f
 
     <!-- Template for replacement mode (raw children, no wrapper) -->
     <ng-template #childrenContentTemplate>
-      <ng-content select="nb-option, nb-option-nested"></ng-content>
+      <ng-content select="nb-option, nb-option-group, nb-option-nested"></ng-content>
     </ng-template>
   `,
   standalone: false,
@@ -891,10 +891,13 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
    * Create the overlay for the submenu
    */
   protected createOverlay(): void {
+    // Calculate optimal position based on available viewport space
+    const preferredPosition = this.calculatePreferredSubmenuPosition();
+
     const positionStrategy = this.positionBuilder
       .connectedTo(this.elementRef)
-      .position(NbPosition.END_TOP)
-      .adjustment(NbAdjustment.HORIZONTAL)
+      .position(preferredPosition)
+      .adjustment(NbAdjustment.CLOCKWISE) // Allows vertical fallback (END_TOP <-> END_BOTTOM) before flipping sides
       .offset(0);
 
     this.overlayRef = this.overlay.create({
@@ -908,12 +911,26 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
     this.overlayRef.attach(templatePortal);
 
     // Determine which direction the submenu opened after it's positioned
+    // and set animation transform-origin accordingly
     requestAnimationFrame(() => {
       if (this.overlayRef?.overlayElement) {
         const triggerRect = this.elementRef.nativeElement.getBoundingClientRect();
         const overlayRect = this.overlayRef.overlayElement.getBoundingClientRect();
-        // If overlay left edge is greater than trigger right edge, it opened to the right
-        this.submenuOpenedRight = overlayRect.left >= triggerRect.right - 10; // Small tolerance for overlap
+
+        // Determine horizontal direction (left vs right of trigger)
+        this.submenuOpenedRight = overlayRect.left >= triggerRect.right - 10;
+
+        // Determine vertical alignment (top vs bottom aligned)
+        const alignedTop =
+          Math.abs(overlayRect.top - triggerRect.top) < Math.abs(overlayRect.bottom - triggerRect.bottom);
+
+        // Set transform-origin on the pane for animation
+        const pane = this.overlayRef.overlayElement.querySelector('.nb-option-nested-pane') as HTMLElement;
+        if (pane) {
+          const horizontal = this.submenuOpenedRight ? 'left' : 'right';
+          const vertical = alignedTop ? 'top' : 'bottom';
+          pane.style.transformOrigin = `${vertical} ${horizontal}`;
+        }
       }
     });
 
@@ -932,6 +949,40 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
         this.hideSubmenu();
       }, this.HOVER_HIDE_DELAY);
     });
+  }
+
+  /**
+   * Calculate the preferred submenu position based on available viewport space.
+   * Checks both horizontal and vertical space to determine optimal alignment.
+   *
+   * Vertical alignment logic:
+   * - If more space BELOW the trigger: use END_BOTTOM/START_BOTTOM (tops aligned, extends downward)
+   * - If more space ABOVE the trigger: use END_TOP/START_TOP (bottoms aligned, extends upward)
+   *
+   * The CLOCKWISE adjustment will try the opposite vertical alignment if the preferred one doesn't fit.
+   */
+  protected calculatePreferredSubmenuPosition(): NbPosition {
+    const triggerRect = this.elementRef.nativeElement.getBoundingClientRect();
+    const viewportHeight = this.document.documentElement.clientHeight;
+    const viewportWidth = this.document.documentElement.clientWidth;
+
+    // Calculate horizontal space
+    const spaceOnRight = viewportWidth - triggerRect.right;
+    const spaceOnLeft = triggerRect.left;
+    const preferEnd = spaceOnRight >= this.SUBMENU_MIN_WIDTH || spaceOnRight >= spaceOnLeft;
+
+    // Calculate vertical space from trigger edges
+    const spaceAbove = triggerRect.top;
+    const spaceBelow = viewportHeight - triggerRect.bottom;
+
+    // Determine optimal position:
+    // - More space below: align tops (submenu extends down)
+    // - More space above: align bottoms (submenu extends up)
+    if (preferEnd) {
+      return spaceBelow >= spaceAbove ? NbPosition.END_BOTTOM : NbPosition.END_TOP;
+    } else {
+      return spaceBelow >= spaceAbove ? NbPosition.START_BOTTOM : NbPosition.START_TOP;
+    }
   }
 
   /**
