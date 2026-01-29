@@ -72,6 +72,10 @@
     &.selected {
       background-color: var(--option-selected-background-color);
       color: var(--option-selected-text-color);
+
+      nb-icon {
+        color: var(--option-selected-text-color);
+      }
     }
 
     &:focus {

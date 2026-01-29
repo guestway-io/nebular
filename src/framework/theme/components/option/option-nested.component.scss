@@ -23,7 +23,6 @@
 
   // Hover state
   &:hover:not([disabled]) {
-    .option-nested-custom-icon,
     .option-nested-chevron {
       color: var(--option-hover-text-color);
     }
@@ -84,7 +83,6 @@
   flex-shrink: 0;
   font-size: 1.25em;
   width: 1.25rem;
-  color: var(--option-text-color);
   margin-right: 0.5rem;
 }
 
