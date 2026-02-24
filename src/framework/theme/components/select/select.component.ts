@@ -896,6 +896,7 @@ export class NbSelectComponent
    * */
   protected onChange: Function = () => {};
   protected onTouched: Function = () => {};
+  protected searchHeightLocked = false;
 
   /*
    * @docs-private
@@ -1535,7 +1536,7 @@ export class NbSelectComponent
           label: opt.content,
           path: [],
           pathDisplay: opt.content,
-          searchText: opt.content.toLowerCase().trim(),
+          searchText: this.normalizeSearchText(opt.content),
         });
       }
     });
@@ -1576,7 +1577,7 @@ export class NbSelectComponent
           label: opt.content,
           path: currentPath,
           pathDisplay: [...currentPath, opt.content].join(' > '),
-          searchText: [...currentPath, opt.content].join(' ').toLowerCase(),
+          searchText: this.normalizeSearchText([...currentPath, opt.content].join(' ')),
         });
       }
     });
@@ -1596,12 +1597,25 @@ export class NbSelectComponent
   }
 
   /**
+   * Normalize text for search comparison by removing separators and converting to lowercase.
+   * This allows matching "AirbnbSvenOrg" with "airbnb sven org" or "airbnb-sven-org".
+   * @param text The text to normalize
+   * @returns Normalized text with separators removed
+   */
+  protected normalizeSearchText(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[\s\-_.,;:'"!?()[\]{}|/\\]+/g, '') // Remove common separators and punctuation
+      .trim();
+  }
+
+  /**
    * Filter the searchable index by the given search term.
    * @param term The search term to filter by
    * @returns Filtered list of searchable options
    */
   protected filterOptions(term: string): NbSearchableOption[] {
-    const searchTerm = term.toLowerCase().trim();
+    const searchTerm = this.normalizeSearchText(term);
     if (!searchTerm) {
       return [];
     }
@@ -1615,6 +1629,7 @@ export class NbSelectComponent
    */
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const previousSearchTerm = this.searchTerm;
     this.searchTerm = input.value;
 
     // Close any open nested option submenus when searching in the parent
@@ -1622,6 +1637,13 @@ export class NbSelectComponent
 
     // Reset active index when search results change
     this.searchResultActiveIndex = -1;
+
+    // Lock height when search starts to prevent container collapse
+    if (this.searchTerm && !previousSearchTerm) {
+      this.lockOptionListHeight();
+    } else if (!this.searchTerm && previousSearchTerm) {
+      this.unlockOptionListHeight();
+    }
 
     if (this.searchTerm) {
       // Rebuild index if needed and filter
@@ -1651,8 +1673,39 @@ export class NbSelectComponent
     this.searchTerm = '';
     this.searchResults = [];
     this.searchResultActiveIndex = -1;
+    this.unlockOptionListHeight();
     if (this.searchInput?.nativeElement) {
       this.searchInput.nativeElement.value = '';
+    }
+  }
+
+  /**
+   * Lock the option list height to prevent collapse during search.
+   * This prevents unwanted mouseleave events when results shrink.
+   */
+  protected lockOptionListHeight(): void {
+    if (this.searchHeightLocked || !this.ref?.overlayElement) {
+      return;
+    }
+    const optionList = this.ref.overlayElement.querySelector('nb-option-list') as HTMLElement;
+    if (optionList) {
+      const currentHeight = optionList.getBoundingClientRect().height;
+      optionList.style.minHeight = `${currentHeight}px`;
+      this.searchHeightLocked = true;
+    }
+  }
+
+  /**
+   * Unlock the option list height after search is cleared.
+   */
+  protected unlockOptionListHeight(): void {
+    if (!this.searchHeightLocked || !this.ref?.overlayElement) {
+      return;
+    }
+    const optionList = this.ref.overlayElement.querySelector('nb-option-list') as HTMLElement;
+    if (optionList) {
+      optionList.style.minHeight = '';
+      this.searchHeightLocked = false;
     }
   }
 
@@ -1807,7 +1860,7 @@ export class NbSelectComponent
           label: opt.content,
           path: [],
           pathDisplay: opt.content,
-          searchText: opt.content.toLowerCase().trim(),
+          searchText: this.normalizeSearchText(opt.content),
         });
       }
     });
@@ -1826,10 +1879,18 @@ export class NbSelectComponent
    */
   onNestedSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const previousSearchTerm = this.nestedSearchTerm;
     this.nestedSearchTerm = input.value;
 
     // Reset active index when search results change
     this.nestedSearchResultActiveIndex = -1;
+
+    // Lock height when search starts to prevent container collapse
+    if (this.nestedSearchTerm && !previousSearchTerm) {
+      this.lockOptionListHeight();
+    } else if (!this.nestedSearchTerm && previousSearchTerm) {
+      this.unlockOptionListHeight();
+    }
 
     if (this.nestedSearchTerm && this.activeNestedOption) {
       // Build index if needed
@@ -1849,7 +1910,7 @@ export class NbSelectComponent
    * @param term The search term
    */
   protected filterNestedOptions(term: string): NbSearchableOption[] {
-    const searchTerm = term.toLowerCase().trim();
+    const searchTerm = this.normalizeSearchText(term);
     if (!searchTerm) {
       return [];
     }
@@ -1873,6 +1934,7 @@ export class NbSelectComponent
     this.nestedSearchResults = [];
     this.nestedSearchResultActiveIndex = -1;
     this.nestedSearchableIndex = [];
+    this.unlockOptionListHeight();
     if (this.nestedSearchInput?.nativeElement) {
       this.nestedSearchInput.nativeElement.value = '';
     }

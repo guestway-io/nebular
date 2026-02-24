@@ -267,6 +267,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
   protected submenuOpenedRight = true; // Track which direction the submenu opened
   protected submenuKeyManager: NbFocusKeyManager<NbFocusableOption> | null = null;
   protected keydownListener: ((event: KeyboardEvent) => void) | null = null;
+  protected searchHeightLocked = false; // Track if height is locked during search
 
   // Minimum width needed for submenu
   protected readonly SUBMENU_MIN_WIDTH = 200;
@@ -512,6 +513,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
    */
   onOverlaySearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const previousSearchTerm = this.overlaySearchTerm;
     this.overlaySearchTerm = input.value;
 
     // Close any open child submenus when searching
@@ -519,6 +521,13 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
 
     // Reset active index when search results change
     this.overlaySearchResultActiveIndex = -1;
+
+    // Lock height when search starts to prevent container collapse
+    if (this.overlaySearchTerm && !previousSearchTerm) {
+      this.lockOverlayHeight();
+    } else if (!this.overlaySearchTerm && previousSearchTerm) {
+      this.unlockOverlayHeight();
+    }
 
     if (this.overlaySearchTerm) {
       if (this.overlaySearchableIndex.length === 0) {
@@ -544,6 +553,17 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
   }
 
   /**
+   * Normalize text for search comparison by removing separators and converting to lowercase.
+   * This allows matching "AirbnbSvenOrg" with "airbnb sven org" or "airbnb-sven-org".
+   */
+  protected normalizeSearchText(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[\s\-_.,;:'"!?()[\]{}|/\\]+/g, '')
+      .trim();
+  }
+
+  /**
    * Build searchable index for overlay submenu children.
    */
   protected buildOverlaySearchableIndex(): NbSearchableOption[] {
@@ -564,7 +584,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
           label: opt.content,
           path: [],
           pathDisplay: opt.content,
-          searchText: opt.content.toLowerCase().trim(),
+          searchText: this.normalizeSearchText(opt.content),
         });
       }
     });
@@ -600,7 +620,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
           label: opt.content,
           path: currentPath,
           pathDisplay: [...currentPath, opt.content].join(' > '),
-          searchText: [...currentPath, opt.content].join(' ').toLowerCase(),
+          searchText: this.normalizeSearchText([...currentPath, opt.content].join(' ')),
         });
       }
     });
@@ -614,7 +634,7 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
    * Filter overlay options by search term.
    */
   protected filterOverlayOptions(term: string): NbSearchableOption[] {
-    const searchTerm = term.toLowerCase().trim();
+    const searchTerm = this.normalizeSearchText(term);
     if (!searchTerm) {
       return [];
     }
@@ -640,8 +660,39 @@ export class NbOptionNestedComponent implements AfterContentInit, OnDestroy, NbF
     this.overlaySearchTerm = '';
     this.overlaySearchResults = [];
     this.overlaySearchResultActiveIndex = -1;
+    this.unlockOverlayHeight();
     if (this.overlaySearchInput?.nativeElement) {
       this.overlaySearchInput.nativeElement.value = '';
+    }
+  }
+
+  /**
+   * Lock the overlay height to prevent collapse during search.
+   * This prevents the mouseleave event from firing when results shrink.
+   */
+  protected lockOverlayHeight(): void {
+    if (this.searchHeightLocked || !this.overlayRef?.overlayElement) {
+      return;
+    }
+    const pane = this.overlayRef.overlayElement.querySelector('.nb-option-nested-pane') as HTMLElement;
+    if (pane) {
+      const currentHeight = pane.getBoundingClientRect().height;
+      pane.style.minHeight = `${currentHeight}px`;
+      this.searchHeightLocked = true;
+    }
+  }
+
+  /**
+   * Unlock the overlay height after search is cleared.
+   */
+  protected unlockOverlayHeight(): void {
+    if (!this.searchHeightLocked || !this.overlayRef?.overlayElement) {
+      return;
+    }
+    const pane = this.overlayRef.overlayElement.querySelector('.nb-option-nested-pane') as HTMLElement;
+    if (pane) {
+      pane.style.minHeight = '';
+      this.searchHeightLocked = false;
     }
   }
 
