@@ -46,7 +46,7 @@
     "lint:fix": "lint-staged --config ./.lintstagedrc-fix.json",
     "format": "prettier --check \"src/**/*.ts\" \"src/**/*.html\"",
     "format:fix": "prettier --write \"src/**/*.ts\" \"src/**/*.html\"",
-    "e2e:open": "concurrently \"npm run serve:no-generate -- --port 4201\" \"wait-on http://localhost:4201 && cypress open\"",
+    "e2e:open": "concurrently \"ng serve --port 4201\" \"wait-on http://localhost:4201 && cypress open\"",
     "e2e:run:headed": "start-server-and-test 'ng serve --port 4201' http://localhost:4201 'cypress run --headed'",
     "e2e:run:headless": "start-server-and-test 'ng serve --port 4201' http://localhost:4201 'cypress run'",
     "ci:lint": "npm-run-all -p lint lint:styles",

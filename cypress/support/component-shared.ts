@@ -17,11 +17,11 @@ export const alertSizes = [
 ];
 
 export const colors = [
-  { colorKey: 'primary', color: 'rgba(51, 102, 255, 1)' },
-  { colorKey: 'success', color: 'rgba(0, 214, 143, 1)' },
-  { colorKey: 'info', color: 'rgba(0, 149, 255, 1)' },
-  { colorKey: 'warning', color: 'rgba(255, 170, 0, 1)' },
-  { colorKey: 'danger', color: 'rgba(255, 61, 113, 1)' },
+  { colorKey: 'primary', color: 'rgb(51, 102, 255)' },
+  { colorKey: 'success', color: 'rgb(0, 214, 143)' },
+  { colorKey: 'info', color: 'rgb(0, 149, 255)' },
+  { colorKey: 'warning', color: 'rgb(255, 170, 0)' },
+  { colorKey: 'danger', color: 'rgb(255, 61, 113)' },
 ];
 
 export const chatSizes = [

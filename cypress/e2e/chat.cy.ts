@@ -6,8 +6,6 @@
 
 import { colors, chatSizes as sizes } from '../support/component-shared';
 
-let chats: any[] = [];
-
 function prepareChats() {
   const result: any[] = [];
 
@@ -28,9 +26,10 @@ function prepareChats() {
   return result;
 }
 
+const chats = prepareChats();
+
 describe('nb-chat', () => {
-  before(() => {
-    chats = prepareChats();
+  beforeEach(() => {
     cy.visit('#/chat/chat-test.component');
   });
 

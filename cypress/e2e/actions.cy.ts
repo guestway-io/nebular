@@ -4,7 +4,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
 
-import badgeTests from './badge.cy';
+import badgeTests from '../support/badge-tests';
 
 describe('nb-action', () => {
   before(() => {

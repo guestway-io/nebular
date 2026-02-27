@@ -6,8 +6,6 @@
 
 import { colors, alertSizes as sizes } from '../support/component-shared';
 
-let alerts: any[] = [];
-
 function prepareAlerts() {
   const result: any[] = [];
 
@@ -28,9 +26,10 @@ function prepareAlerts() {
   return result;
 }
 
+const alerts = prepareAlerts();
+
 describe('nb-alert', () => {
-  before(() => {
-    alerts = prepareAlerts();
+  beforeEach(() => {
     cy.visit('#/alert/alert-test.component');
   });
 

@@ -6,8 +6,6 @@
 
 import { colors, cardSizes as sizes } from '../support/component-shared';
 
-let cards: any[] = [];
-
 function prepareCards() {
   const result: any[] = [];
 
@@ -28,9 +26,10 @@ function prepareCards() {
   return result;
 }
 
+const cards = prepareCards();
+
 describe('nb-card', () => {
-  before(() => {
-    cards = prepareCards();
+  beforeEach(() => {
     cy.visit('#/card/card-test.component');
   });
 

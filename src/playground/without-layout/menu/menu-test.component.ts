@@ -55,7 +55,7 @@ export class MenuTestComponent implements OnInit, OnDestroy {
       link: '/menu/menu-test.component/1',
       icon: 'home-outline',
       queryParams: { param: 1 },
-      fragment: '#fragment',
+      fragment: 'fragment',
     },
     {
       title: 'Menu #2',
@@ -85,7 +85,7 @@ export class MenuTestComponent implements OnInit, OnDestroy {
               title: 'Menu #3.3.2',
               link: '/menu/menu-test.component/3/3/2',
               queryParams: { param: 2 },
-              fragment: '#fragment',
+              fragment: 'fragment',
               home: true,
             },
             {
@@ -109,7 +109,7 @@ export class MenuTestComponent implements OnInit, OnDestroy {
       link: '/menu/menu-test.component/1',
       icon: 'home-outline',
       queryParams: { param: 1 },
-      fragment: '#fragment',
+      fragment: 'fragment',
     },
     {
       title: 'Menu #2',
@@ -210,7 +210,7 @@ export class MenuTestComponent implements OnInit, OnDestroy {
                   title: 'Menu #3.3.2',
                   link: '/menu/menu-test.component/3/3/2',
                   queryParams: { param: 2 },
-                  fragment: '#fragment',
+                  fragment: 'fragment',
                   home: true,
                 },
                 {
