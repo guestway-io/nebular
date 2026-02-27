@@ -2,7 +2,11 @@
 @use '../../theming' as *;
 
 @mixin nb-typography {
-  #{if(&, '&', 'body')} {
+  $_root: body;
+  @if & {
+    $_root: &;
+  }
+  #{$_root} {
     color: var(--text-basic-color);
     font-family: var(--text-paragraph-font-family);
     font-size: var(--text-paragraph-font-size);
