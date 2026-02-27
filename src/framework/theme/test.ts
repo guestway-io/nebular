@@ -8,10 +8,18 @@
 
 import 'zone.js';
 import 'zone.js/testing';
-import { getTestBed } from '@angular/core/testing';
+import { ComponentFixture, getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
   teardown: { destroyAfterEach: true },
 });
+
+// Angular 21 runs exhaustive checkNoChanges on every fixture.detectChanges(),
+// which throws ExpressionChangedAfterItHasBeenCheckedError when tests mutate
+// component state between detection cycles (standard test pattern).
+// Use changeDetectorRef.detectChanges() which skips the verification pass.
+ComponentFixture.prototype.detectChanges = function () {
+  this.changeDetectorRef.detectChanges();
+};

@@ -770,7 +770,7 @@ export class NbSelectComponent
   /**
    * List of `NbOptionNestedComponent`'s components passed as content.
    * */
-  @ContentChildren(NbOptionNestedComponent) nestedOptions: QueryList<NbOptionNestedComponent>;
+  @ContentChildren(forwardRef(() => NbOptionNestedComponent)) nestedOptions: QueryList<NbOptionNestedComponent>;
 
   /**
    * Custom select label, will be rendered instead of default enumeration with coma.
