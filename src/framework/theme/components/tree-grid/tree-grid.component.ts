@@ -28,13 +28,7 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import { NB_DOCUMENT, NB_WINDOW } from '../../theme.options';
 import { NbPlatform } from '../cdk/platform/platform-service';
 import { NbDirectionality } from '../cdk/bidi/bidi-service';
-import {
-  NB_TABLE_TEMPLATE,
-  NbTable,
-  NB_TABLE_PROVIDERS,
-  NB_COALESCED_STYLE_SCHEDULER,
-  NB_VIEW_REPEATER_STRATEGY,
-} from '../cdk/table/table.module';
+import { NB_TABLE_TEMPLATE, NbTable, NB_TABLE_PROVIDERS, NB_VIEW_REPEATER_STRATEGY } from '../cdk/table/table.module';
 import { NB_STICKY_POSITIONING_LISTENER, NbRowContext } from '../cdk/table/type-mappings';
 import { NbViewportRulerAdapter } from '../cdk/adapter/viewport-ruler-adapter';
 import { NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from './data-source/tree-grid-data-source';
@@ -162,7 +156,6 @@ export class NbTreeGridComponent<T> extends NbTable<NbTreeGridPresentationNode<T
     platform: NbPlatform,
     @Inject(NB_WINDOW) private window,
     @Inject(NB_VIEW_REPEATER_STRATEGY) protected readonly _viewRepeater,
-    @Inject(NB_COALESCED_STYLE_SCHEDULER) protected readonly _coalescedStyleScheduler,
     _viewportRuler: NbViewportRulerAdapter,
     @Optional()
     @SkipSelf()
@@ -178,7 +171,6 @@ export class NbTreeGridComponent<T> extends NbTable<NbTreeGridPresentationNode<T
       document,
       platform,
       _viewRepeater,
-      _coalescedStyleScheduler,
       _viewportRuler,
       _stickyPositioningListener,
     );
