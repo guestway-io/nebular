@@ -76,7 +76,7 @@
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
-    "@angular/fire": "^20.0.1",
+    "@angular/fire": "21.0.0-rc.0",
     "@angular/forms": "^21.0.0",
     "@angular/platform-browser": "^21.0.0",
     "@angular/platform-browser-dynamic": "^21.0.0",
@@ -90,8 +90,8 @@
     "moment": "2.29.4",
     "normalize.css": "~8.0.1",
     "pace-js": "~1.2.4",
-    "rxfire": "~6.0.5",
-    "rxjs": "~6.5.3 || ~7.8.0",
+    "rxfire": "~6.1.0",
+    "rxjs": "~7.8.0",
     "tslib": "~2.6.3",
     "zone.js": "~0.15.1"
   },
@@ -124,7 +124,7 @@
     "del": "3.0.0",
     "doc-prsr": "2.2.0",
     "eslint": "~9.8.0",
-    "eslint-config-prettier": "~9.1.0",
+    "eslint-config-prettier": "~9.1.2",
     "eslint-plugin-rxjs-x": "~0.7.7",
     "fs-extra": "~8.1.0",
     "globals": "~15.9.0",
@@ -155,13 +155,6 @@
     "typescript": "~5.9.2",
     "wait-on": "~9.0.1"
   },
-  "overrides": {
-    "@angular/fire": {
-      "@angular/common": "$@angular/common",
-      "@angular/core": "$@angular/core",
-      "@angular/platform-browser": "$@angular/platform-browser",
-      "@angular/platform-browser-dynamic": "$@angular/platform-browser-dynamic"
-    }
-  },
+  "overrides": {},
   "schematics": "./tools/dev-schematics/dist/collection.json"
 }
