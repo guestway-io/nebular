@@ -158,7 +158,8 @@
   "overrides": {
     "rxfire": {
       "firebase": "$firebase"
-    }
+    },
+    "vite": "7.3.8"
   },
   "schematics": "./tools/dev-schematics/dist/collection.json"
 }
